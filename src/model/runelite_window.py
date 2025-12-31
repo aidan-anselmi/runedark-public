@@ -2,10 +2,8 @@ import time
 from typing import Dict, List, Literal, Tuple
 
 import pyautogui as pag
-import pygetwindow as gw
-import win32con
-import win32gui
 from matplotlib.pyplot import imsave
+import subprocess
 
 import utilities.img_search as imsearch
 from model.window import Window, WindowInitializationError
@@ -95,23 +93,29 @@ class RuneLiteWindow(Window):
             return "runelite" in current_window.title.lower()
 
     def switch_window_to_runelite(self) -> bool:
-        """Switch the active window to RuneLite.
+        """Switch the active window to RuneLite (Linux/X11)."""
+        try:
+            # List windows and find RuneLite
+            output = subprocess.check_output(["wmctrl", "-l"], text=True)
+            runelite_lines = [line for line in output.splitlines() if "RuneLite" in line]
 
-        Returns:
-            bool: True if the active window was switched to RuneLite, False otherwise.
-        """
-        runelite_windows = [win for win in gw.getAllTitles() if "RuneLite" in win]
-        if not runelite_windows:
-            print("RuneLite window not found.")
+            if not runelite_lines:
+                print("RuneLite window not found.")
+                return False
+
+            # Window ID is the first column
+            window_id = runelite_lines[0].split()[0]
+
+            # Activate the window
+            subprocess.run(["wmctrl", "-i", "-R", window_id], check=True)
+
+            time.sleep(0.5)
+            print("Switched to RuneLite window.")
+            return True
+
+        except Exception as e:
+            print(f"Failed to switch window: {e}")
             return False
-        runelite_window = gw.getWindowsWithTitle(runelite_windows[0])[0]
-        hwnd = runelite_window._hWnd  # Get the window handle.
-        # Use win32gui to bring the window to the front
-        win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)  # Restore if minimized.
-        win32gui.SetForegroundWindow(hwnd)  # Bring the window to the foreground.
-        time.sleep(0.5)  # Wait briefly to allow window switching to complete.
-        print(f"Switched to window: {runelite_window.title}.")
-        return True
 
     def resize(self, width: int = 773, height: int = 534) -> None:
         """Resize the client window.

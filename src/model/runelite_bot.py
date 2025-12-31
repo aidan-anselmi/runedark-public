@@ -55,7 +55,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         game_title: str,
         bot_title: str,
         description: str,
-        window: Window = RuneLiteWindow(f"RuneLite - {settings.get('username')}"),
+        window: Window = RuneLiteWindow(f"RuneLite"),
     ) -> None:
         """Initialize a `RuneLiteBot`, a `Bot` tailored to Old School Runescape.
 

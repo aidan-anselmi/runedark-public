@@ -1,7 +1,6 @@
 from typing import Optional
 
 import pywinctl
-import pywintypes
 
 from utilities.geometry import Point, Rectangle
 
@@ -45,40 +44,40 @@ class Window:
         self.padding_left = padding_left
 
     @property
-    def window(self) -> Optional[pywintypes.HANDLE]:
-        """Retrieve the handle of the game client window.
+    def window(self) -> Optional[pywinctl.Window]:
+        """Retrieve the game client window.
 
         Raises:
-            WindowInitializationError: Raised if no client window is found with a title
-                matching `self.window_title`.
+            WindowInitializationError: If no client window is found matching
+            `self.window_title`.
 
         Returns:
-            Optional[pywintypes.HANDLE]: The handle of the `pywinctl.Window` object
-                representing the game client if found, otherwise None. Note that the
-                `pywinctl.Window` object is an aliased version of `pywinctl.Win32Window`.
+            pywinctl.Window: The game client window if found.
         """
+        windows = pywinctl.getWindowsWithTitle(self.window_title)
 
-        # Attempt to get an exact match for the window title.
-        self._client = pywinctl.getWindowsWithTitle(self.window_title)
-        if self._client:
-            return self._client[0]
+        if windows:
+            self._client = windows[0]
+            return self._client
+
         msg = f"No client window found matching name:\n\t{self.window_title}"
         raise WindowInitializationError(msg)
+
 
     def focus(self) -> None:
         """Focus the client window.
 
-        In other words, make the game client the active window.
-
         Raises:
             WindowInitializationError: If the game client window cannot be focused.
         """
-        if client := self.window:
-            try:
-                client.activate()
-            except pywintypes.error as exc:
-                msg = f"Failed to focus the game client window: {exc}"
-                raise WindowInitializationError(msg)
+        try:
+            client = self.window
+            client.restore()   # Safe on all platforms
+            client.activate()
+        except Exception as exc:
+            msg = f"Failed to focus the game client window: {exc}"
+            raise WindowInitializationError(msg)
+
 
     def position(self) -> Optional[Point]:
         """Get the origin (i.e. left-top corner) of the client window.
