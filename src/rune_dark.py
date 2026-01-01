@@ -635,9 +635,11 @@ if __name__ == "__main__":
     if run_without_gui:
         from model.osrs.template import OSRSTemplate
         from model.osrs.power_chopper import OSRSPowerChopper
+        from model.osrs.wanderer import OSRSWanderer
+        from model.osrs.karambwan import Karambwan
 
         app = App(test=True)
-        app.test(OSRSPowerChopper())
+        app.test(Karambwan())
 
     app = App()
     app.start()

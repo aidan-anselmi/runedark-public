@@ -1641,7 +1641,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         self.log_msg("Standard initial state configured.")
 
     # --- Bank---
-    def find_and_mouse_to_bank(self, num_retries: int = 10) -> bool:
+    def find_and_mosue_to_bank(self, num_retries: int = 10) -> bool:
         """After traveling within range, mouse to the color-tagged bank booth.
 
         Note that this is a simple wrapper for `find_and_mouse_to_marked_object`.
@@ -1698,6 +1698,19 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         """
         bank_frame = self.find_sprite(
             win=self.win.game_view, png="window-open.png", folder="bank"
+        )
+        if bank_frame:
+            return True
+        return False
+    
+    def is_bank_deposit_open(self) -> bool:
+        """Return whether or not the bank deposit window is open.
+
+        Returns:
+            bool: True if the bank deposit window is open, or False if it isn't.
+        """
+        bank_frame = self.find_sprite(
+            win=self.win.game_view, png="bank_deposit_manual.png", folder="bank"
         )
         if bank_frame:
             return True

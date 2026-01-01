@@ -262,6 +262,7 @@ class Walker:
         )
         dest = Point(dest[0], dest[1])
         path = self.get_api_walk_path(p1=self.loc, p2=dest, host=host)
+        #print(f"Walking along path: {path}")
         return self.walk(path, dest)
 
     def get_api_walk_path(
