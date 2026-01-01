@@ -1,5 +1,6 @@
 
 
+import math
 import time
 
 import utilities.random_util as rd
@@ -13,6 +14,8 @@ from utilities.color_util import Color
 from utilities.sprite_scraper import SpriteScraper, ImageType
 import pytweening
 from pathlib import Path
+from utilities.mappings.colors_rgb import BLUE, BLUE, GREEN, CYAN, YELLOW
+import cv2
 
 """
 [
@@ -34,18 +37,18 @@ class Karambwan(OSRSBot):
         super().__init__(bot_title=bot_title, description=description)
         # We can set default option values here if we'd like, and potentially override
         # needing to open the options panel.
-        self.run_time = 10
+        self.run_time = 120
         self.options_set = False
 
-        self.walker = Walker(self, dest_square_side_length=4)
+        self.walker = Walker(self, dest_square_side_length=6)
 
         self.bank_tile = Point(2384, 4458)
         self.fairy_ring_tile = Point(2412, 4436)
 
-        self.fishing_spot_color = self.cp.hsv.PURPLE
-        self.karamja_fairy_ring_color = self.cp.hsv.PINK
-        self.zanaris_fairy_ring_color = self.cp.hsv.RED
-        self.bank_deposit_color = self.cp.hsv.BLUE
+        self.fishing_spot_color = self.cp.hsv.CYAN_MARK
+        self.karamja_fairy_ring_color = self.cp.hsv.PURPLE_MARK
+        self.zanaris_fairy_ring_color = self.cp.hsv.YELLOW_MARK
+        self.bank_deposit_color = self.cp.hsv.GREEN_MARK
 
         self.scrape()
 
@@ -136,50 +139,71 @@ class Karambwan(OSRSBot):
         accelerates the development process.
         """
 
-        #self.travel_to(Point(2384, 4458), None, "bank")
-        # self.click_color(
-        #                     self.fishing_spot_color, "Fish"
-        #                 )
+        self.action_win = self.win.current_action
+        self.action_win.top += 59
+        # img = self.action_win.screenshot()
+        # cv2.imwrite("action_win.png", img)
 
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
         self.log_msg(f"[START] ({run_time_str})", overwrite=True)
         start_time = time.time()
         end_time = int(self.run_time) * 60  # Measured in seconds.
+        last_update = start_time
         while time.time() - start_time < end_time:
             
             # bank
             if self.is_inv_full():
                 if self.find_colors(self.win.game_view, self.karamja_fairy_ring_color):
                     self.click_karamja_fairy_ring()
-                if self.find_colors(self.win.game_view, self.zanaris_fairy_ring_color):
+                elif self.find_colors(self.win.game_view, self.zanaris_fairy_ring_color):
+                    self.log_msg("at zanaris fairy ring")
                     self.travel_to(self.bank_tile, None, "zanaris_fairy_ring_to_bank")
-                if self.find_colors(self.win.game_view, self.bank_deposit_color):
-                    self.click_color(self.bank_deposit_color, "Deposit")
-                    for _ in range(10):
-                        if self.is_bank_deposit_open():
-                            break
-                        self.sleep(1)
-                    if self.is_bank_deposit_open():
-                        self.click_karambwan()
-                        self.close_bank()
+                elif self.find_colors(self.win.game_view, self.bank_deposit_color):
+                    self.log_msg("at bank deposit")
+                    if self.click_color(self.bank_deposit_color, "Deposit"):
+                        for _ in range(10):
+                            if self.is_bank_deposit_open():
+                                break
+                            time.sleep(1)
+                    self.click_karambwan()
+                    self.close_bank()
+                elif self.is_bank_deposit_open():
+                    self.log_msg("bank deposit open with full inv")
+                    self.click_karambwan()
+                    self.close_bank()
+                else:
+                    self.log_msg("Could not find any tags with full inv")
+
             # return from bank and fish
             else:
+                if self.is_bank_deposit_open():
+                    self.log_msg("bank deposit open")
+                    self.click_karambwan()
+                    self.close_bank()
                 if self.find_colors(self.win.game_view, self.bank_deposit_color):
+                    self.log_msg("at bank deposit")
                     self.travel_to(self.fairy_ring_tile, None, "zanaris_bank_to_fairy_ring")
-                if self.find_colors(self.win.game_view, self.zanaris_fairy_ring_color):
+                elif self.find_colors(self.win.game_view, self.zanaris_fairy_ring_color):
+                    self.log_msg("at zanaris fairy ring")
                     self.click_color(self.zanaris_fairy_ring_color, "Last")
                     time.sleep(2)
-                if self.find_colors(self.win.game_view, self.fishing_spot_color):
-                    if not self.is_player_doing_action("Fishing") or rd.random_chance(0.05):
-                        self.click_color(self.fishing_spot_color, "Fish")
+                elif self.find_colors(self.win.game_view, self.fishing_spot_color):
+                    if not self.is_player_doing_action("Fishing", rect=self.action_win) or rd.random_chance(0.05):
+                        if self.click_color(self.fishing_spot_color, "Fish"):
+                            time.sleep(5)
+                else:
+                    self.log_msg("Could not find any tags with empty inv")
             
-            #self.update_progress((time.time() - start_time) / end_time)
+            if time.time() - last_update > 5:
+                self.update_progress((time.time() - start_time) / end_time)
+                last_update = time.time()
 
         self.update_progress(1)
         self.log_msg("[END]")
         self.stop()
     
     def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str):
+        self.log_msg(f"Traveling to {dest_name}...")
         if self.walker.travel_to_dest_along_path(
             tile_coord,
             walk_path,
@@ -201,40 +225,71 @@ class Karambwan(OSRSBot):
             self.mouse.move_to(rect.random_point())
             if self.get_mouseover_text(contains=mouseover_text):
                 res = self.mouse.click(check_red_click=True)
-                self.sleep_while_moving()
+                self.sleep_while_color_moving(color)
                 return res
         self.log_msg(f"Could not find color.")
         return False
     
     def click_karamja_fairy_ring(self) -> bool:
+        self.log_msg("Clicking Karamja fairy ring...")
         if rects := self.find_colors(self.win.game_view, self.karamja_fairy_ring_color):
-            if not rects or len(rects) != 0:
+            if not rects or len(rects) != 1:
+                self.log_msg(f"Could not find color. rects={len(rects)}")
                 return False
 
             rect = rects[0]
             self.mouse.move_to(rect.random_point())
             if self.get_mouseover_text(contains="Last"):
                 res = self.right_click_select_context_menu("Zanaris")
-                self.sleep_while_moving()
+                self.sleep_while_color_moving(self.karamja_fairy_ring_color)
                 return res
         return False
     
-    def click_karambwan(self):
+    def click_karambwan(self) -> bool:
         """With the bank window open, mouse to the Deposit All button and left-click it.
 
         Args:
             mouse_speed (str, optional): The speed to move the mouse. Defaults to
                 "fast".
         """
-        deposit_all_btn = self.find_sprite(
-            win=self.win.game_view, png="Raw_karambwan_bank.png", folder="bank"
+        self.log_msg("Clicking karambwan deposit button...")
+        sprite = self.find_sprite(
+            win=self.win.game_view, png="raw-karambwan.png", folder="items"
         )
-        self.mouse.move_to(
-            deposit_all_btn.random_point(),
-            knotsCount=1,  # Using 0 or 1 here produces more linear movement.
-            tween=pytweening.easeOutBack,
-            mouseSpeed="fast",
-        )
-        self.mouse.click()
-        self.log_msg("Deposited karambwans.")
-        self.sleep()
+        if sprite: 
+            self.mouse.move_to(
+                sprite.random_point(),
+                knotsCount=1,  # Using 0 or 1 here produces more linear movement.
+                tween=pytweening.easeOutBack,
+                mouseSpeed="fast",
+            )
+            self.mouse.click()
+            self.sleep()
+            self.log_msg("Deposited karambwans.")
+            self.sleep()
+            return True
+        return False
+    
+    def sleep_while_color_moving(self, color: Color, timeout: int = 15) -> None:
+        """Sleep while the player is moving towards a color tag.
+
+        Args:
+            color (Color): The color tag we are moving towards.
+            timeout (int, optional): The maximum time to wait in seconds. Defaults to 15.
+        """
+        time.sleep(1)
+        start_time = time.time()
+        while self.find_colors(self.win.game_view, color) and time.time() - start_time < timeout:
+            prev = self.find_colors(self.win.game_view, color)
+            time.sleep(.2)
+            curr = self.find_colors(self.win.game_view, color)
+            if prev and curr:
+                prev = prev[0].center
+                curr = curr[0].center
+                if math.dist(prev, curr) < 2:
+                    break
+            else:
+                break
+        time.sleep(1)
+        return 
+    

@@ -25,7 +25,7 @@
 5. Set up a virtual environment.
    1. Ensure [`virtualenv`](https://virtualenv.pypa.io/en/latest/) is installed: `pip install virtualenv`
    2. Create a virtual environment: `virtualenv venv --python=python3.10.9`
-   3. Activate the newly-created virtual environment: `source venv/Scripts/activate`
+   3. Activate the newly-created virtual environment: `source venv/bin/activate`
    4. Install dependencies: `pip install -r requirements.txt`
 6. Run: `python src/rune_dark.py`
 

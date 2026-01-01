@@ -155,7 +155,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             self.sleep()
         return False
 
-    def is_player_doing_action(self, action: str) -> bool:
+    def is_player_doing_action(self, action: str, rect: Rectangle = None) -> bool:
         """Check whether the player character is performing a given action.
 
         This method checks the text in the `current_action` region of the chat window.
@@ -166,8 +166,11 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         Returns:
             True if the player is performing the given action, False otherwise.
         """
+        if rect is None:
+            rect = self.win.current_action
+
         txt_box = ocr.find_textbox(
-            action, self.win.current_action, ocr.PLAIN_12, self.cp.bgr.GREEN
+            action, rect, ocr.PLAIN_12, self.cp.bgr.GREEN
         )
         return bool(txt_box)
 

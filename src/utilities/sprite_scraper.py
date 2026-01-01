@@ -30,6 +30,7 @@ class SpriteScraper:
         """Instantiate a `SpriteScraper` to scrape sprites from the Wiki."""
         self.BASE_URL = "https://oldschool.runescape.wiki/"
         self.DEFAULT_DESTINATION = imsearch.BOT_IMAGES.joinpath("scraper")
+        self.HEADERS = {"User-Agent": "MyRuneScapeBot/1.0 (contact: yourname@example.com)"}
 
     def search_and_download(self, search_string: str, **kwargs) -> Path:
         """Search for and downloads the image(s) specified `search_string`.
@@ -201,7 +202,8 @@ class SpriteScraper:
         }
 
         try:
-            response = requests.get(url=f"{self.BASE_URL}/api.php", params=params)
+
+            response = requests.get(url=f"{self.BASE_URL}/api.php", params=params, headers=self.HEADERS)
             data = response.json()
             pages = data["query"]["pages"]
             page_id = list(pages.keys())[0]
@@ -279,7 +281,7 @@ class SpriteScraper:
         """
         notify_callback("Downloading image...")
         try:
-            response = requests.get(img_url)
+            response = requests.get(img_url, headers=self.HEADERS)
             downloaded_img = np.frombuffer(response.content, dtype="uint8")
             downloaded_img = cv2.imdecode(downloaded_img, cv2.IMREAD_UNCHANGED)
             self.__save_image(
