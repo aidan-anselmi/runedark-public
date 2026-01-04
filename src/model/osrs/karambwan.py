@@ -334,7 +334,7 @@ class Karambwan(OSRSBot):
             xp_timestart += break_time
 
             if not self.is_player_doing_action("Fishing", rect=self.action_win) or rd.random() < 0.05:
-                if self.click_color(self.fishing_spot_color, "Fish"):
+                if self.click_color(self.fishing_spot_color, "Net"):
                     time.sleep(5)
 
             if time.time() - last_update > 300:
