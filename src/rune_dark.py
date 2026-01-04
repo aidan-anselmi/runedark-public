@@ -637,6 +637,7 @@ if __name__ == "__main__":
         from model.osrs.power_chopper import OSRSPowerChopper
         from model.osrs.wanderer import OSRSWanderer
         from model.osrs.karambwan import Karambwan
+        from model.osrs.plank_maker import PlankMaker
 
         app = App(test=True)
         app.test(Karambwan())

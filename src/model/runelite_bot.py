@@ -2356,3 +2356,26 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         self.log_msg(msg)
         self.logout()
         self.stop()
+
+    def check_interface_text(self, texts: Union[str, List[str]], font=ocr.BOLD_12, color=None) -> bool:
+        """
+        This will check if certain text is present in the interface
+        """
+        if color is None:
+            color = [self.cp.bgr.OFF_WHITE_TEXT, self.cp.bgr.OFF_BROWN_TEXT]
+
+        return ocr.find_textbox(texts, rect=self.win.chat, font=font, colors=color)
+
+    def wait_till_interface_text(self, texts: Union[str, List[str]], font=ocr.BOLD_12, color=None, max_wait = 10) -> bool:
+        """
+        This will stop further execution until interface is opened with certain text
+        """
+        
+        error = 0
+        while not self.check_interface_text(texts, font=font, color=color):
+            if error > max_wait * 10:
+                return False
+            error += 1
+            time.sleep(.1)
+        self.sleep()
+        return True

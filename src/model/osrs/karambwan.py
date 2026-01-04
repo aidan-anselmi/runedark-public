@@ -1,5 +1,3 @@
-
-
 import math
 import time
 
@@ -16,28 +14,16 @@ import pytweening
 from pathlib import Path
 from utilities.mappings.colors_rgb import BLUE, BLUE, GREEN, CYAN, YELLOW
 import cv2
-
-"""
-[
-{"regionId":11568,"regionX":19,"regionY":47,"z":0,"color":"#FF00FF00"},
-{"regionId":11568,"regionX":19,"regionY":44,"z":0,"color":"#FF00FF00"}
-]
-
-[{"regionId":9284,"regionX":55,"regionY":31,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":44,"regionY":20,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":44,"regionY":21,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":44,"regionY":22,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":43,"regionY":23,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":42,"regionY":24,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":41,"regionY":25,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":41,"regionY":26,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":40,"regionY":27,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":39,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":38,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":37,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":36,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":35,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":34,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":33,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":32,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":31,"regionY":29,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":30,"regionY":30,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":29,"regionY":31,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":28,"regionY":31,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":27,"regionY":31,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":26,"regionY":31,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":25,"regionY":31,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":25,"regionY":32,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":24,"regionY":33,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":23,"regionY":34,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":23,"regionY":35,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":22,"regionY":36,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":21,"regionY":37,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":20,"regionY":38,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":19,"regionY":39,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":18,"regionY":39,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":18,"regionY":40,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":17,"regionY":41,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":16,"regionY":42,"z":0,"color":"#FF00FF00"}]
-[{"regionId":9284,"regionX":55,"regionY":31,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":44,"regionY":20,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":44,"regionY":21,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":44,"regionY":22,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":43,"regionY":23,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":42,"regionY":24,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":41,"regionY":25,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":41,"regionY":26,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":40,"regionY":27,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":39,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":38,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":37,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":36,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":35,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":34,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":33,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":32,"regionY":28,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":31,"regionY":29,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":30,"regionY":30,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":29,"regionY":31,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":28,"regionY":31,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":27,"regionY":31,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":26,"regionY":31,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":25,"regionY":31,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":25,"regionY":32,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":24,"regionY":33,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":23,"regionY":34,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":23,"regionY":35,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":22,"regionY":36,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":21,"regionY":37,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":20,"regionY":38,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":19,"regionY":39,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":18,"regionY":39,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":18,"regionY":40,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":17,"regionY":41,"z":0,"color":"#FF00FF00"},{"regionId":9541,"regionX":16,"regionY":42,"z":0,"color":"#FF00FF00"}]
-"""
+import random as rd
 
 class Karambwan(OSRSBot):
     def __init__(self):
-        bot_title = "Karambwan"  # i.e. "<Script Name>"
-        description = (
-            "<The script description, in some detail, but not so much as to"
-            " take up the whole upper half of the page, goes here.>"
-        )
+        bot_title = "Karambwan Fisher"  # i.e. "<Script Name>"
+        description = ()
         super().__init__(bot_title=bot_title, description=description)
         # We can set default option values here if we'd like, and potentially override
         # needing to open the options panel.
-        self.run_time = 120
+        self.run_time = 201
         self.options_set = False
 
         self.walker = Walker(self, dest_square_side_length=6)
@@ -140,20 +126,41 @@ class Karambwan(OSRSBot):
         """
 
         self.action_win = self.win.current_action
-        self.action_win.top += 59
-        # img = self.action_win.screenshot()
-        # cv2.imwrite("action_win.png", img)
+        self.action_win.top += 58
+        self.action_win.height += 3
+        img = self.action_win.screenshot()
+        cv2.imwrite("action_win.png", img)
 
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
         self.log_msg(f"[START] ({run_time_str})", overwrite=True)
         start_time = time.time()
         end_time = int(self.run_time) * 60  # Measured in seconds.
         last_update = start_time
+
+        cur_xp = self.get_total_xp()
+        xp_timestart = time.time()
         while time.time() - start_time < end_time:
             
+            xp = self.get_total_xp()
+            if xp != -1 and xp != cur_xp:
+                cur_xp = xp
+                xp_timestart = time.time()
+            if time.time() - xp_timestart > 300:
+                self.log_msg("XP has not changed for 5 minutes, stopping bot.")
+                break
+
             # bank
             if self.is_inv_full():
                 if self.find_colors(self.win.game_view, self.karamja_fairy_ring_color):
+                    break_time = 0
+                    if rd.random() < 0.15:
+                        break_time = rd.randint(2, 12)
+                    if rd.random() < 0.05:
+                        break_time = rd.randint(15, 60)
+                    time.sleep(break_time)
+                    xp_timestart += break_time
+                    
+                    
                     self.click_karamja_fairy_ring()
                 elif self.find_colors(self.win.game_view, self.zanaris_fairy_ring_color):
                     self.log_msg("at zanaris fairy ring")
@@ -188,15 +195,17 @@ class Karambwan(OSRSBot):
                     self.click_color(self.zanaris_fairy_ring_color, "Last")
                     time.sleep(2)
                 elif self.find_colors(self.win.game_view, self.fishing_spot_color):
-                    if not self.is_player_doing_action("Fishing", rect=self.action_win) or rd.random_chance(0.05):
+                    if not self.is_player_doing_action("Fishing", rect=self.action_win) or rd.random() < 0.05:
                         if self.click_color(self.fishing_spot_color, "Fish"):
                             time.sleep(5)
                 else:
                     self.log_msg("Could not find any tags with empty inv")
             
-            if time.time() - last_update > 5:
+            if time.time() - last_update > 300:
                 self.update_progress((time.time() - start_time) / end_time)
                 last_update = time.time()
+
+            time.sleep(.1)
 
         self.update_progress(1)
         self.log_msg("[END]")
@@ -217,9 +226,11 @@ class Karambwan(OSRSBot):
 
     def click_color(self, color: Color, mouseover_text: str) -> bool:
         if rects := self.find_colors(self.win.game_view, color):
-            if not rects or len(rects) != 1:
+            if not rects:
                 self.log_msg(f"Could not find color. rects={len(rects)}")
                 return False
+
+            rects = sorted(rects, key=lambda r: r.dist_from_rect_center())
 
             rect = rects[0]
             self.mouse.move_to(rect.random_point())
