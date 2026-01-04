@@ -333,12 +333,6 @@ class Karambwan(OSRSBot):
             time.sleep(break_time)
             xp_timestart += break_time
 
-            if self.is_inv_full():
-                slots = self.get_num_item_in_inv("raw-shrimps.png", folder="items")
-                skip_slots = [i for i in range(28) if not i in slots]
-                self.drop_all_items(skip_slots=skip_slots)
-                self.sleep()
-
             if not self.is_player_doing_action("Fishing", rect=self.action_win) or rd.random() < 0.05:
                 if self.click_color(self.fishing_spot_color, "Fish"):
                     time.sleep(5)
