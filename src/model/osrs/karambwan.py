@@ -47,7 +47,7 @@ class Karambwan(OSRSBot):
         # make sure directory exists
         dest_dir.mkdir(parents=True, exist_ok=True)
 
-        search_string = "Raw karambwan, Mithril bar"
+        search_string = "Raw karambwan, Raw shrimps"
         # search_string = "Deposit Inventory"
         image_type = ImageType.BANK
         destination = dest_dir
@@ -136,6 +136,8 @@ class Karambwan(OSRSBot):
         start_time = time.time()
         end_time = int(self.run_time) * 60  # Measured in seconds.
         last_update = start_time
+
+        self.get_karambwanji()
 
         cur_xp = self.get_total_xp()
         xp_timestart = time.time()
@@ -304,3 +306,50 @@ class Karambwan(OSRSBot):
         time.sleep(1)
         return 
     
+    def get_karambwanji(self):
+        run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
+        self.log_msg(f"[START] ({run_time_str})", overwrite=True)
+        start_time = time.time()
+        end_time = int(self.run_time) * 60  # Measured in seconds.
+        last_update = start_time
+
+        cur_xp = self.get_total_xp()
+        xp_timestart = time.time()
+        while time.time() - start_time < end_time:
+            
+            xp = self.get_total_xp()
+            if xp != -1 and xp != cur_xp:
+                cur_xp = xp
+                xp_timestart = time.time()
+            if time.time() - xp_timestart > 300:
+                self.log_msg("XP has not changed for 5 minutes, stopping bot.")
+                break
+
+            break_time = 0
+            if rd.random() < 0.15:
+                break_time = rd.randint(2, 12)
+            if rd.random() < 0.05:
+                break_time = rd.randint(15, 60)
+            time.sleep(break_time)
+            xp_timestart += break_time
+
+            if self.is_inv_full():
+                slots = self.get_num_item_in_inv("raw-shrimps.png", folder="items")
+                skip_slots = [i for i in range(28) if not i in slots]
+                self.drop_all_items(skip_slots=skip_slots)
+                self.sleep()
+
+            if not self.is_player_doing_action("Fishing", rect=self.action_win) or rd.random() < 0.05:
+                if self.click_color(self.fishing_spot_color, "Fish"):
+                    time.sleep(5)
+
+            if time.time() - last_update > 300:
+                self.update_progress((time.time() - start_time) / end_time)
+                last_update = time.time()
+
+            self.sleep()
+
+        self.update_progress(1)
+        self.log_msg("[END]")
+        self.stop()
+        return
