@@ -45,7 +45,7 @@ class MahoganyHomes(OSRSBot):
 
         self.walker = Walker(self, dest_square_side_length=6)
 
-        self.build_color = self.cp.hsv.YELLOW_MARK
+        self.build_color = self.cp.hsv.RED_MARK
         self.stairs_color = self.cp.hsv.PURPLE_MARK
         self.npc_color = self.cp.hsv.CYAN_MARK
         self.door_color = self.cp.hsv.BLUE_MARK
