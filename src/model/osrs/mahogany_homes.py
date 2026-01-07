@@ -318,7 +318,7 @@ class MahoganyHomes(OSRSBot):
                     res.teak_planks = int(nums[-1])
 
         self.log_msg(f"Contract: {res}")
-        if res.dest == "" or res.teak_planks == 0 or res.dest_tile == Point(0, 0):
+        if res.dest == "" or res.dest_tile == Point(0, 0):
             self.log_msg("Could not read contract destination")
             return None
         return res
