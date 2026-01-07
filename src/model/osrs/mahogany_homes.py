@@ -191,7 +191,7 @@ class MahoganyHomes(OSRSBot):
                     self.log_msg("Still do not have required items after withdrawing")
                     continue
             
-            if not self.find_colors(self.win.game_view, [self.build_color, self.stairs_color]):
+            if not self.find_colors(self.win.game_view, self.build_color) and not self.find_colors(self.win.game_view, self.stairs_color):
                 if contract.dest != "falador":
                     self.tele_to(contract.dest)
                 self.travel_to(contract.dest_tile, None, f"mahogany_homes_travel_to_{contract.dest}")
