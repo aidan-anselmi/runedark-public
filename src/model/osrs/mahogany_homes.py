@@ -14,7 +14,6 @@ from utilities.sprite_scraper import SpriteScraper, ImageType
 import pytweening
 from pathlib import Path
 import cv2
-import random as rd
 import pyautogui as pag
 from dataclasses import dataclass
 import utilities.ocr as ocr
