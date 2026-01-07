@@ -242,6 +242,7 @@ class MahoganyHomes(OSRSBot):
         self.sleep()
         
         pag.press("esc")
+        self.sleep(lo=1, hi=1.5)
         return True
     
     def task_completed(self):
