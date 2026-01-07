@@ -320,7 +320,7 @@ def isolate_contours(image: cv2.Mat, color: Union[Color, List[Color]]) -> np.arr
     result = cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)  # Convert result to grayscale.
     dbg.save_image("result3.png", result)
     # Threshold the result: pixel strength < 50 to black (0), >= 50 to white (255).
-    _, result = cv2.threshold(result, 50, 255, cv2.THRESH_BINARY)
+    _, result = cv2.threshold(result, 10, 255, cv2.THRESH_BINARY)
     dbg.save_image("result4.png", result)
     # Find external contours, which are outlines or curves that represent the
     # boundaries of objects or regions within our (binary) thresholded image.
