@@ -337,6 +337,8 @@ class MahoganyHomes(OSRSBot):
             self.mouse.move_to(self.win.spellbook_normal[15].random_point())
         elif dest == "hosidius":
             self.mouse.move_to(self.win.spellbook_normal[22].random_point())
+        elif dest == "ardougne":
+            self.mouse.move_to(self.win.spellbook_normal[32].random_point())
         else:
             return False
         
