@@ -425,6 +425,7 @@ class MahoganyHomes(OSRSBot):
         if self.find_colors(self.win.game_view, self.stairs_color):
             while not self.get_mouseover_text(contains="Climb"):
                 self.move_mouse_to_color_obj(self.stairs_color, order=order)
+                self.sleep()
             if self.mouse.click(check_red_click=True):
                 self.sleep_while_color_moving(self.stairs_color)
                 return True
