@@ -49,6 +49,7 @@ class MahoganyHomes(OSRSBot):
         self.npc_color = self.cp.hsv.CYAN_MARK
         self.door_color = self.cp.hsv.BLUE_MARK
         self.bank_color = self.cp.hsv.YELLOW_MARK
+        self.teleport_color = self.cp.hsv.PURPLE_MARK
 
         self.contract_start_point = Point(2989, 3366)
         self.bank_point = Point(3013, 3356)
@@ -332,8 +333,10 @@ class MahoganyHomes(OSRSBot):
         self.mouse.click()
         self.sleep(lo=4, hi=6)
         if dest == "hosidius":
-            pag.press("space")
-            self.sleep(lo=1, hi=2)
+            time.sleep(2)
+            self.find_and_mouse_to_marked_object(self.teleport_color, "Enter")
+            self.mouse.click()
+            self.sleep(lo=4, hi=6)
         return True
 
     def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str):
