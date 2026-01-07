@@ -144,7 +144,7 @@ class MahoganyHomes(OSRSBot):
         self.scrape()
         dbg.print_unique_colors(self.win.game_view.screenshot(), top_n=5)
         game_view = self.win.game_view.screenshot()
-        dbg.save_image("blue.png", isolate_contours(game_view, self.cp.rgb.BLUE))
+        dbg.save_image("blue.png", isolate_contours(game_view, self.cp.hsv.BLUE))
         dbg.save_image("blue_mark.png", isolate_contours(game_view, self.cp.hsv.BLUE_MARK))
         
 
