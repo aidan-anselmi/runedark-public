@@ -421,7 +421,7 @@ class MahoganyHomes(OSRSBot):
                 return self.open_door()
         return False
 
-    def go_up_stairs(self, order = 0) -> bool:
+    def go_up_stairs(self, order:int = 0) -> bool:
         if self.find_colors(self.win.game_view, self.stairs_color):
             while not self.get_mouseover_text(contains="Climb"):
                 self.move_mouse_to_color_obj(self.stairs_color, order=order)
