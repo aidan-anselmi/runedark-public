@@ -311,7 +311,8 @@ class MahoganyHomes(OSRSBot):
                 case "jeff":
                     res.dest_tile = Point(3239, 3450)
                 case "sarah":
-                    res.dest_tile = Point(3235, 3384)
+                    #res.dest_tile = Point(3235, 3384)
+                    res.dest_tile = Point(3235, 3387)
 
         for text in ["Varrock", "Falador", "Ardougne", "Hosidius"]:
             if ocr.find_textbox(text, rect=self.dest_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE):
