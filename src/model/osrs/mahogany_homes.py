@@ -398,9 +398,16 @@ class MahoganyHomes(OSRSBot):
     def open_all_doors(self) -> bool:
         self.log_msg(f"Opening all doors... {self.find_colors(self.win.game_view, self.door_color)}")
         while self.find_colors(self.win.game_view, self.door_color):
+            self.open_door()
+
+    def open_door(self) -> bool:
+        if self.find_colors(self.win.game_view, self.door_color):
             self.move_mouse_to_color_obj(self.door_color)
-            self.mouse.click(check_red_click=True)
+            res = self.mouse.click(check_red_click=True)
             self.sleep_while_color_moving(self.door_color)
+            if not res:
+                return self.open_door()
+        return False
 
     def go_up_stairs(self, order = 0) -> bool:
         if self.find_colors(self.win.game_view, self.stairs_color):
