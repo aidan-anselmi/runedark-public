@@ -4,7 +4,7 @@ import time
 import utilities.random_util as rd
 from model.osrs.osrs_bot import OSRSBot
 from model.osrs.power_chopper import OSRSPowerChopper
-from utilities.geometry import Point
+from utilities.geometry import Point, Rectangle
 from utilities.mappings import item_ids as iid
 from utilities.mappings import locations as loc
 from utilities.walker import Walker, WalkPath
@@ -135,11 +135,11 @@ class MahoganyHomes(OSRSBot):
         accelerates the development process.
         """
 
-        self.dest_win = self.win.current_action
+        self.dest_win = Rectangle(self.win.current_action)
         self.dest_win.left -= 10
         self.dest_win.top += 73
-        
-        self.plank_win = self.dest_win
+
+        self.plank_win = Rectangle(self.dest_win)
         self.plank_win.top += 35
         dbg.save_image("plank_win.png", self.plank_win.screenshot())
         dbg.save_image("dest_win.png", self.dest_win.screenshot())
