@@ -143,7 +143,7 @@ class MahoganyHomes(OSRSBot):
 
         self.npc_win = copy.deepcopy(self.win.current_action)
         self.npc_win.left -= 10
-        self.npc_win.top += 58
+        self.npc_win.top += 57
 
         self.dest_win = copy.deepcopy(self.win.current_action)
         self.dest_win.left -= 10
@@ -261,7 +261,7 @@ class MahoganyHomes(OSRSBot):
     def get_contract(self) -> Contract | None:
         res = Contract(dest="", teak_planks=0, steel_bars=0, dest_tile=Point(0, 0))
 
-        if npc_text := ocr.scrape_text(self.plank_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE):
+        if npc_text := ocr.scrape_text(self.npc_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE):
             npc_text = npc_text.strip().lower()
             match npc_text:
                 case "jess":
