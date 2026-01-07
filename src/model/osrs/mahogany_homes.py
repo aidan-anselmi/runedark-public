@@ -356,12 +356,12 @@ class MahoganyHomes(OSRSBot):
         
         time.sleep(3)
         self.mouse.click()
-        self.sleep(lo=4, hi=6)
+        self.sleep_until_color_visible(self.cp.hsv.PINK_MARK, timeout=15)
         if dest == "hosidius":
             time.sleep(2)
             self.move_mouse_to_color_obj(self.teleport_color)
             self.mouse.click()
-            self.sleep(lo=4, hi=6)
+            self.sleep_until_color_visible(self.cp.hsv.GREEN_MARK, timeout=15)
         return True
 
     def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str):

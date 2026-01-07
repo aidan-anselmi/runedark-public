@@ -2416,3 +2416,16 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 return True
             time.sleep(0.1)
         return False
+    
+    def sleep_until_color_visible(self, color: Color, timeout: int = 15) -> bool:
+        """Sleep until a color tag is visible on screen.
+
+        Args:
+            color (Color): The color tag we are waiting for.
+            timeout (int, optional): The maximum time to wait in seconds. Defaults to 15.
+            """
+        for _ in range(timeout * 10):
+            if self.find_colors(self.win.game_view, color):
+                return True
+            time.sleep(0.1)
+        return False
