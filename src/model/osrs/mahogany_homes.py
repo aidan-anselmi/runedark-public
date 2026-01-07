@@ -19,6 +19,7 @@ import pyautogui as pag
 from dataclasses import dataclass
 import utilities.ocr as ocr
 import utilities.debug as dbg
+import copy
 
 @dataclass
 class Contract:
@@ -136,11 +137,11 @@ class MahoganyHomes(OSRSBot):
         accelerates the development process.
         """
 
-        self.dest_win = Rectangle(self.win.current_action)
+        self.dest_win = copy.deepcopy(self.win.current_action)
         self.dest_win.left -= 10
         self.dest_win.top += 73
 
-        self.plank_win = Rectangle(self.dest_win)
+        self.plank_win = copy.deepcopy(self.dest_win)
         self.plank_win.top += 35
         dbg.save_image("plank_win.png", self.plank_win.screenshot())
         dbg.save_image("dest_win.png", self.dest_win.screenshot())
