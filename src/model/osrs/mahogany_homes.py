@@ -20,6 +20,7 @@ from dataclasses import dataclass
 import utilities.ocr as ocr
 import utilities.debug as dbg
 import copy
+from utilities.color_util import Color, ColorPalette, isolate_colors, isolate_contours
 
 @dataclass
 class Contract:
@@ -141,7 +142,11 @@ class MahoganyHomes(OSRSBot):
         """
 
         self.scrape()
-        dbg.print_unique_colors(self.win.game_view.screenshot(), top_n=5)
+        #dbg.print_unique_colors(self.win.game_view.screenshot(), top_n=5)
+        game_view = self.win.game_view.screenshot()
+        dbg.save_image("blue.png", isolate_contours(game_view, self.cp.rgb.BLUE))
+        dbg.save_image("blue_mark.png", isolate_contours(game_view, self.cp.hsv.BLUE_MARK))
+        
 
         self.npc_win = copy.deepcopy(self.win.current_action)
         self.npc_win.left -= 10
@@ -171,7 +176,7 @@ class MahoganyHomes(OSRSBot):
             if not contract:
                 self.tele_to("falador")
                 self.travel_to(self.contract_start_point, None, "falador_to_mahogany_homes_start")
-                self.find_and_mouse_to_marked_object(self.npc_color, "Last")
+                self.move_mouse_to_color_obj(self.npc_color, "Last")
                 self.wait_till_interface_text(texts=["What is"])
                 if not self.get_contract():
                     pag.press("space")
@@ -336,7 +341,7 @@ class MahoganyHomes(OSRSBot):
         self.sleep(lo=4, hi=6)
         if dest == "hosidius":
             time.sleep(2)
-            self.find_and_mouse_to_marked_object(self.teleport_color, "Enter")
+            self.move_mouse_to_color_obj(self.teleport_color, "Enter")
             self.mouse.click()
             self.sleep(lo=4, hi=6)
         return True
