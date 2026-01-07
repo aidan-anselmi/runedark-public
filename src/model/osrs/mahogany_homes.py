@@ -60,7 +60,7 @@ class MahoganyHomes(OSRSBot):
         # make sure directory exists
         dest_dir.mkdir(parents=True, exist_ok=True)
 
-        search_string = "Steel bar, Teak Plank"
+        search_string = "Steel bar, Teak plank"
         # search_string = "Deposit Inventory"
         image_type = ImageType.ALL
         destination = dest_dir
@@ -137,6 +137,8 @@ class MahoganyHomes(OSRSBot):
         `Bot` and `RuneLiteBot` classes. Leveraging these methods significantly
         accelerates the development process.
         """
+
+        self.scrape()
 
         self.dest_win = copy.deepcopy(self.win.current_action)
         self.dest_win.left -= 10
