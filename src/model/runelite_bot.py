@@ -956,7 +956,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         self,
         color: Color,
         req_txt: Union[str, List[str]],
-        req_txt_colors: Union[Color, List[Color]],
+        req_txt_colors: Union[Color, List[Color]] = None,
         num_retries: int = 10,
     ) -> bool:
         """After traveling within range, mouse to a color-marked object.
@@ -975,6 +975,9 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         Returns:
             bool: True if we moused to the object, False if not.
         """
+        if req_txt_colors is None:
+            req_txt_colors = self.cp.bgr.OFF_WHITE_TEXT
+
         self.move_mouse_to_color_obj(color=color)
         found_obj = self.get_mouseover_text(contains=req_txt, colors=req_txt_colors)
         _not = "" if found_obj else " not"

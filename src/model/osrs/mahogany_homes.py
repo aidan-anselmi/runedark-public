@@ -144,7 +144,7 @@ class MahoganyHomes(OSRSBot):
             if not self.get_dest():
                 self.tele_to("falador")
                 self.travel_to(self.contract_start_point, None, "mahogany_homes_start")
-                self.find_and_mouse_to_marked_object(self.npc_color, self.win.game_view)
+                self.find_and_mouse_to_marked_object(self.npc_color, "Last")
                 self.mouse.click()
                 
             
@@ -209,9 +209,9 @@ class MahoganyHomes(OSRSBot):
         pag.press("f4")
         self.sleep()
         if dest == "falador":
-            self.mouse.move_to(self.win.spellbook_normal[18].random_point())
+            self.mouse.move_to(self.win.spellbook_normal[20].random_point())
         elif dest == "varrock":
-            self.mouse.move_to(self.win.spellbook_normal[14].random_point())
+            self.mouse.move_to(self.win.spellbook_normal[15].random_point())
         else:
             return False
         
