@@ -1,5 +1,6 @@
 import math
 import time
+import re
 
 import utilities.random_util as rd
 from model.osrs.osrs_bot import OSRSBot
@@ -198,18 +199,26 @@ class MahoganyHomes(OSRSBot):
     def get_contract(self) -> Contract | None:
         res = Contract(dest="", teak_planks=0, steel_bars=0)
         
-        text = ocr.scrape_text(self.dest_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE)
-        self.log_msg(f"dest text: {text}")
+        #text = ocr.scrape_text(self.dest_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE)
+        #self.log_msg(f"dest text: {text}")
 
         for text in ["Varrock", "Falador", "Ardougne"]:
             if ocr.find_textbox(text, rect=self.dest_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE):
                 res.dest = text
                 break
-        if res.dest == "":
+        
+        if plank_text := ocr.scrape_text(self.plank_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE):
+            m = re.search(r"-(\d+)", plank_text)
+            if m:
+                res.teak_planks = int(m.group(1))
+            else:
+                nums = re.findall(r"\d+", plank_text)
+                if nums:
+                    res.teak_planks = int(nums[-1])
+
+        if res.dest == "" or res.teak_planks == 0:
             self.log_msg("Could not read contract destination")
             return None
-        
-
 
         self.log_msg(f"Contract: {res}")
         return res
