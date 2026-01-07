@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Callable
 
 import cv2
+import numpy as np
 
 from model.runelite_window import RuneLiteWindow
 from utilities import settings
@@ -80,7 +81,7 @@ def timer(func: Callable) -> Callable:
     return wrapper
 
 def print_unique_colors(im: cv2.Mat):
-    """Print all unique colors in an image.
+    """Print all unique colors in an image as HSV tuples.
 
     Args:
         im (cv2.Mat): The image to analyze.
@@ -89,8 +90,13 @@ def print_unique_colors(im: cv2.Mat):
     height, width, _ = im.shape
     for y in range(height):
         for x in range(width):
-            color = tuple(im[y, x])
+            # Ensure we store Python ints (B, G, R) from the image
+            color = tuple(int(c) for c in im[y, x])
             unique_colors.add(color)
-    print("Unique colors in image:")
-    for color in unique_colors:
-        print(color)
+    print("Unique colors in image (HSV):")
+    for bgr in unique_colors:
+        # Convert single BGR color to HSV using OpenCV. Build a 1x1 image.
+        bgr_arr = np.uint8([[list(bgr)]])
+        hsv = cv2.cvtColor(bgr_arr, cv2.COLOR_BGR2HSV)[0][0]
+        hsv_tuple = tuple(int(c) for c in hsv)
+        print(hsv_tuple)
