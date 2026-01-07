@@ -2404,7 +2404,6 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                     break
             else:
                 break
-        time.sleep(.1)
         return 
     
     def sleep_until_bank_open(self, timeout: int = 15) -> bool:
