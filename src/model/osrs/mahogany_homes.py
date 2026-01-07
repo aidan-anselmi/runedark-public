@@ -326,7 +326,8 @@ class MahoganyHomes(OSRSBot):
         return res
     
     def tele_to(self, dest: str) -> bool:
-        if math.dist(self.walker.get_position(), self.contract_start_point) < 100:
+        if math.dist(self.walker.get_position(), self.contract_start_point) < 50:
+            self.log_msg("Already at dest")
             return True
 
         pag.press("f4")
@@ -340,6 +341,7 @@ class MahoganyHomes(OSRSBot):
         elif dest == "ardougne":
             self.mouse.move_to(self.win.spellbook_normal[32].random_point())
         else:
+            self.log_msg("dest not recognized")
             return False
         
         time.sleep(3)
