@@ -15,7 +15,14 @@ from pathlib import Path
 import cv2
 import random as rd
 import pyautogui as pag
+from dataclasses import dataclass
+import utilities.ocr as ocr
 
+@dataclass
+class Contract:
+    dest: str
+    teak_planks: int
+    steel_bars: int
 
 class MahoganyHomes(OSRSBot):
     def __init__(self):
@@ -40,6 +47,10 @@ class MahoganyHomes(OSRSBot):
 
         self.contract_start_point = Point(2989, 3366)
         self.bank_point = Point(3013, 3356)
+
+        self.dest_win = self.win.current_action
+        self.dest_win.top += 58
+        self.dest_win.height += 3
 
     def scrape(self):
         scraper = SpriteScraper()
@@ -127,12 +138,6 @@ class MahoganyHomes(OSRSBot):
         accelerates the development process.
         """
 
-        self.action_win = self.win.current_action
-        self.action_win.top += 58
-        self.action_win.height += 3
-        img = self.action_win.screenshot()
-        cv2.imwrite("action_win.png", img)
-
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
         self.log_msg(f"[START] ({run_time_str})", overwrite=True)
         start_time = time.time()
@@ -140,8 +145,8 @@ class MahoganyHomes(OSRSBot):
         last_update = start_time
 
         while time.time() - start_time < end_time:
-            
-            if not self.get_dest():
+            contract = self.get_contract()
+            if not contract:
                 self.tele_to("falador")
                 self.travel_to(self.contract_start_point, None, "mahogany_homes_start")
                 self.find_and_mouse_to_marked_object(self.npc_color, "Last")
@@ -182,8 +187,19 @@ class MahoganyHomes(OSRSBot):
     def task_completed(self):
         return False
     
-    def get_dest(self) -> str:
-        return ""
+    def get_contract(self) -> Contract | None:
+        res = Contract(dest="", teak_planks=0, steel_bars=0)
+        for text in ["Varrock", "Falador", "Ardougne"]:
+            if ocr.find_textbox(text, rect=self.dest_win, font=ocr.PLAIN_11, colors=self.cp.hsv.OFF_WHITE_TEXT):
+                res.dest = text
+                break
+
+        if res.dest == "":
+            self.log_msg("Could not read contract destination")
+            return None
+
+        self.log_msg(f"Contract: {res}")
+        return res
     
     def hand_in(self) -> bool:
         if not self.find_colors(self.win.game_view, self.npc_color):
