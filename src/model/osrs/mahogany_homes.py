@@ -194,7 +194,7 @@ class MahoganyHomes(OSRSBot):
             
             if contract.dest != "falador":
                 self.tele_to(contract.dest)
-            self.walk_along_highlighted_path("north")
+            self.travel_to(contract.dest_tile, None, f"mahogany_homes_travel_to_{contract.dest}")
             
             if time.time() - last_update > 300:
                 self.update_progress((time.time() - start_time) / end_time)
@@ -212,6 +212,10 @@ class MahoganyHomes(OSRSBot):
         Returns:
             bool: True if the player has all required items, False otherwise.
         """
+        if not self.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
+            self.sleep()
+        
 
         if self.get_num_item_in_inv("teak-plank.png", "items") < contract.teak_planks:
             self.log_msg(f"Not enough teak planks. Required: {contract.teak_planks}")
