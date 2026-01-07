@@ -175,7 +175,7 @@ class MahoganyHomes(OSRSBot):
         while time.time() - start_time < end_time:
             contract = self.get_contract()
             if not contract:
-                if math.dist(self.walker.get_position(), contract.dest_tile) > 100:
+                if math.dist(self.walker.get_position(), self.contract_start_point) > 100:
                     self.tele_to("falador")
                 else:
                     self.log_msg("Already at dest")
