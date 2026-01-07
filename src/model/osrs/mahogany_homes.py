@@ -195,11 +195,11 @@ class MahoganyHomes(OSRSBot):
     
     def get_contract(self) -> Contract | None:
         res = Contract(dest="", teak_planks=0, steel_bars=0)
-        text = ocr.scrape_text(self.dest_win, font=ocr.PLAIN_11, colors=self.cp.hsv.WHITE)
+        text = ocr.scrape_text(self.dest_win, font=ocr.PLAIN_11, colors=self.cp.rgb.WHITE)
         self.log_msg(f"dest text: {text}")
 
         for text in ["Varrock", "Falador", "Ardougne"]:
-            if ocr.find_textbox(text, rect=self.dest_win, font=ocr.PLAIN_11, colors=self.cp.hsv.WHITE):
+            if ocr.find_textbox(text, rect=self.dest_win, font=ocr.PLAIN_11, colors=self.cp.rgb.WHITE):
                 res.dest = text
                 break
 
