@@ -141,7 +141,7 @@ class MahoganyHomes(OSRSBot):
         """
 
         self.scrape()
-        dbg.print_unique_colors(self.win.game_view)
+        dbg.print_unique_colors(self.win.game_view.screenshot(), top_n=5)
 
         self.npc_win = copy.deepcopy(self.win.current_action)
         self.npc_win.left -= 10

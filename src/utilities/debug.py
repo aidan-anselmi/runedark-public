@@ -91,7 +91,7 @@ def print_unique_colors(im: cv2.Mat, top_n: int = 10):
     try:
         pixels = im.reshape(-1, 3)
     except Exception:
-        print(f"Provided image has unexpected shape {im.shape}.")
+        print(f"Provided image has unexpected shape.")
         return
 
     # Use numpy to count unique rows (colors) efficiently
