@@ -310,7 +310,8 @@ class MahoganyHomes(OSRSBot):
                     #res.dest_tile = Point(1766, 3621)
                     res.dest_tile = Point(1765, 3624)
                 case "bob":
-                    res.dest_tile = Point(3238, 3486)
+                    #res.dest_tile = Point(3238, 3486)
+                    res.dest_tile = Point(3243, 3486)
                 case "jeff":
                     #res.dest_tile = Point(3239, 3450)
                     res.dest_tile = Point(3244, 3450)
