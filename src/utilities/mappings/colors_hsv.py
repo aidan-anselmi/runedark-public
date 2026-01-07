@@ -14,7 +14,7 @@ CYAN_DROPDOWN_TEXT = ((89, 255, 255), (91, 255, 255))
 
 # Default RuneLite colors for marking objects.
 GREEN_MARK = ((59, 255, 255), (61, 255, 255))
-PINK_MARK = ((149, 230, 230), (151, 255, 255))
+PINK_MARK = ((164, 230, 230), (166, 255, 255))
 YELLOW_MARK = ((29, 255, 255), (31, 255, 255))
 CYAN_MARK = ((89, 255, 255), (91, 255, 255))
 PURPLE_MARK = ((139, 255, 255), (141, 255, 255))
