@@ -47,7 +47,7 @@ class MahoganyHomes(OSRSBot):
         self.build_color = self.cp.hsv.GREEN_MARK
         self.stairs_color = self.cp.hsv.PURPLE_MARK
         self.npc_color = self.cp.hsv.CYAN_MARK
-        self.door_color = self.cp.hsv.BLUE_MARK
+        self.door_color = self.cp.rgb.BLUE
         self.bank_color = self.cp.hsv.YELLOW_MARK
         self.teleport_color = self.cp.hsv.PURPLE_MARK
 
