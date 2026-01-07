@@ -78,3 +78,19 @@ def timer(func: Callable) -> Callable:
         return result
 
     return wrapper
+
+def print_unique_colors(im: cv2.Mat):
+    """Print all unique colors in an image.
+
+    Args:
+        im (cv2.Mat): The image to analyze.
+    """
+    unique_colors = set()
+    height, width, _ = im.shape
+    for y in range(height):
+        for x in range(width):
+            color = tuple(im[y, x])
+            unique_colors.add(color)
+    print("Unique colors in image:")
+    for color in unique_colors:
+        print(color)
