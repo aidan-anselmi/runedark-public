@@ -352,7 +352,7 @@ class MahoganyHomes(OSRSBot):
             self.log_msg("dest not recognized")
             return False
         
-        time.sleep(3)
+        time.sleep(2)
         self.mouse.click()
         self.sleep_until_color_visible(self.cp.hsv.PINK_MARK, timeout=15)
         if dest == "hosidius":
