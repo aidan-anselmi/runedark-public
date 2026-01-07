@@ -167,7 +167,7 @@ class MahoganyHomes(OSRSBot):
         while time.time() - start_time < end_time:
             contract = self.get_contract()
             if not contract:
-                #self.tele_to("falador")
+                self.tele_to("falador")
                 self.travel_to(self.contract_start_point, None, "falador_to_mahogany_homes_start")
                 self.find_and_mouse_to_marked_object(self.npc_color, "Last")
                 self.mouse.click()
