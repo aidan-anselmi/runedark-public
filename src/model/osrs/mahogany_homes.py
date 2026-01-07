@@ -140,7 +140,7 @@ class MahoganyHomes(OSRSBot):
         img = self.dest_win.screenshot()
         cv2.imwrite("dest_win.png", img)
         dbg.print_unique_colors(img)
-        return
+        #return
 
 
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
@@ -195,7 +195,7 @@ class MahoganyHomes(OSRSBot):
     
     def get_contract(self) -> Contract | None:
         res = Contract(dest="", teak_planks=0, steel_bars=0)
-        text = ocr.scrape_text(self.dest_win, font=ocr.PLAIN_11, colors=self.cp.hsv.OFF_WHITE_TEXT)
+        text = ocr.scrape_text(self.dest_win, font=ocr.PLAIN_11, colors=self.cp.hsv.WHITE)
         self.log_msg(f"dest text: {text}")
 
         for text in ["Varrock", "Falador", "Ardougne"]:
