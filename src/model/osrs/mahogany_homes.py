@@ -139,8 +139,9 @@ class MahoganyHomes(OSRSBot):
         self.dest_win.top += 73
         
         self.plank_win = self.dest_win
-        self.plank_win.top += 20
+        self.plank_win.top += 35
         dbg.save_image("plank_win.png", self.plank_win.screenshot())
+        dbg.save_image("dest_win.png", self.dest_win.screenshot())
 
 
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
