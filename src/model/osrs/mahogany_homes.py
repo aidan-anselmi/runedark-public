@@ -45,7 +45,7 @@ class MahoganyHomes(OSRSBot):
 
         self.walker = Walker(self, dest_square_side_length=6)
 
-        self.build_color = self.cp.hsv.ORANGE_MARK
+        self.build_color = self.cp.hsv.YELLOW_MARK
         self.stairs_color = self.cp.hsv.PURPLE_MARK
         self.npc_color = self.cp.hsv.CYAN_MARK
         self.door_color = self.cp.hsv.BLUE_MARK
@@ -380,7 +380,6 @@ class MahoganyHomes(OSRSBot):
         self.log_msg("Handling contract...")
         order = -1        
         while self.get_contract().completed == False:
-            self.open_all_doors()
             self.build_all_furniture()
             self.go_up_stairs(order=order)
 
@@ -440,5 +439,7 @@ class MahoganyHomes(OSRSBot):
             self.move_mouse_to_color_obj(self.build_color)
             self.mouse.click(check_red_click=True)
             self.sleep_while_color_moving(self.build_color)
+            if self.get_cant_reach():
+                self.open_all_doors()
         
         return True

@@ -231,6 +231,24 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             ocr.PLAIN_12,
             self.cp.bgr.OFF_RED_TEXT,
         )
+    
+    def get_cant_reach(self) -> bool:
+        """Get the Idle Notifier plug-in off-red update text from the chat window.
+
+        This method checks text in the `chat_history` region of the chat window and
+        assumes that the Idle Notifier RuneLite plug-in is installed and appropriately
+        configured.
+
+        Returns:
+            str: The most recent off-red update text derived from the Idle Notifier
+                RuneLite plug-in (if there is off-red update text as the most recent
+                line of text), otherwise an empty string.
+        """
+        return "I can" in ocr.scrape_text(
+            self.win.chat_history[0],
+            ocr.PLAIN_12,
+            self.cp.bgr.BLACK,
+        )
 
     def check_idle_notifier_status(
         self,
