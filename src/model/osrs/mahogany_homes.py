@@ -265,12 +265,14 @@ class MahoganyHomes(OSRSBot):
         if clicks > 0:
             rect = self.find_sprite(self.win.game_view, png="steel-bar-bank.png", folder="items")
             self.mouse.move_to(rect.random_point())
+            self.sleep()
             for _ in range(clicks):
                 self.mouse.click()
                 self.sleep()
 
         rect = self.find_sprite(self.win.game_view, png="teak-plank-bank.png", folder="items")
         self.mouse.move_to(rect.random_point())
+        self.sleep()
         self.mouse.click()
         self.sleep()
         
