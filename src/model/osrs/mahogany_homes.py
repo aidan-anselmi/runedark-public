@@ -26,6 +26,7 @@ class Contract:
     dest: str
     teak_planks: int
     steel_bars: int
+    dest_tile: Point
 
 class MahoganyHomes(OSRSBot):
     def __init__(self):
@@ -140,6 +141,10 @@ class MahoganyHomes(OSRSBot):
 
         self.scrape()
 
+        self.npc_win = copy.deepcopy(self.win.current_action)
+        self.dest_win.left -= 10
+        self.dest_win.top += 58
+
         self.dest_win = copy.deepcopy(self.win.current_action)
         self.dest_win.left -= 10
         self.dest_win.top += 73
@@ -185,6 +190,10 @@ class MahoganyHomes(OSRSBot):
                 if not self.have_required_items(contract):
                     self.log_msg("Still do not have required items after withdrawing")
                     continue
+            
+            if contract.dest != "falador":
+                self.tele_to(contract.dest)
+            self.walk_along_highlighted_path("north")
             
             if time.time() - last_update > 300:
                 self.update_progress((time.time() - start_time) / end_time)
@@ -249,14 +258,39 @@ class MahoganyHomes(OSRSBot):
         return False
     
     def get_contract(self) -> Contract | None:
-        res = Contract(dest="", teak_planks=0, steel_bars=0)
-        
-        #text = ocr.scrape_text(self.dest_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE)
-        #self.log_msg(f"dest text: {text}")
+        res = Contract(dest="", teak_planks=0, steel_bars=0, dest_tile=Point(0, 0))
+
+        if npc_text := ocr.scrape_text(self.plank_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE):
+            npc_text = npc_text.strip().lower()
+            match npc_text:
+                case "jess":
+                    res.dest_tile = Point(2621, 3292)
+                case "noella":
+                    res.dest_tile = Point(2659, 3322)
+                case "ross":
+                    res.dest_tile = Point(2613, 3316)
+                case "larry":
+                    res.dest_tile = Point(3038, 3364)
+                case "norman":
+                    res.dest_tile = Point(3038, 3344)
+                case "tau":
+                    res.dest_tile = Point(3047, 3345)
+                case "barbara":
+                    res.dest_tile = Point(1750, 3534)
+                case "leela":
+                    res.dest_tile = Point(1785, 3592)
+                case "mariah":
+                    res.dest_tile = Point(1766, 3621)
+                case "bob":
+                    res.dest_tile = Point(3238, 3486)
+                case "jeff":
+                    res.dest_tile = Point(3239, 3450)
+                case "sarah":
+                    res.dest_tile = Point(3235, 3384)
 
         for text in ["Varrock", "Falador", "Ardougne"]:
             if ocr.find_textbox(text, rect=self.dest_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE):
-                res.dest = text
+                res.dest = text.lower()
                 break
         
         if plank_text := ocr.scrape_text(self.plank_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE):
@@ -268,11 +302,10 @@ class MahoganyHomes(OSRSBot):
                 if nums:
                     res.teak_planks = int(nums[-1])
 
-        if res.dest == "" or res.teak_planks == 0:
+        self.log_msg(f"Contract: {res}")
+        if res.dest == "" or res.teak_planks == 0 or res.dest_tile == Point(0, 0):
             self.log_msg("Could not read contract destination")
             return None
-
-        self.log_msg(f"Contract: {res}")
         return res
     
     def hand_in(self) -> bool:
