@@ -248,10 +248,11 @@ class Karambwan(OSRSBot):
     def click_karamja_fairy_ring(self) -> bool:
         self.log_msg("Clicking Karamja fairy ring...")
         if rects := self.find_colors(self.win.game_view, self.karamja_fairy_ring_color):
-            if not rects or len(rects) != 1:
+            if not rects:
                 self.log_msg(f"Could not find color. rects={len(rects)}")
                 return False
 
+            rects = sorted(rects, key=lambda r: r.dist_from_rect_center())
             rect = rects[0]
             self.mouse.move_to(rect.random_point())
             if self.get_mouseover_text(contains="Last"):
