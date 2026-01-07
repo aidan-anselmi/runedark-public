@@ -173,6 +173,10 @@ class MahoganyHomes(OSRSBot):
                 self.mouse.click()
                 if not self.get_contract():
                     pag.press("space")
+                    self.sleep()
+                if not self.get_contract():
+                    self.log_msg("Could not get contract")
+                    continue
             if not self.have_required_items(contract):
                 self.travel_to(self.bank_point, None, "mahogany_homes_start_to_bank")
                 if not self.move_mouse_to_color_obj(self.bank_color):
@@ -325,7 +329,7 @@ class MahoganyHomes(OSRSBot):
 
         res = self.mouse.click(check_red_click=True)
         if res:
-            self.sleep(lo=3, hi=4)
+            self.sleep(lo=4, hi=6)
         return res
     
     def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str):
