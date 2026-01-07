@@ -638,9 +638,10 @@ if __name__ == "__main__":
         from model.osrs.wanderer import OSRSWanderer
         from model.osrs.karambwan import Karambwan
         from model.osrs.plank_maker import PlankMaker
+        from model.osrs.mahogany_homes import MahoganyHomes
 
         app = App(test=True)
-        app.test(Karambwan())
+        app.test(MahoganyHomes())
 
     app = App()
     app.start()

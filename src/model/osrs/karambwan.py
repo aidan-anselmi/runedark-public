@@ -285,29 +285,6 @@ class Karambwan(OSRSBot):
             return True
         return False
     
-    def sleep_while_color_moving(self, color: Color, timeout: int = 15) -> None:
-        """Sleep while the player is moving towards a color tag.
-
-        Args:
-            color (Color): The color tag we are moving towards.
-            timeout (int, optional): The maximum time to wait in seconds. Defaults to 15.
-        """
-        time.sleep(1)
-        start_time = time.time()
-        while self.find_colors(self.win.game_view, color) and time.time() - start_time < timeout:
-            prev = self.find_colors(self.win.game_view, color)
-            time.sleep(.2)
-            curr = self.find_colors(self.win.game_view, color)
-            if prev and curr:
-                prev = prev[0].center
-                curr = curr[0].center
-                if math.dist(prev, curr) < 2:
-                    break
-            else:
-                break
-        time.sleep(1)
-        return 
-    
     def get_karambwanji(self):
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
         self.log_msg(f"[START] ({run_time_str})", overwrite=True)
