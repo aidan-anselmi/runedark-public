@@ -47,6 +47,7 @@ class MahoganyHomes(OSRSBot):
         self.stairs_color = self.cp.hsv.PURPLE_MARK
         self.npc_color = self.cp.hsv.CYAN_MARK
         self.door_color = self.cp.hsv.BLUE_MARK
+        self.bank_color = self.cp.hsv.PINK_MARK
 
         self.contract_start_point = Point(2989, 3366)
         self.bank_point = Point(3013, 3356)
@@ -146,6 +147,8 @@ class MahoganyHomes(OSRSBot):
         dbg.save_image("plank_win.png", self.plank_win.screenshot())
         dbg.save_image("dest_win.png", self.dest_win.screenshot())
 
+        self.prepare_standard_initial_state()
+        self.first_bank = True
 
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
         self.log_msg(f"[START] ({run_time_str})", overwrite=True)
@@ -162,6 +165,16 @@ class MahoganyHomes(OSRSBot):
                 self.mouse.click()
             if not self.have_required_items(contract):
                 self.travel_to(self.bank_point, None, "mahogany_homes_start_to_bank")
+                self.move_mouse_to_color_obj(self.bank_color)
+                if not self.get_mouseover_text(contains="Bank"):
+                    continue
+                if not self.mouse.click(check_red_click=True):
+                    continue
+                if not self.sleep_until_bank_open():
+                    continue
+                self.withdraw_items()
+                if not self.have_required_items(contract):
+                    continue
             
             if time.time() - last_update > 300:
                 self.update_progress((time.time() - start_time) / end_time)
@@ -189,9 +202,37 @@ class MahoganyHomes(OSRSBot):
             return False
 
         return True
+    
+    def withdraw_items(self) -> bool:
+        """Withdraw required items from the bank.
 
-    def get_required_items(self):
-        return 0, 0
+        Returns:
+            bool: True if the items were successfully withdrawn, False otherwise.
+        """
+        if not self.open_bank():
+            self.log_msg("Bank not open")
+            return False
+        
+        if self.first_bank:
+            self.open_bank_tab(4)
+            self.first_bank = False
+        
+        bars = self.get_num_item_in_inv("steel-bar.png", "items")
+        clicks = 2 - bars
+        if clicks > 0:
+            i = self.get_first_item_index(png="steel-bar-bank.png", folder="items")
+            self.mouse.move_to(self.win.inventory_slots[i].random_point())
+            for _ in range(clicks):
+                self.mouse.click()
+                self.sleep()
+
+        i = self.get_first_item_index(png="teak-plank-bank.png", folder="items")
+        self.mouse.move_to(self.win.inventory_slots[i].random_point())
+        self.mouse.click()
+        self.sleep()
+        
+        pag.press("esc")
+        return True
     
     def task_completed(self):
         return False

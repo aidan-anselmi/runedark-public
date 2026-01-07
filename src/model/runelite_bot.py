@@ -2407,4 +2407,13 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         time.sleep(1)
         return 
     
-    
+    def sleep_until_bank_open(self, timeout: int = 15) -> bool:
+        """Sleep until the bank window is open.
+
+        Args:
+            timeout (int, optional): The maximum time to wait in seconds. Defaults to 20."""
+        for _ in range(timeout * 10):
+            if self.is_bank_window_open():
+                return True
+            time.sleep(0.1)
+        return False
