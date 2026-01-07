@@ -244,12 +244,14 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 RuneLite plug-in (if there is off-red update text as the most recent
                 line of text), otherwise an empty string.
         """
-        dbg.save_image("cant_reach.png", self.win.chat_history[0].screenshot())
-        return "I can" in ocr.scrape_text(
+        #dbg.save_image("cant_reach.png", self.win.chat_history[0].screenshot())
+        text = ocr.scrape_text(
             self.win.chat_history[0],
             ocr.PLAIN_12,
             self.cp.bgr.BLACK,
         )
+        print(f"Cant reach text: {text}")
+        return "I can" in text
 
     def check_idle_notifier_status(
         self,
