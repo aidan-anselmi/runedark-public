@@ -162,7 +162,6 @@ class MahoganyHomes(OSRSBot):
         self.log_msg(f"[START] ({run_time_str})", overwrite=True)
         start_time = time.time()
         end_time = int(self.run_time) * 60  # Measured in seconds.
-        last_update = start_time
 
         while time.time() - start_time < end_time:
             contract = self.get_contract()
@@ -192,14 +191,13 @@ class MahoganyHomes(OSRSBot):
                     self.log_msg("Still do not have required items after withdrawing")
                     continue
             
-            if contract.dest != "falador":
-                self.tele_to(contract.dest)
-            self.travel_to(contract.dest_tile, None, f"mahogany_homes_travel_to_{contract.dest}")
-            
-            if time.time() - last_update > 300:
-                self.update_progress((time.time() - start_time) / end_time)
-                last_update = time.time()
+            if not self.find_colors(self.win.game_view, [self.build_color, self.stairs_color]):
+                if contract.dest != "falador":
+                    self.tele_to(contract.dest)
+                self.travel_to(contract.dest_tile, None, f"mahogany_homes_travel_to_{contract.dest}")
+            self.handle_contract()
 
+            self.update_progress((time.time() - start_time) / end_time)
             time.sleep(.1)
 
         self.update_progress(1)
@@ -313,6 +311,58 @@ class MahoganyHomes(OSRSBot):
             return None
         return res
     
+    def tele_to(self, dest: str) -> bool:
+        pag.press("f4")
+        self.sleep()
+        if dest == "falador":
+            self.mouse.move_to(self.win.spellbook_normal[20].random_point())
+        elif dest == "varrock":
+            self.mouse.move_to(self.win.spellbook_normal[15].random_point())
+        else:
+            return False
+        
+
+        res = self.mouse.click(check_red_click=True)
+        if res:
+            self.sleep(lo=3, hi=4)
+        return res
+    
+    def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str):
+        self.log_msg(f"Traveling to {dest_name}...")
+        if self.walker.travel_to_dest_along_path(
+            tile_coord,
+            walk_path,
+            dest_name,
+        ):
+            self.log_msg(f"Arrived: {dest_name}")
+        else:
+            self.log_msg(f"Failed to arrive at {dest_name}.")
+        while self.is_traveling():
+            self.sleep()
+
+    def handle_contract(self) -> bool:
+        self.open_all_doors()
+        self.build_all_furniture()
+        if self.go_up_stairs():
+            self.build_all_furniture()
+            self.go_up_stairs()
+        self.hand_in()
+        return
+    
+    def open_all_doors(self) -> bool:
+        while self.find_colors(self.win.game_view, [self.door_color]):
+            self.move_mouse_to_color_obj(self.door_color)
+            self.mouse.click(check_red_click=True)
+            self.sleep_while_color_moving(self.door_color)
+
+    def go_up_stairs(self) -> bool:
+        if self.find_colors(self.win.game_view, self.stairs_color):
+            self.move_mouse_to_color_obj(self.stairs_color)
+            self.mouse.click(check_red_click=True)
+            self.sleep_while_color_moving(self.stairs_color)
+            return True
+        return False
+
     def hand_in(self) -> bool:
         if not self.find_colors(self.win.game_view, self.npc_color):
             self.log_msg("Could not find hand in option")
@@ -333,40 +383,10 @@ class MahoganyHomes(OSRSBot):
         
         return True
     
-    def tele_to(self, dest: str) -> bool:
-        pag.press("f4")
-        self.sleep()
-        if dest == "falador":
-            self.mouse.move_to(self.win.spellbook_normal[20].random_point())
-        elif dest == "varrock":
-            self.mouse.move_to(self.win.spellbook_normal[15].random_point())
-        else:
-            return False
+    def build_all_furniture(self) -> bool:
+        while self.find_colors(self.win.game_view, [self.build_color]):
+            self.move_mouse_to_color_obj(self.build_color)
+            self.mouse.click(check_red_click=True)
+            self.sleep_while_color_moving(self.build_color)
         
-
-        return self.mouse.click(check_red_click=True)
-    
-    
-    def build_furniture(self) -> bool:
-        if not self.move_mouse_to_color_obj(self.build_color, self.action_win):
-            self.log_msg("Could not find build furniture")
-            return False
-        
-        if not self.get_mouseover_text(contains=["Build", "Repair", "Remove"]):
-            self.log_msg("Mouseover text did not match for building furniture")
-            return False
-        
-        return self.mouse.click(check_red_click=True)
-    
-    def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str):
-        self.log_msg(f"Traveling to {dest_name}...")
-        if self.walker.travel_to_dest_along_path(
-            tile_coord,
-            walk_path,
-            dest_name,
-        ):
-            self.log_msg(f"Arrived: {dest_name}")
-        else:
-            self.log_msg(f"Failed to arrive at {dest_name}.")
-        while self.is_traveling():
-            self.sleep()
+        return True
