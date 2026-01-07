@@ -136,6 +136,7 @@ class MahoganyHomes(OSRSBot):
         """
 
         self.dest_win = self.win.current_action
+        self.dest_win.left -= 10
         self.dest_win.top += 73
         
         self.plank_win = self.dest_win
@@ -197,17 +198,18 @@ class MahoganyHomes(OSRSBot):
     def get_contract(self) -> Contract | None:
         res = Contract(dest="", teak_planks=0, steel_bars=0)
         
-        #text = ocr.scrape_text(self.dest_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE)
-        #self.log_msg(f"dest text: {text}")
+        text = ocr.scrape_text(self.dest_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE)
+        self.log_msg(f"dest text: {text}")
 
         for text in ["Varrock", "Falador", "Ardougne"]:
             if ocr.find_textbox(text, rect=self.dest_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE):
                 res.dest = text
                 break
-
         if res.dest == "":
             self.log_msg("Could not read contract destination")
             return None
+        
+
 
         self.log_msg(f"Contract: {res}")
         return res
