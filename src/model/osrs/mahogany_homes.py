@@ -147,7 +147,7 @@ class MahoganyHomes(OSRSBot):
         dbg.save_image("plank_win.png", self.plank_win.screenshot())
         dbg.save_image("dest_win.png", self.dest_win.screenshot())
 
-        self.prepare_standard_initial_state()
+        #self.prepare_standard_initial_state()
         self.first_bank = True
 
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
@@ -163,17 +163,25 @@ class MahoganyHomes(OSRSBot):
                 self.travel_to(self.contract_start_point, None, "falador_to_mahogany_homes_start")
                 self.find_and_mouse_to_marked_object(self.npc_color, "Last")
                 self.mouse.click()
+                if not self.get_contract():
+                    pag.press("space")
             if not self.have_required_items(contract):
                 self.travel_to(self.bank_point, None, "mahogany_homes_start_to_bank")
-                self.move_mouse_to_color_obj(self.bank_color)
+                if not self.move_mouse_to_color_obj(self.bank_color):
+                    self.log_msg("Could not find bank")
+                    continue
                 if not self.get_mouseover_text(contains="Bank"):
+                    self.log_msg("Could not find bank mouseover")
                     continue
                 if not self.mouse.click(check_red_click=True):
+                    self.log_msg("Could not open bank")
                     continue
                 if not self.sleep_until_bank_open():
+                    self.log_msg("Bank did not open")
                     continue
                 self.withdraw_items()
                 if not self.have_required_items(contract):
+                    self.log_msg("Still do not have required items after withdrawing")
                     continue
             
             if time.time() - last_update > 300:
