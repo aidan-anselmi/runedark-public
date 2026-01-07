@@ -142,8 +142,8 @@ class MahoganyHomes(OSRSBot):
         self.scrape()
 
         self.npc_win = copy.deepcopy(self.win.current_action)
-        self.dest_win.left -= 10
-        self.dest_win.top += 58
+        self.npc_win.left -= 10
+        self.npc_win.top += 58
 
         self.dest_win = copy.deepcopy(self.win.current_action)
         self.dest_win.left -= 10
@@ -153,6 +153,7 @@ class MahoganyHomes(OSRSBot):
         self.plank_win.top += 35
         dbg.save_image("plank_win.png", self.plank_win.screenshot())
         dbg.save_image("dest_win.png", self.dest_win.screenshot())
+        dbg.save_image("npc_win.png", self.npc_win.screenshot())
 
         #self.prepare_standard_initial_state()
         self.first_bank = True
