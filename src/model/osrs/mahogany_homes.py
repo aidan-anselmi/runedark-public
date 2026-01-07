@@ -155,13 +155,13 @@ class MahoganyHomes(OSRSBot):
 
         while time.time() - start_time < end_time:
             contract = self.get_contract()
-            continue 
             if not contract:
                 self.tele_to("falador")
-                self.travel_to(self.contract_start_point, None, "mahogany_homes_start")
+                self.travel_to(self.contract_start_point, None, "falador_to_mahogany_homes_start")
                 self.find_and_mouse_to_marked_object(self.npc_color, "Last")
                 self.mouse.click()
-                
+            if not self.have_required_items(contract):
+                self.travel_to(self.bank_point, None, "mahogany_homes_start_to_bank")
             
             if time.time() - last_update > 300:
                 self.update_progress((time.time() - start_time) / end_time)
@@ -173,20 +173,19 @@ class MahoganyHomes(OSRSBot):
         self.log_msg("[END]")
         self.stop()
 
-    def have_required_items(self):
+    def have_required_items(self, contract: Contract) -> bool:
         """Check if the player has the required items to start Mahogany Homes.
 
         Returns:
             bool: True if the player has all required items, False otherwise.
         """
-        planks, bars = self.get_required_items()
 
-        if self.get_num_item_in_inv("teak-plank.png", "items") < planks:
-            self.log_msg(f"Not enough teak planks. Required: {planks}")
+        if self.get_num_item_in_inv("teak-plank.png", "items") < contract.teak_planks:
+            self.log_msg(f"Not enough teak planks. Required: {contract.teak_planks}")
             return False
 
-        if self.get_num_item_in_inv("steel-bar.png", "items") < bars:
-            self.log_msg(f"Not enough steel bars. Required: {bars}")
+        if self.get_num_item_in_inv("steel-bar.png", "items") < contract.steel_bars:
+            self.log_msg(f"Not enough steel bars. Required: {contract.steel_bars}")
             return False
 
         return True
