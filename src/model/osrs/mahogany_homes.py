@@ -405,6 +405,7 @@ class MahoganyHomes(OSRSBot):
         if not self.find_colors(self.win.game_view, self.npc_color):
             self.log_msg("Could not find hand in option")
             return False
+        self.move_mouse_to_color_obj(self.npc_color)
         if not self.get_mouseover_text(contains="Talk"):
             self.log_msg("Mouseover text did not match for hand in")
             return False
