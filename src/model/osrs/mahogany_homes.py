@@ -413,11 +413,11 @@ class MahoganyHomes(OSRSBot):
             self.log_msg("Could not click to hand in")
             return False
 
-        self.wait_till_interface_text(texts="I've finished")
+        self.wait_till_interface_text(texts="Ive finished", font=ocr.QUILL, color=self.cp.hsv.BLACK)
         pag.press("space")
-        self.wait_till_interface_text(texts="Thank you")
+        self.wait_till_interface_text(texts="Thank you", font=ocr.QUILL, color=self.cp.hsv.BLACK)
         pag.press("space")
-        self.wait_till_interface_text(texts="Yes")
+        self.wait_till_interface_text(texts="Yes", font=ocr.QUILL, color=self.cp.hsv.BLACK)
         if rd.random_chance(0.8):
             pag.press("space")
         
