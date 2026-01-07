@@ -101,6 +101,7 @@ def scrape_text(
     # Screenshot and isolate colors.
     img_bgr = rect.screenshot()
     image = isolate_colors(img_bgr, colors)
+    debug.save_image("ocr-isolated-colors.png", image)
     result = ""
     char_list = []
     for char in font:
