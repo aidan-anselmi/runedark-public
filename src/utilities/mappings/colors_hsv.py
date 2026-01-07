@@ -18,6 +18,7 @@ PINK_MARK = ((149, 230, 230), (151, 255, 255))
 YELLOW_MARK = ((29, 255, 255), (31, 255, 255))
 CYAN_MARK = ((89, 255, 255), (91, 255, 255))
 PURPLE_MARK = ((139, 255, 255), (141, 255, 255))
+BLUE_MARK = ((119, 255, 255), (121, 255, 255))
 
 # Default path color for the Shortest Path RuneLite plug-in.
 RED_PATH = ((3, 0, 0), (5, 255, 255))
