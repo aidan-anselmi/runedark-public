@@ -390,8 +390,7 @@ class MahoganyHomes(OSRSBot):
         self.log_msg("Handling contract...")
         order = -1        
         self.open_all_doors()
-        while self.get_contract().completed == False and self.find_colors(self.win.game_view, [self.build_color, self.stairs_color]):
-
+        while self.get_contract().completed == False and (self.find_colors(self.win.game_view, self.stairs_color) or self.find_colors(self.win.game_view, self.build_color)):
             self.build_all_furniture()
             if self.go_up_stairs(order=order):
                 self.open_all_doors()
