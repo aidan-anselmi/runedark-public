@@ -135,7 +135,7 @@ class MahoganyHomes(OSRSBot):
         """
 
         self.dest_win = self.win.current_action
-        self.dest_win.top += 58
+        self.dest_win.top += 68
         self.dest_win.height += 3
         img = self.dest_win.screenshot()
         cv2.imwrite("dest_win.png", img)
