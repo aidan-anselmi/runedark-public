@@ -137,6 +137,9 @@ class MahoganyHomes(OSRSBot):
         self.dest_win = self.win.current_action
         self.dest_win.top += 58
         self.dest_win.height += 3
+        img = self.dest_win.screenshot()
+        cv2.imwrite("dest_win.png", img)
+
 
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
         self.log_msg(f"[START] ({run_time_str})", overwrite=True)
