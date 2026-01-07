@@ -181,6 +181,8 @@ class MahoganyHomes(OSRSBot):
                     self.log_msg("Already at dest")
                 self.travel_to(self.contract_start_point, None, "falador_to_mahogany_homes_start")
                 self.move_mouse_to_color_obj(self.npc_color)
+                if not self.mouse.click(check_red_click=True):
+                    continue
                 self.wait_till_interface_text(texts="Please could", font=ocr.QUILL, color=self.cp.hsv.BLACK)
                 if not self.get_contract():
                     pag.press("space")
