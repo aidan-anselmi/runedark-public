@@ -28,7 +28,7 @@ from utilities.color_util import Color, ColorPalette, isolate_colors, isolate_co
 from utilities.extract_contours import extract_contours
 from utilities.geometry import Point, Rectangle, RuneLiteObject, cosine_similarity
 from utilities.img_search import BOT_IMAGES, search_img_in_rect
-
+import utilities.debug as dbg
 
 class RuneLiteBot(Bot, metaclass=ABCMeta):
     """The `RuneLiteBot` class contains bot methods specific to RuneLite (i.e. OSRS).
@@ -244,6 +244,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 RuneLite plug-in (if there is off-red update text as the most recent
                 line of text), otherwise an empty string.
         """
+        dbg.save_image("cant_reach.png", self.win.chat_history[0].screenshot())
         return "I can" in ocr.scrape_text(
             self.win.chat_history[0],
             ocr.PLAIN_12,
