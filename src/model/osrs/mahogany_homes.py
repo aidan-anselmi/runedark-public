@@ -183,7 +183,7 @@ class MahoganyHomes(OSRSBot):
                 self.move_mouse_to_color_obj(self.npc_color)
                 if not self.mouse.click(check_red_click=True):
                     continue
-                self.wait_till_interface_text(texts="Please could", font=ocr.QUILL, color=self.cp.hsv.BLACK)
+                self.wait_till_interface_text(texts="Please could", font=ocr.QUILL_8, color=self.cp.hsv.BLACK)
                 if not self.get_contract():
                     pag.press("space")
                     self.sleep()
@@ -414,11 +414,11 @@ class MahoganyHomes(OSRSBot):
             self.log_msg("Could not click to hand in")
             return False
 
-        self.wait_till_interface_text(texts="Ive finished", font=ocr.QUILL, color=self.cp.hsv.BLACK)
+        self.wait_till_interface_text(texts="Ive finished", font=ocr.QUILL_8, color=self.cp.hsv.BLACK)
         pag.press("space")
-        self.wait_till_interface_text(texts="Thank you", font=ocr.QUILL, color=self.cp.hsv.BLACK)
+        self.wait_till_interface_text(texts="Thank you", font=ocr.QUILL_8, color=self.cp.hsv.BLACK)
         pag.press("space")
-        self.wait_till_interface_text(texts="Yes", font=ocr.QUILL, color=self.cp.hsv.BLACK)
+        self.wait_till_interface_text(texts="Yes", font=ocr.QUILL_8, color=self.cp.hsv.BLACK)
         if rd.random_chance(0.8):
             pag.press("space")
         
