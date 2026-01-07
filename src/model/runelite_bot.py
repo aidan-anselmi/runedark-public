@@ -250,8 +250,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             ocr.PLAIN_12,
             self.cp.bgr.BLACK,
         )
-        print(f"Cant reach text: {text}")
-        return "I can" in text
+        return "Ican" in text.replace(" ", "")
 
     def check_idle_notifier_status(
         self,
