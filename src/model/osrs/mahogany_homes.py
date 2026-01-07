@@ -28,6 +28,7 @@ class Contract:
     teak_planks: int
     steel_bars: int
     dest_tile: Point
+    completed: bool = False
 
 class MahoganyHomes(OSRSBot):
     def __init__(self):
@@ -324,6 +325,10 @@ class MahoganyHomes(OSRSBot):
                 nums = re.findall(r"\d+", plank_text)
                 if nums:
                     res.teak_planks = int(nums[-1])
+        elif plank_text := ocr.find_textbox("All tasks", rect=self.plank_win, font=ocr.PLAIN_12, colors=self.cp.rgb.GREEN_DROPDOWN_TEXT):
+            res.completed = True
+        else:
+            self.log_msg("Could not read plank window")
 
         self.log_msg(f"Contract: {res}")
         if res.dest == "" or res.dest_tile == Point(0, 0):
@@ -395,6 +400,7 @@ class MahoganyHomes(OSRSBot):
         return False
 
     def hand_in(self) -> bool:
+        self.log_msg("Handing in")
         if not self.find_colors(self.win.game_view, self.npc_color):
             self.log_msg("Could not find hand in option")
             return False
@@ -402,6 +408,7 @@ class MahoganyHomes(OSRSBot):
             self.log_msg("Mouseover text did not match for hand in")
             return False
         if not self.mouse.click(check_red_click=True):
+            self.log_msg("Could not click to hand in")
             return False
 
         self.wait_till_interface_text(texts="I've finished")
