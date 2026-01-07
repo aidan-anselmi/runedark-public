@@ -184,11 +184,9 @@ class MahoganyHomes(OSRSBot):
                 if not self.mouse.click(check_red_click=True):
                     continue
                 self.wait_till_interface_text(texts="Please could", font=ocr.QUILL_8, color=self.cp.hsv.BLACK)
-                if not self.get_contract():
+                contract = self.get_contract()
+                if not contract:
                     pag.press("space")
-                    self.sleep()
-                if not self.get_contract():
-                    self.log_msg("Could not get contract")
                     continue
             if not self.have_required_items(contract):
                 self.travel_to(self.bank_point, None, "mahogany_homes_start_to_bank")
