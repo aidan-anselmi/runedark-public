@@ -173,8 +173,7 @@ class MahoganyHomes(OSRSBot):
         while time.time() - start_time < end_time:
             contract = self.get_contract()
             if not contract:
-                if math.dist(self.get_player_tile(), self.contract_start_point) > 100:
-                    self.tele_to("falador")
+                self.tele_to("falador")
                 self.travel_to(self.contract_start_point, None, "falador_to_mahogany_homes_start")
                 self.move_mouse_to_color_obj(self.npc_color)
                 self.wait_till_interface_text(texts=["What is"])
@@ -325,6 +324,9 @@ class MahoganyHomes(OSRSBot):
         return res
     
     def tele_to(self, dest: str) -> bool:
+        if math.dist(self.walker.get_position(), self.contract_start_point) < 100:
+            return True
+
         pag.press("f4")
         self.sleep()
         if dest == "falador":

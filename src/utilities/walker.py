@@ -371,3 +371,12 @@ class Walker:
                 except Exception as exc:
                     print(f"Failed to travel to {dest_name}: {exc}")
                     return False
+
+    def get_position(self) -> Point:
+        """Get the current position of our character in tile space.
+
+        Returns:
+            Point: The current position of our character, measured in tiles.
+        """
+        self.update_position()
+        return self.loc
