@@ -230,14 +230,14 @@ class MahoganyHomes(OSRSBot):
         bars = self.get_num_item_in_inv("steel-bar.png", "items")
         clicks = 2 - bars
         if clicks > 0:
-            i = self.get_first_item_index(png="steel-bar-bank.png", folder="items")
-            self.mouse.move_to(self.win.inventory_slots[i].random_point())
+            rect = self.find_sprite(self.win.game_view, png="steel-bar-bank.png", folder="items")
+            self.mouse.move_to(rect.random_point())
             for _ in range(clicks):
                 self.mouse.click()
                 self.sleep()
 
-        i = self.get_first_item_index(png="teak-plank-bank.png", folder="items")
-        self.mouse.move_to(self.win.inventory_slots[i].random_point())
+        rect = self.find_sprite(self.win.game_view, png="teak-plank-bank.png", folder="items")
+        self.mouse.move_to(rect.random_point())
         self.mouse.click()
         self.sleep()
         
