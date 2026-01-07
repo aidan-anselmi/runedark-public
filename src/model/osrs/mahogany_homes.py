@@ -213,6 +213,7 @@ class MahoganyHomes(OSRSBot):
                 else:
                     self.log_msg("Already at dest")
                 self.travel_to(contract.dest_tile, None, f"mahogany_homes_travel_to_{contract.dest}")
+                time.sleep(1)
             self.handle_contract()
 
             self.update_progress((time.time() - start_time) / end_time)
