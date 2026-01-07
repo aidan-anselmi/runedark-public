@@ -170,7 +170,7 @@ class MahoganyHomes(OSRSBot):
                 self.tele_to("falador")
                 self.travel_to(self.contract_start_point, None, "falador_to_mahogany_homes_start")
                 self.find_and_mouse_to_marked_object(self.npc_color, "Last")
-                self.mouse.click()
+                self.wait_till_interface_text(texts=["What is"])
                 if not self.get_contract():
                     pag.press("space")
                     self.sleep()
@@ -323,12 +323,17 @@ class MahoganyHomes(OSRSBot):
             self.mouse.move_to(self.win.spellbook_normal[20].random_point())
         elif dest == "varrock":
             self.mouse.move_to(self.win.spellbook_normal[15].random_point())
+        elif dest == "hosidius":
+            self.mouse.move_to(self.win.spellbook_normal[22].random_point())
         else:
             return False
         
-
+        time.sleep(3)
         self.mouse.click()
         self.sleep(lo=4, hi=6)
+        if dest == "hosidius":
+            pag.press("space")
+            self.sleep(lo=1, hi=2)
         return True
 
     def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str):
