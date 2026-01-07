@@ -327,11 +327,10 @@ class MahoganyHomes(OSRSBot):
             return False
         
 
-        res = self.mouse.click(check_red_click=True)
-        if res:
-            self.sleep(lo=4, hi=6)
-        return res
-    
+        self.mouse.click()
+        self.sleep(lo=4, hi=6)
+        return True
+
     def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str):
         self.log_msg(f"Traveling to {dest_name}...")
         if self.walker.travel_to_dest_along_path(
