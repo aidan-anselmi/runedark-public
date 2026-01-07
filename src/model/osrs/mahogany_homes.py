@@ -190,6 +190,7 @@ class MahoganyHomes(OSRSBot):
                     continue
             if not self.have_required_items(contract):
                 self.travel_to(self.bank_point, None, "mahogany_homes_start_to_bank")
+                self.sleep_while_color_moving(self.bank_color)
                 if not self.move_mouse_to_color_obj(self.bank_color):
                     self.log_msg("Could not find bank")
                     continue
