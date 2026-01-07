@@ -26,7 +26,7 @@ class Karambwan(OSRSBot):
         self.run_time = 251
         self.options_set = False
 
-        self.walker = Walker(self, dest_square_side_length=6)
+        self.walker = Walker(self, dest_square_side_length=8)
 
         self.bank_tile = Point(2384, 4458)
         self.fairy_ring_tile = Point(2412, 4436)

@@ -43,7 +43,7 @@ class MahoganyHomes(OSRSBot):
         self.run_time = 120
         self.options_set = False
 
-        self.walker = Walker(self, dest_square_side_length=6)
+        self.walker = Walker(self, dest_square_side_length=10)
 
         self.build_color = self.cp.hsv.RED_MARK
         self.stairs_color = self.cp.hsv.PURPLE_MARK
@@ -357,16 +357,17 @@ class MahoganyHomes(OSRSBot):
         else:
             self.log_msg("dest not recognized")
             return False
-        
         self.sleep()
         self.mouse.click()
         self.sleep_until_color_visible(self.cp.hsv.PINK_MARK, timeout=15)
+
         if dest == "hosidius":
             self.sleep()
             for _ in range(5):
                 if not self.move_mouse_to_color_obj(self.teleport_color):
                     continue
-                self.sleep()
+                if not self.get_mouseover_text(contains="Enter"):
+                    continue
                 if not self.mouse.click(check_red_click=True):
                     continue
                 break
