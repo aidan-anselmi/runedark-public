@@ -1,5 +1,6 @@
 from types import ModuleType
 from typing import Dict, List, Literal, Tuple, Union
+import utilities.debug as dbg
 
 import cv2
 import numpy as np
@@ -306,8 +307,10 @@ def isolate_contours(image: cv2.Mat, color: Union[Color, List[Color]]) -> np.arr
     """
     # Convert from BGR to HSV color space.
     image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    dbg.save_image("COLOR_BGR2HSV.png", image)
     # Create a mask with pixels within range as white and all others as black.
     mask = cv2.inRange(image, color.lo, color.hi)
+    dbg.save_image("mask.png", mask)
     # Apply the `mask` to keep only colored pixels in `image` that correspond to white
     # pixels in `mask` (i.e. get the masked region, but with colored pixels).
     result = cv2.bitwise_and(image, image, mask=mask)
