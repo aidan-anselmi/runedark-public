@@ -150,7 +150,8 @@ class MahoganyHomes(OSRSBot):
         self.dest_win.top += 73
 
         self.plank_win = copy.deepcopy(self.dest_win)
-        self.plank_win.top += 35
+        self.plank_win.top += 34
+
         dbg.save_image("plank_win.png", self.plank_win.screenshot())
         dbg.save_image("dest_win.png", self.dest_win.screenshot())
         dbg.save_image("npc_win.png", self.npc_win.screenshot())
@@ -166,7 +167,7 @@ class MahoganyHomes(OSRSBot):
         while time.time() - start_time < end_time:
             contract = self.get_contract()
             if not contract:
-                self.tele_to("falador")
+                #self.tele_to("falador")
                 self.travel_to(self.contract_start_point, None, "falador_to_mahogany_homes_start")
                 self.find_and_mouse_to_marked_object(self.npc_color, "Last")
                 self.mouse.click()
@@ -193,7 +194,7 @@ class MahoganyHomes(OSRSBot):
             
             if not self.find_colors(self.win.game_view, self.build_color) and not self.find_colors(self.win.game_view, self.stairs_color):
                 if contract.dest != "falador":
-                    self.tele_to(contract.dest)
+                     self.tele_to(contract.dest)
                 self.travel_to(contract.dest_tile, None, f"mahogany_homes_travel_to_{contract.dest}")
             self.handle_contract()
 
@@ -357,7 +358,8 @@ class MahoganyHomes(OSRSBot):
 
     def go_up_stairs(self) -> bool:
         if self.find_colors(self.win.game_view, self.stairs_color):
-            self.move_mouse_to_color_obj(self.stairs_color)
+            while not self.get_mouseover_text(contains="Climb"):
+                self.move_mouse_to_color_obj(self.stairs_color)
             self.mouse.click(check_red_click=True)
             self.sleep_while_color_moving(self.stairs_color)
             return True
