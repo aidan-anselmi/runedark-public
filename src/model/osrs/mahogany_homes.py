@@ -272,7 +272,7 @@ class MahoganyHomes(OSRSBot):
         return False
     
     def get_contract(self) -> Contract | None:
-        res = Contract(dest="", teak_planks=0, steel_bars=0, dest_tile=Point(0, 0))
+        res = Contract(dest="", teak_planks=0, steel_bars=1, dest_tile=Point(0, 0))
 
         if npc_text := ocr.scrape_text(self.npc_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE):
             npc_text = npc_text.strip().lower()
@@ -340,7 +340,7 @@ class MahoganyHomes(OSRSBot):
         self.sleep(lo=4, hi=6)
         if dest == "hosidius":
             time.sleep(2)
-            self.move_mouse_to_color_obj(self.teleport_color, "Enter")
+            self.move_mouse_to_color_obj(self.teleport_color)
             self.mouse.click()
             self.sleep(lo=4, hi=6)
         return True
