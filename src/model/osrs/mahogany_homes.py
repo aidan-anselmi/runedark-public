@@ -292,7 +292,7 @@ class MahoganyHomes(OSRSBot):
                 case "jess":
                     res.dest_tile = Point(2621, 3292)
                 case "noella":
-                    res.dest_tile = Point(2659, 3322)
+                    res.dest_tile = Point(2659, 3320)
                 case "ross":
                     res.dest_tile = Point(2613, 3316)
                 case "larry":
@@ -379,11 +379,21 @@ class MahoganyHomes(OSRSBot):
 
     def handle_contract(self) -> bool:
         self.log_msg("Handling contract...")
-        self.open_all_doors()
-        self.build_all_furniture()
-        if self.go_up_stairs():
+        order = 0        
+        while self.get_contract().completed == False:
+            self.open_all_doors()
             self.build_all_furniture()
+            self.go_up_stairs(order=order)
+
+            if order == 0:
+                order = -1
+            else:
+                order = 0
+
+        if not self.find_colors(self.win.game_view, self.npc_color):
             self.go_up_stairs()
+        if not self.find_colors(self.win.game_view, self.npc_color):
+            self.go_up_stairs(-1)
         self.hand_in()
         return
     
@@ -394,10 +404,10 @@ class MahoganyHomes(OSRSBot):
             self.mouse.click(check_red_click=True)
             self.sleep_while_color_moving(self.door_color)
 
-    def go_up_stairs(self) -> bool:
+    def go_up_stairs(self, order = 0) -> bool:
         if self.find_colors(self.win.game_view, self.stairs_color):
             while not self.get_mouseover_text(contains="Climb"):
-                self.move_mouse_to_color_obj(self.stairs_color)
+                self.move_mouse_to_color_obj(self.stairs_color, order=order)
             self.mouse.click(check_red_click=True)
             self.sleep_while_color_moving(self.stairs_color)
             return True
