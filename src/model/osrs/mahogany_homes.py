@@ -375,6 +375,7 @@ class MahoganyHomes(OSRSBot):
             self.sleep()
 
     def handle_contract(self) -> bool:
+        self.log_msg("Handling contract...")
         self.open_all_doors()
         self.build_all_furniture()
         if self.go_up_stairs():
