@@ -45,7 +45,7 @@ class MahoganyHomes(OSRSBot):
 
         self.walker = Walker(self, dest_square_side_length=6)
 
-        self.build_color = self.cp.hsv.GREEN_MARK
+        self.build_color = self.cp.hsv.ORANGE_MARK
         self.stairs_color = self.cp.hsv.PURPLE_MARK
         self.npc_color = self.cp.hsv.CYAN_MARK
         self.door_color = self.cp.hsv.BLUE_MARK
@@ -142,7 +142,7 @@ class MahoganyHomes(OSRSBot):
         """
 
         self.scrape()
-        #dbg.print_unique_colors(self.win.game_view.screenshot(), top_n=5)
+        dbg.print_unique_colors(self.win.game_view.screenshot(), top_n=5)
         #game_view = self.win.game_view.screenshot()
         #dbg.save_image("blue.png", isolate_contours(game_view, self.cp.hsv.BLUE))
         dbg.save_image("blue_mark.png", isolate_contours(self.win.game_view.screenshot(), self.cp.hsv.BLUE_MARK))
@@ -353,11 +353,11 @@ class MahoganyHomes(OSRSBot):
             self.log_msg("dest not recognized")
             return False
         
-        time.sleep(2)
+        self.sleep()
         self.mouse.click()
         self.sleep_until_color_visible(self.cp.hsv.PINK_MARK, timeout=15)
         if dest == "hosidius":
-            time.sleep(2)
+            self.sleep()
             self.move_mouse_to_color_obj(self.teleport_color)
             self.mouse.click()
             self.sleep_until_color_visible(self.cp.hsv.GREEN_MARK, timeout=15)
