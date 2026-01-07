@@ -458,6 +458,8 @@ class MahoganyHomes(OSRSBot):
     
     def build_all_furniture(self) -> bool:
         while self.find_colors(self.win.game_view, self.build_color):
+            if self.get_cant_reach():
+                self.open_all_doors()
             self.move_mouse_to_color_obj(self.build_color)
             self.mouse.click(check_red_click=True)
             self.sleep_while_color_moving(self.build_color)
