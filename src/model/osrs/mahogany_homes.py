@@ -158,7 +158,7 @@ class MahoganyHomes(OSRSBot):
         self.plank_win = copy.deepcopy(self.dest_win)
         self.plank_win.top += 34
 
-        self.dest_win.width += 50
+        self.dest_win.width += 150
 
         dbg.save_image("plank_win.png", self.plank_win.screenshot())
         dbg.save_image("dest_win.png", self.dest_win.screenshot())
