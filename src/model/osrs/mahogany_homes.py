@@ -361,8 +361,13 @@ class MahoganyHomes(OSRSBot):
         self.sleep_until_color_visible(self.cp.hsv.PINK_MARK, timeout=15)
         if dest == "hosidius":
             self.sleep()
-            self.move_mouse_to_color_obj(self.teleport_color)
-            self.mouse.click()
+            for _ in range(5):
+                if not self.move_mouse_to_color_obj(self.teleport_color):
+                    continue
+                self.sleep()
+                if not self.mouse.click(check_red_click=True):
+                    continue
+                break
             self.sleep_until_color_visible(self.cp.hsv.GREEN_MARK, timeout=15)
         return True
 
