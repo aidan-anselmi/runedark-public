@@ -321,6 +321,7 @@ def isolate_contours(image: cv2.Mat, color: Union[Color, List[Color]]) -> np.arr
     # Find external contours, which are outlines or curves that represent the
     # boundaries of objects or regions within our (binary) thresholded image.
     contours, _ = cv2.findContours(result, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    print(f"Found {len(contours)} contours.")
     black_image = np.zeros(result.shape, dtype="uint8")  # Create a black base image.
     for c in contours:  # Fill external contours white pixels if they are large enough.
         color_fill_bgr = (255, 255, 255) if cv2.contourArea(c) >= 25 else (0, 0, 0)
