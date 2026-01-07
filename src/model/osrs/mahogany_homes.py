@@ -285,7 +285,8 @@ class MahoganyHomes(OSRSBot):
                 case "tau":
                     res.dest_tile = Point(3047, 3345)
                 case "barbara":
-                    res.dest_tile = Point(1750, 3534)
+                    #res.dest_tile = Point(1750, 3534)
+                    res.dest_tile = Point(1746, 3534)
                 case "leela":
                     res.dest_tile = Point(1785, 3592)
                 case "mariah":
