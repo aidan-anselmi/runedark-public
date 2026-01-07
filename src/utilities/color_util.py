@@ -333,7 +333,7 @@ def isolate_contours(image: cv2.Mat, color: Union[Color, List[Color]]) -> np.arr
         )
     _, black_image = cv2.threshold(black_image, 0, 255, cv2.THRESH_BINARY)
     # Use the following line for troubleshooting:
-    # cv2.imwrite("test.png", black_image)
+    cv2.imwrite("test.png", black_image)
     return black_image
 
 
