@@ -216,7 +216,6 @@ class MahoganyHomes(OSRSBot):
                 self.travel_to(contract.dest_tile, None, f"mahogany_homes_travel_to_{contract.dest}")
                 time.sleep(1)
             self.handle_contract()
-
             self.update_progress((time.time() - start_time) / end_time)
             time.sleep(.1)
 
@@ -392,6 +391,9 @@ class MahoganyHomes(OSRSBot):
         order = -1        
         self.open_all_doors()
         while self.get_contract().completed == False:
+            if not self.find_colors(self.win.game_view, [self.build_color, self.stairs_color]):
+                break
+
             self.build_all_furniture()
             if self.go_up_stairs(order=order):
                 self.open_all_doors()
