@@ -80,23 +80,36 @@ def timer(func: Callable) -> Callable:
 
     return wrapper
 
-def print_unique_colors(im: cv2.Mat):
-    """Print all unique colors in an image as HSV tuples.
+def print_unique_colors(im: cv2.Mat, top_n: int = 10):
+    """Print the top N most common colors in an image as HSV tuples.
 
     Args:
         im (cv2.Mat): The image to analyze.
+        top_n (int): How many of the most common colors to print (default 10).
     """
-    unique_colors = set()
-    height, width, _ = im.shape
-    for y in range(height):
-        for x in range(width):
-            # Ensure we store Python ints (B, G, R) from the image
-            color = tuple(int(c) for c in im[y, x])
-            unique_colors.add(color)
-    print("Unique colors in image (HSV):")
-    for bgr in unique_colors:
+    # Flatten image to an array of pixels (N x 3)
+    try:
+        pixels = im.reshape(-1, 3)
+    except Exception:
+        print("Provided image has unexpected shape.")
+        return
+
+    # Use numpy to count unique rows (colors) efficiently
+    unique_colors, counts = np.unique(pixels, axis=0, return_counts=True)
+    if unique_colors.size == 0:
+        print("Image has no pixels.")
+        return
+
+    # Sort unique colors by count (descending)
+    order = np.argsort(-counts)
+    n_print = min(top_n, unique_colors.shape[0])
+
+    print(f"Top {n_print} colors (most common first):")
+    for rank in range(n_print):
+        bgr = tuple(int(c) for c in unique_colors[order[rank]])
+        cnt = int(counts[order[rank]])
         # Convert single BGR color to HSV using OpenCV. Build a 1x1 image.
         bgr_arr = np.uint8([[list(bgr)]])
         hsv = cv2.cvtColor(bgr_arr, cv2.COLOR_BGR2HSV)[0][0]
         hsv_tuple = tuple(int(c) for c in hsv)
-        print(hsv_tuple)
+        print(f"{rank+1}. Count: {cnt}  HSV: {hsv_tuple}  BGR: {bgr}")

@@ -47,7 +47,7 @@ class MahoganyHomes(OSRSBot):
         self.build_color = self.cp.hsv.GREEN_MARK
         self.stairs_color = self.cp.hsv.PURPLE_MARK
         self.npc_color = self.cp.hsv.CYAN_MARK
-        self.door_color = self.cp.rgb.BLUE
+        self.door_color = self.cp.hsv.BLUE_MARK
         self.bank_color = self.cp.hsv.YELLOW_MARK
         self.teleport_color = self.cp.hsv.PURPLE_MARK
 
@@ -141,6 +141,7 @@ class MahoganyHomes(OSRSBot):
         """
 
         self.scrape()
+        dbg.print_unique_colors(self.win.game_view)
 
         self.npc_win = copy.deepcopy(self.win.current_action)
         self.npc_win.left -= 10
