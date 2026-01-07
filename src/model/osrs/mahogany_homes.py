@@ -148,6 +148,7 @@ class MahoganyHomes(OSRSBot):
 
         while time.time() - start_time < end_time:
             contract = self.get_contract()
+            continue 
             if not contract:
                 self.tele_to("falador")
                 self.travel_to(self.contract_start_point, None, "mahogany_homes_start")
@@ -192,7 +193,7 @@ class MahoganyHomes(OSRSBot):
     def get_contract(self) -> Contract | None:
         res = Contract(dest="", teak_planks=0, steel_bars=0)
         for text in ["Varrock", "Falador", "Ardougne"]:
-            if ocr.find_textbox(text, rect=self.dest_win, font=ocr.PLAIN_11, colors=self.cp.hsv.OFF_WHITE_TEXT):
+            if ocr.find_textbox(text, rect=self.dest_win, font=ocr.PLAIN_11, colors=self.cp.hsv.WHITE):
                 res.dest = text
                 break
 
