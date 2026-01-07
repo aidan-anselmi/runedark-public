@@ -48,10 +48,6 @@ class MahoganyHomes(OSRSBot):
         self.contract_start_point = Point(2989, 3366)
         self.bank_point = Point(3013, 3356)
 
-        self.dest_win = self.win.current_action
-        self.dest_win.top += 58
-        self.dest_win.height += 3
-
     def scrape(self):
         scraper = SpriteScraper()
 
@@ -137,6 +133,10 @@ class MahoganyHomes(OSRSBot):
         `Bot` and `RuneLiteBot` classes. Leveraging these methods significantly
         accelerates the development process.
         """
+
+        self.dest_win = self.win.current_action
+        self.dest_win.top += 58
+        self.dest_win.height += 3
 
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
         self.log_msg(f"[START] ({run_time_str})", overwrite=True)
