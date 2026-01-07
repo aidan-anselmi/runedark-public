@@ -145,7 +145,7 @@ class MahoganyHomes(OSRSBot):
         #dbg.print_unique_colors(self.win.game_view.screenshot(), top_n=5)
         #game_view = self.win.game_view.screenshot()
         #dbg.save_image("blue.png", isolate_contours(game_view, self.cp.hsv.BLUE))
-        #dbg.save_image("blue_mark.png", isolate_contours(game_view, self.cp.hsv.BLUE_MARK))
+        dbg.save_image("blue_mark.png", isolate_contours(self.win.game_view.screenshot(), self.cp.hsv.BLUE_MARK))
 
         self.npc_win = copy.deepcopy(self.win.current_action)
         self.npc_win.left -= 10
