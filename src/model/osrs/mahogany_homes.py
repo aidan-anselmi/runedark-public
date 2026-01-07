@@ -250,7 +250,7 @@ class MahoganyHomes(OSRSBot):
         Returns:
             bool: True if the items were successfully withdrawn, False otherwise.
         """
-        if not self.open_bank():
+        if not self.is_bank_window_open():
             self.log_msg("Bank not open")
             return False
         
