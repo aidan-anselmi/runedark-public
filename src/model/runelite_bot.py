@@ -2462,9 +2462,9 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             time.sleep(0.1)
         return False
 
-    def pickup_ground_item(self, color: Color = None) -> bool:
-        if color is None:
-            color = self.cp.hsv.GROUND_ITEM_COLOR
+    def pickup_ground_item(self) -> bool:
+        color = self.cp.hsv.GROUND_ITEM_COLOR
+        txt_color = self.cp.hsv.PURPLE_MARK
 
         if not self.is_inv_full() and (obj := self.find_colors(self.win.game_view, color)):
             obj = obj[0]
@@ -2476,12 +2476,12 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             for _ in range(5):
                 self.mouse.move_to(obj.random_point())
                 self.sleep()
-                if self.get_mouseover_text(contains="Take", colors=color) and self.mouse.click(check_red_click=True):
+                if self.get_mouseover_text(contains="Take", colors=txt_color) and self.mouse.click(check_red_click=True):
                     self.log_msg(f"Picked up ground item")
                     self.sleep()
                     self.sleep_while_color_moving(color)
                     return True
-                elif self.right_click_select_context_menu(req_txt=f"Take", color=color):
+                elif self.right_click_select_context_menu(req_txt=f"Take", color=txt_color):
                     self.log_msg(f"Picked up ground item via context menu")
                     self.sleep()
                     self.sleep_while_color_moving(color)
