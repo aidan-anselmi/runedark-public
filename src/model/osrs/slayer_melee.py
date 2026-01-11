@@ -155,7 +155,7 @@ class SlayerMelee(OSRSBot):
                     self.return_to_bank()
 
             # fight 
-            if self.check_idle_notifier_status("out_of_combat") or not self.has_no_hp_bar():
+            if self.check_idle_notifier_status("out_of_combat") or self.has_no_hp_bar():
                 self.atack_monster()
 
             # update progress
@@ -213,7 +213,7 @@ class SlayerMelee(OSRSBot):
         return True
     
     def has_no_hp_bar(self) -> bool:
-        for _ in range(5):
+        for _ in range(10):
             if self.has_hp_bar():
                 return False
             self.sleep(0.1)
