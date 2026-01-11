@@ -900,7 +900,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         if txt := ocr.scrape_text(
             rc_rect,
             font=ocr.BOLD_12,
-            colors=self.cp.bgr.WHITE,
+            colors=[self.cp.bgr.WHITE, color],
             exclude_chars=[char for char in ocr.PROBLEMATIC_CHARS if char != ","],
         ):
             txt = txt.lower()
