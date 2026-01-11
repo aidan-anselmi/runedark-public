@@ -128,7 +128,6 @@ class SlayerMelee(OSRSBot):
         xp_timestamp = time.time()
 
         self.log_msg(f"Starting HP: {self.get_hp()}")
-        return
 
         self.toggle_auto_retaliate(state="on")
         self.sleep()
