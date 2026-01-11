@@ -142,10 +142,12 @@ class SlayerMelee(OSRSBot):
                 return
 
             # heal
-            while self.get_hp() != -1 and self.get_hp() <= 65 and self.eat_food():
-                self.sleep()
-            if self.get_hp() <= 40:
-                self.return_to_bank()
+            if self.get_hp() != -1:
+                while self.get_hp() <= 65 and self.eat_food():
+                    self.sleep()
+                if self.get_hp() <= 40:
+                    self.log_msg("HP low after eating, returning to banks")
+                    self.return_to_bank()
 
             # loot
             while self.pickup_ground_item():
@@ -155,6 +157,7 @@ class SlayerMelee(OSRSBot):
                 if self.is_inv_full():
                     self.eat_food()
                 if self.full_trip():
+                    self.log_msg("Inventory full, returning to bank")
                     self.return_to_bank()
 
             # fight 
