@@ -897,23 +897,22 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             filename = "context-menu.png"
             imsave(filename, rc_rect.screenshot())
             self.log_msg(f"Screenshot saved as: {filename}")
-        if txt := ocr.scrape_text(
+        if exit_txt is not None and (txt := ocr.scrape_text(
             rc_rect,
             font=ocr.BOLD_12,
-            colors=[self.cp.bgr.WHITE, color],
+            colors=self.cp.bgr.WHITE,
             exclude_chars=[char for char in ocr.PROBLEMATIC_CHARS if char != ","],
-        ):
+        )):
             txt = txt.lower()
-            if exit_txt is not None:
-                exit_txt = exit_txt.lower().replace(" ", "")
-                pattern = rf"{exit_txt}\D"  # \D matches any non-digit character.
-                if re.search(pattern, txt):
-                    dx, dy = round(1.1 * pad), round(1.1 * pad)
-                    dx = -dx if exit_direction == "left" else dx
-                    dy = -dy if exit_direction == "up" else dy
-                    (x, y) = (dx, 0) if exit_direction in ["left", "right"] else (0, dy)
-                    self.mouse.move_rel(x, y)
-                    return False
+            exit_txt = exit_txt.lower().replace(" ", "")
+            pattern = rf"{exit_txt}\D"  # \D matches any non-digit character.
+            if re.search(pattern, txt):
+                dx, dy = round(1.1 * pad), round(1.1 * pad)
+                dx = -dx if exit_direction == "left" else dx
+                dy = -dy if exit_direction == "up" else dy
+                (x, y) = (dx, 0) if exit_direction in ["left", "right"] else (0, dy)
+                self.mouse.move_rel(x, y)
+                return False
         if ocr_rect := ocr.find_textbox(req_txt, rc_rect, font=font, colors=color):
             # Note that if the mouse strays too far, the context menu will disappear.
             menu_point = ocr_rect[0].center  # Use the center for reliability.
@@ -2464,7 +2463,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
 
     def pickup_ground_item(self) -> bool:
         color = self.cp.hsv.GROUND_ITEM_COLOR
-        txt_color = self.cp.hsv.PURPLE_MARK
+        txt_color = self.cp.hsv.GROUND_ITEM_TEXT
 
         if not self.is_inv_full() and (obj := self.find_colors(self.win.game_view, color)):
             obj = obj[0]
