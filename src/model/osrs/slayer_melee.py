@@ -43,8 +43,7 @@ class SlayerMelee(OSRSBot):
         # make sure directory exists
         dest_dir.mkdir(parents=True, exist_ok=True)
 
-        search_string = "Karambwan, Ring of dueling, Ring of dueling(8)"
-        # search_string = "Deposit Inventory"
+        search_string = "Cooked karambwan, Ring of dueling"
         image_type = ImageType.ALL
         destination = dest_dir
 
@@ -176,7 +175,7 @@ class SlayerMelee(OSRSBot):
         if not self.is_control_panel_tab_open("inventory"):
             pag.press("f2")
             self.sleep()
-        if rect := self.find_sprite(self.win.inventory, "karambwan.png", "items"):
+        if rect := self.find_sprite(self.win.inventory, "cooked-karambwan.png", "items"):
             self.mouse.move_to(rect.random_point())
             self.sleep()
             self.mouse.click()
@@ -185,7 +184,7 @@ class SlayerMelee(OSRSBot):
         return False
     
     def full_trip(self) -> bool:
-        return self.get_num_item_in_inv("karambwan.png", "items") == 0 and self.is_inv_full()
+        return self.get_num_item_in_inv("cooked-karambwan.png", "items") == 0 and self.is_inv_full()
 
     def atack_monster(self) -> bool:
         if not self.move_mouse_to_color_obj(self.monster_color):
