@@ -2476,6 +2476,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             for _ in range(5):
                 self.mouse.move_to(obj.random_point())
                 self.sleep()
+                time.sleep(1)
                 self.log_msg(f"mouseover text txt_color = {self.get_mouseover_text(colors=txt_color)}")
                 self.log_msg(f"mouseover text color = {self.get_mouseover_text(colors=color)}")
                 if self.get_mouseover_text(contains="Take", colors=txt_color) and self.mouse.click(check_red_click=True):
