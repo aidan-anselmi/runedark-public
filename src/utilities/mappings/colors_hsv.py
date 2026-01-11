@@ -37,9 +37,7 @@ PURPLE = ((140, 255, 255), (140, 255, 255))
 PINK = ((165, 255, 255), (165, 255, 255))
 
 # Special colors
-#GROUND_ITEM_COLOR = ((139, 230, 200), (141, 255, 255)) # purple with lower brightness
-#GROUND_ITEM_TEXT = ((130, 0, 0), (150, 255, 255)) # purple with lower brightness
-GROUND_ITEM_COLOR = ((59, 230, 200), (61, 255, 255))
-GROUND_ITEM_TEXT = GREEN_DROPDOWN_TEXT
+GROUND_ITEM_COLOR = ((139, 230, 200), (141, 255, 255)) # purple with lower brightness
+GROUND_ITEM_TEXT = ((130, 0, 0), (150, 255, 255)) # purple with lower brightness
 
 # Colors selected from the Color Filter tool should be added below this line.
