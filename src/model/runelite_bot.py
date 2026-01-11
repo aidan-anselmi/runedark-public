@@ -2009,6 +2009,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         Returns:
             int: The HP of the player, or -1 if the value couldn't be read.
         """
+        dbg.save_image(self.win.hp_orb_text.screenshot(), "hp_orb_text.png")
         if hp := ocr.scrape_text(
             self.win.hp_orb_text, ocr.PLAIN_11, [self.cp.bgr.GREEN, self.cp.bgr.RED]
         ):
