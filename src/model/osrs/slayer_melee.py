@@ -142,7 +142,7 @@ class SlayerMelee(OSRSBot):
                 return
 
             # heal
-            while self.get_hp() <= 65 and self.eat_food():
+            while self.get_hp() != -1 and self.get_hp() <= 65 and self.eat_food():
                 self.sleep()
             if self.get_hp() <= 40:
                 self.return_to_bank()
