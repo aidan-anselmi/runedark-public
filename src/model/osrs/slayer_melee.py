@@ -121,8 +121,8 @@ class SlayerMelee(OSRSBot):
         accelerates the development process.
         """
 
-        self.return_to_bank()
         self.high_alch_item()
+        self.return_to_bank()
         return
 
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
