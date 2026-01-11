@@ -197,15 +197,20 @@ class SlayerMelee(OSRSBot):
 
     def return_to_bank(self) -> bool:
         self.log_msg("Returning to bank...")
-        pag.press("f5")
+        # pag.press("f5")
+        # self.sleep()
+        # for _ in range(5):
+        #     if rect := self.find_sprite(self.win.inventory, "ring_of_dueling.png", "items"):
+        #         self.mouse.move_to(rect.random_point())
+        #         self.sleep()
+        #         self.mouse.click()
+        #         time.sleep(10)
+        #         self.logout_and_stop_script("[END]")
+        #         return True        
+        pag.press("f4")
         self.sleep()
-        for _ in range(5):
-            if rect := self.find_sprite(self.win.inventory, "ring_of_dueling.png", "items"):
-                self.mouse.move_to(rect.random_point())
-                self.sleep()
-                self.mouse.click()
-                time.sleep(10)
-                self.logout_and_stop_script("[END]")
-                return True        
-
-        return False
+        self.mouse.move_to(self.win.spellbook_normal[22].random_point())
+        self.sleep()
+        self.mouse.click()
+        self.logout_and_stop_script("[END]")
+        return True
