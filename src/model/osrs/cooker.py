@@ -16,24 +16,22 @@ from utilities.mappings.colors_rgb import BLUE, BLUE, GREEN, CYAN, YELLOW
 import cv2
 import pyautogui as pag
 import random
+import random
 
-class PlankMaker(OSRSBot):
+class Cooker(OSRSBot):
     def __init__(self):
-        bot_title = "Plank Maker"  # i.e. "<Script Name>"
-        description = ("Make planks from ")
+        bot_title = "Cooker"  # i.e. "<Script Name>"
+        description = ("Cook fish")
         super().__init__(bot_title=bot_title, description=description)
         # We can set default option values here if we'd like, and potentially override
         # needing to open the options panel.
-        self.run_time = 120
+        self.run_time = 180
         self.options_set = False
 
         self.walker = Walker(self, dest_square_side_length=10)
 
-        self.bank_tile = Point(1592, 3476)
-        self.buy_tile = Point(1624, 3500)
-
-        self.sawmill_op_color = self.cp.hsv.CYAN_MARK
         self.bank_color = self.cp.hsv.GREEN_MARK
+        self.range_color = self.cp.hsv.PINK_MARK
 
         self.scrape()
 
@@ -46,7 +44,7 @@ class PlankMaker(OSRSBot):
         # make sure directory exists
         dest_dir.mkdir(parents=True, exist_ok=True)
 
-        search_string = "Teak logs, Teak plank"
+        search_string = "Raw karambwan"
         # search_string = "Deposit Inventory"
         image_type = ImageType.ALL
         destination = dest_dir
@@ -130,61 +128,84 @@ class PlankMaker(OSRSBot):
         start_time = time.time()
         end_time = int(self.run_time) * 60  # Measured in seconds.
         last_update = start_time
+        first_run = True
+
+        xp_timestamp = time.time()
+
         while time.time() - start_time < end_time:
+            rk = self.get_karambwan_count()
+            self.log_msg(f"Raw karambwans at {rk}")
+
+            if self.get_total_xp() != -1:
+                xp_timestamp = time.time()
+            if time.time() - xp_timestamp > 300:
+                self.log_msg("No XP gain detected for 5 minutes, stopping script.")
+                self.logout_and_stop_script("[END]")
+                return
+
             if self.is_run_off() and self.get_run_energy() >= random.randint(10, 60):
                 self.toggle_run(state="on")
 
+
             if self.is_bank_window_open():
-                if self.is_item_in_inv(png="teak-plank.png", folder="items"):
-                    i = self.get_first_item_index(png="teak-plank.png", folder="items")
-                    self.mouse.move_to(self.win.inventory_slots[i].random_point())
-                    self.mouse.click()
+                if first_run:
                     self.sleep()
-                if rect := self.find_sprite(win=self.win.game_view, png="teak-logs-bank.png", folder="items"):
-                    self.mouse.move_to(rect.random_point())
-                    self.mouse.click()
-                    time.sleep(.3)
+                    self.open_bank_tab(3)
+                    first_run = False
+                if self.get_karambwan_count() == 28:
+                    pag.press("esc")
+                    continue
                 else:
-                    self.open_bank_tab(4)
+                    self.bank_left_click_deposit_all()
                     self.sleep()
-                self.sleep()
-                pag.press("esc")
-                self.sleep()
-            elif self.is_item_in_inv(png="teak-logs.png", folder="items"):
-                if not self.find_colors(rect=self.win.game_view, colors=self.sawmill_op_color):
-                    self.travel_to(
-                        tile_coord=self.buy_tile,
-                        walk_path=None,
-                        dest_name="wc_guild_bank_to_sawmill",
-                    )
-                if rect := self.find_colors(rect=self.win.game_view, colors=self.sawmill_op_color):
-                    rect = rect[0]
-                    self.mouse.move_to(rect.random_point())
-                    if self.get_mouseover_text(contains="Buy"):
-                        if self.mouse.click(check_red_click=True):
-                            self.wait_till_interface_text(texts="How")
+                    if rect := self.find_sprite(win=self.win.game_view, png="raw-karambwan-bank.png", folder="items"):
+                        self.mouse.move_to(rect.random_point())
+                        self.mouse.click()
                         self.sleep()
-                if self.check_interface_text(texts="How"):
-                    pag.press("3")
-                    time.sleep(.6)
-                self.sleep()
-            else:
-                if rect := self.find_colors(rect=self.win.game_view, colors=self.bank_color):
-                    rect = rect[0]
-                    self.mouse.move_to(rect.random_point())
-                    if self.get_mouseover_text(contains="Use"):
-                        if self.mouse.click(check_red_click=True):
-                            for _ in range(10):
-                                if self.is_bank_window_open():
-                                    break
-                                time.sleep(1)
+                        pag.press("esc")
                         self.sleep()
+                    else:
+                        self.log_msg("could not find raw karambwan in bank.")
+                        self.logout_and_stop_script("[END]")
+            if self.get_karambwan_count() == 0:
+                if not self.move_mouse_to_color_obj(self.bank_color):
+                    self.log_msg("Could not find bank booth.")
+                    continue
+                if not self.get_mouseover_text(contains="Use"):
+                    continue
+                if not self.mouse.click(check_red_click=True):
+                    self.log_msg("Could not click bank booth.")
+                    continue
                 else:
-                    self.travel_to(
-                        tile_coord=self.bank_tile,
-                        walk_path=None,
-                        dest_name="sawmill_to_wc_guild_bank",
-                    )
+                    self.sleep_until_bank_open(timeout=8)
+            if self.get_karambwan_count() > 0:
+                if not self.move_mouse_to_color_obj(self.range_color):
+                    self.log_msg("Could not find range.")
+                    continue
+                if not self.get_mouseover_text(contains="Cook"):
+                    continue
+                if not self.mouse.click(check_red_click=True):
+                    self.log_msg("Could not click range.")
+                    continue
+                if self.wait_till_interface_text(texts="What"):
+                    pag.press("space")
+                    while self.get_karambwan_count() > 0:
+                        time.sleep(0.5)
+                    self.sleep()
+
+                # break chance
+                break_time = 0
+                if rd.random_chance(0.25):
+                    break_time = random.randint(1, 5)
+                if rd.random_chance(0.05):
+                    break_time = random.randint(5, 30)
+                if rd.random_chance(0.01):
+                    break_time = random.randint(30, 300)
+                if break_time > 5:
+                    self.log_msg(f"Taking a break for {break_time} seconds.")
+                time.sleep(break_time)
+                xp_timestamp += break_time
+            
             
             if time.time() - last_update > 300:
                 self.update_progress((time.time() - start_time) / end_time)
@@ -196,15 +217,5 @@ class PlankMaker(OSRSBot):
         self.log_msg("[END]")
         self.logout_and_stop_script("[END]")
 
-    def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str):
-        self.log_msg(f"Traveling to {dest_name}...")
-        if self.walker.travel_to_dest_along_path(
-            tile_coord,
-            walk_path,
-            dest_name,
-        ):
-            self.log_msg(f"Arrived: {dest_name}")
-        else:
-            self.log_msg(f"Failed to arrive at {dest_name}.")
-        while self.is_traveling():
-            self.sleep()
+    def get_karambwan_count(self) -> int:
+        return self.get_num_item_in_inv(png="raw-karambwan.png", folder="items", confidence=0.03)

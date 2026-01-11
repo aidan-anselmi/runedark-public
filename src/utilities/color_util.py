@@ -309,13 +309,15 @@ def isolate_contours(image: cv2.Mat, color: Union[Color, List[Color]]) -> np.arr
     image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # Create a mask with pixels within range as white and all others as black.
     mask = cv2.inRange(image, color.lo, color.hi)
+    cv2.imwrite("test.png", mask)
     # Apply the `mask` to keep only colored pixels in `image` that correspond to white
     # pixels in `mask` (i.e. get the masked region, but with colored pixels).
     result = cv2.bitwise_and(image, image, mask=mask)
     result = cv2.cvtColor(result, cv2.COLOR_HSV2BGR)
     result = cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)  # Convert result to grayscale.
+    
     # Threshold the result: pixel strength < 20 to black (0), >= 50 to white (255).
-    _, result = cv2.threshold(result, 10, 255, cv2.THRESH_BINARY)
+    _, result = cv2.threshold(result, 20, 255, cv2.THRESH_BINARY)
     # Find external contours, which are outlines or curves that represent the
     # boundaries of objects or regions within our (binary) thresholded image.
     contours, _ = cv2.findContours(result, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -331,7 +333,7 @@ def isolate_contours(image: cv2.Mat, color: Union[Color, List[Color]]) -> np.arr
         )
     _, black_image = cv2.threshold(black_image, 0, 255, cv2.THRESH_BINARY)
     # Use the following line for troubleshooting:
-    #cv2.imwrite("test.png", black_image)
+    # cv2.imwrite("test.png", black_image)
     return black_image
 
 

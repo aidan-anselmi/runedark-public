@@ -7,6 +7,7 @@ import customtkinter as ctk
 import pynput.keyboard as keyboard
 from PIL import Image, ImageTk
 
+from model.osrs.util_tester import OSRSUtilTester
 import utilities.settings as settings
 from controller.bot_controller import BotController, MockBotController
 from model import Bot, RuneLiteBot
@@ -639,9 +640,11 @@ if __name__ == "__main__":
         from model.osrs.karambwan import Karambwan
         from model.osrs.plank_maker import PlankMaker
         from model.osrs.mahogany_homes import MahoganyHomes
+        from model.osrs.cooker import Cooker
+        from model.osrs.util_tester import OSRSUtilTester
 
         app = App(test=True)
-        app.test(MahoganyHomes())
+        app.test(OSRSUtilTester())
 
     app = App()
     app.start()

@@ -194,6 +194,7 @@ class MahoganyHomes(OSRSBot):
                 if not self.move_mouse_to_color_obj(self.bank_color):
                     self.log_msg("Could not find bank")
                     continue
+                self.sleep()
                 if not self.get_mouseover_text(contains="Bank"):
                     self.log_msg("Could not find bank mouseover")
                     continue
@@ -313,10 +314,10 @@ class MahoganyHomes(OSRSBot):
                     res.dest_tile = Point(3243, 3486)
                 case "jeff":
                     #res.dest_tile = Point(3239, 3450)
-                    res.dest_tile = Point(3244, 3450)
+                    res.dest_tile = Point(3241, 3450)
                 case "sarah":
                     #res.dest_tile = Point(3235, 3384)
-                    res.dest_tile = Point(3235, 3387)
+                    res.dest_tile = Point(3235, 3385)
 
         for text in ["Varrock", "Falador", "Ardougne", "Hosidius"]:
             if ocr.find_textbox(text, rect=self.dest_win, font=ocr.PLAIN_12, colors=self.cp.rgb.WHITE):

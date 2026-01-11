@@ -1,6 +1,7 @@
 import time
 
 from model.osrs.osrs_bot import OSRSBot
+from utilities.color_util import Color
 
 # from utilities.api.gi_tracker import GITracker
 
@@ -49,6 +50,19 @@ class OSRSUtilTester(OSRSBot):
         self.log_msg(f"[START] ({run_time_str})", overwrite=True)
         start_time = time.time()
         end_time = int(self.run_time) * 60  # Measured in seconds.
+
+        self.loot_color = Color(((149, 230, 200), (151, 255, 255)))
+
+        while time.time() - start_time < end_time:
+            if self.move_mouse_to_color_obj(self.loot_color):
+                self.log_msg("Found loot color obj, clicking.")
+            else:
+                self.log_msg("Could not find loot color obj.")
+
+            self.sleep()
+            
+
+        
         # self.relog()
         # self._export_all_window_regions()
         # self.win._snapshot_all_window_regions()

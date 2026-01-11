@@ -390,12 +390,12 @@ class RuneLiteObject:
             "height": self.height,
         }
         point = rd.random_point_in(**kwargs)
-        attempt = 0
-        while not self._point_exists(point):
-            point = rd.random_point_in(**kwargs)
-            attempt += 1
-            if attempt > 100:
-                return self.center
+        # attempt = 0
+        # while not self._point_exists(point):
+        #     point = rd.random_point_in(**kwargs)
+        #     attempt += 1
+        #     if attempt > 100:
+        #         return self.center
         return self._relative_point(point)
 
     def _relative_point(self, point: Point) -> Point:
@@ -409,7 +409,7 @@ class RuneLiteObject:
         """
         return Point(self.rect.left + point.x, self.rect.top + point.y)
 
-    def _point_exists(self, point: Point, pad: int = 5) -> bool:
+    def _point_exists(self, point: Point, pad: int = 3) -> bool:
         """Check if a row-column coordinate exists within its parent `RuneLiteObject`.
 
         Note that the coordinates are represented as (y, x) in this context because it
