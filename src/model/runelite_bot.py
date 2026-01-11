@@ -929,7 +929,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         color: Color,
         order: int = 0,
         dist_measure: str = "absolute",
-        verbose: bool = True,
+        verbose: bool = False,
     ) -> bool:
         """Move the mouse to a region of a specified color within the game window.
 
@@ -2448,4 +2448,59 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             if self.find_colors(self.win.game_view, color):
                 return True
             time.sleep(0.1)
+        return False
+
+    def pickup_ground_item(self, color: Color = None) -> bool:
+        if color is None:
+            color = self.cp.hsv.GROUND_ITEM_COLOR
+
+        if obj := self.find_colors(self.win.game_view, color) and not self.is_inv_full():
+            obj = obj[0]
+
+            # trim rectangle since the entire thing is not a clickbox
+            obj.width = obj.width * 2 // 3
+            obj.height = obj.height * 2 // 3
+
+            for _ in range(5):
+                self.mouse.move_to(obj.random_point())
+                self.sleep()
+                if self.get_mouseover_text(contains="Take", colors=[color]):
+                    if self.mouse.click(check_red_click=True):
+                        self.log_msg(f"Picked up ground item")
+                        self.sleep()
+                        self.sleep_while_color_moving(color)
+                    return True
+                if self.right_click_select_context_menu(req_txt=f"Take", color=color):
+                    self.log_msg(f"Picked up ground item via context menu")
+                    self.sleep()
+                    self.sleep_while_color_moving(color)
+                    return True
+
+        return False
+
+    def high_alch_item(self, color: Color = None) -> bool:
+        if color is None:
+            color = self.cp.hsv.GREEN_MARK
+
+        if not self.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
+            self.sleep()
+
+        if item := self.find_colors(self.win.inventory, color):
+            item = random.choice(item)
+
+            pag.press("f4")
+            self.sleep()
+            self.mouse.move_to(self.win.spellbook_normal[35].random_point())
+            if not self.get_mouseover_text(contains="Cast"):
+                pag.press("f2")
+                self.sleep()
+                return False
+            self.mouse.click()
+            self.sleep()
+            self.mouse.move_to(item.random_point())
+            self.mouse.click()
+            self.sleep()
+            return True
+
         return False
