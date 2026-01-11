@@ -140,11 +140,10 @@ class SlayerMelee(OSRSBot):
                 return
 
             # heal
-            if self.get_hp() <= 50:
-                while self.get_hp() <= 65 and self.eat_food():
-                    self.sleep()
-                if self.get_hp() <= 40:
-                    self.return_to_bank()
+            while self.get_hp() <= 65 and self.eat_food():
+                self.sleep()
+            if self.get_hp() <= 40:
+                self.return_to_bank()
 
             # loot
             while self.pickup_ground_item():
@@ -170,6 +169,7 @@ class SlayerMelee(OSRSBot):
         self.logout_and_stop_script("[END]")
 
     def eat_food(self) -> bool:
+        self.log_msg(f"hp at {self.get_hp()}, eating food")
         if not self.is_control_panel_tab_open("inventory"):
             pag.press("f2")
             self.sleep()

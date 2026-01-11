@@ -1089,6 +1089,9 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         Returns:
             int: The number of empty spaces left our character's inventory.
         """
+        if not self.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
+
         # Determine whether each inventory slot is empty.
         item_path = BOT_IMAGES / "inventory" / "empty-slot.png"
         num_empty_slots = 0
