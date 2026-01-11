@@ -120,10 +120,6 @@ class SlayerMelee(OSRSBot):
         accelerates the development process.
         """
 
-        self.high_alch_item()
-        self.return_to_bank()
-        return
-
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
         self.log_msg(f"[START] ({run_time_str})", overwrite=True)
         start_time = time.time()
@@ -212,5 +208,6 @@ class SlayerMelee(OSRSBot):
         self.mouse.move_to(self.win.spellbook_normal[22].random_point())
         self.sleep()
         self.mouse.click()
+        time.sleep(10)
         self.logout_and_stop_script("[END]")
         return True
