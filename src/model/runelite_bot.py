@@ -2454,7 +2454,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         if color is None:
             color = self.cp.hsv.GROUND_ITEM_COLOR
 
-        if obj := self.find_colors(self.win.game_view, color) and not self.is_inv_full():
+        if not self.is_inv_full() and (obj := self.find_colors(self.win.game_view, color)):
             obj = obj[0]
 
             # trim rectangle since the entire thing is not a clickbox
