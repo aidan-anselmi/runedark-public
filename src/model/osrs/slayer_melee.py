@@ -128,7 +128,8 @@ class SlayerMelee(OSRSBot):
         xp_timestamp = time.time()
 
         #self.log_msg(f"Starting HP: {self.get_hp()}")
-        self.pickup_ground_item() 
+        if not self.pickup_ground_item():
+            self.log_msg("No ground item to pick up")
         return
 
         self.toggle_auto_retaliate(state="on")
