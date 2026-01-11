@@ -1652,7 +1652,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         )
         state = "open" if match else "closed"
         msg = f"{name.replace('_', ' ').capitalize()} tab is {state}."
-        self.log_msg(msg)
+        # self.log_msg(msg)
         return state == "open"
 
     def prepare_standard_initial_state(self) -> None:

@@ -217,8 +217,9 @@ class SlayerMelee(OSRSBot):
         return True
     
     def has_no_hp_bar(self) -> bool:
-        for _ in range(10):
+        for _ in range(20):
             if self.has_hp_bar():
                 return False
             self.sleep(0.1)
+        self.log_msg("No HP bar detected.")
         return True
