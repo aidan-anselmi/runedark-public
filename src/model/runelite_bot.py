@@ -2010,10 +2010,10 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             int: The HP of the player, or -1 if the value couldn't be read.
         """
 
-        self.win.hp_orb_text.top -= 10
-        self.win.hp_orb_text.height += 20
-        self.win.hp_orb_text.left -= 10
-        self.win.hp_orb_text.width += 20
+        self.win.hp_orb_text.top -= 20
+        self.win.hp_orb_text.height += 40
+        self.win.hp_orb_text.left -= 20
+        self.win.hp_orb_text.width += 40
         dbg.save_image("hp_orb_text.png", self.win.hp_orb_text.screenshot())
 
 
