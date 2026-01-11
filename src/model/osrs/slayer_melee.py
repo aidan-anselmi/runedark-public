@@ -127,6 +127,9 @@ class SlayerMelee(OSRSBot):
         last_update = start_time
         xp_timestamp = time.time()
 
+        self.get_hp()
+        return
+
         self.toggle_auto_retaliate(state="on")
         self.sleep()
         pag.press("f2")  # open combat tab
