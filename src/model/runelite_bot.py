@@ -2463,7 +2463,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
 
     def pickup_ground_item(self) -> bool:
         color = self.cp.hsv.GROUND_ITEM_COLOR
-        txt_color = Color((169, 0, 255), (171, 0, 255))
+        txt_color = self.cp.bgr.PURPLE_DROPDOWN_TEXT
 
         if not self.is_inv_full() and (obj := self.find_colors(self.win.game_view, color)):
             obj = obj[0]
