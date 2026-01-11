@@ -2464,17 +2464,18 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             for _ in range(5):
                 self.mouse.move_to(obj.random_point())
                 self.sleep()
-                if self.get_mouseover_text(contains="Take", colors=[color]):
-                    if self.mouse.click(check_red_click=True):
-                        self.log_msg(f"Picked up ground item")
-                        self.sleep()
-                        self.sleep_while_color_moving(color)
+                if self.get_mouseover_text(contains="Take", colors=color) and self.mouse.click(check_red_click=True):
+                    self.log_msg(f"Picked up ground item")
+                    self.sleep()
+                    self.sleep_while_color_moving(color)
                     return True
-                if self.right_click_select_context_menu(req_txt=f"Take", color=color):
+                elif self.right_click_select_context_menu(req_txt=f"Take", color=color):
                     self.log_msg(f"Picked up ground item via context menu")
                     self.sleep()
                     self.sleep_while_color_moving(color)
                     return True
+                else:
+                    self.log_msg("Failed to pick up ground item, retrying...")
 
         return False
 

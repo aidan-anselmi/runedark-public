@@ -128,6 +128,8 @@ class SlayerMelee(OSRSBot):
         xp_timestamp = time.time()
 
         self.toggle_auto_retaliate(state="on")
+        self.sleep()
+        pag.press("f2")  # open combat tab
 
         while time.time() - start_time < end_time:
             if self.get_total_xp() != -1:
@@ -155,7 +157,7 @@ class SlayerMelee(OSRSBot):
                     self.return_to_bank()
 
             # fight 
-            if self.check_idle_notifier_status("out_of_combat") or self.has_no_hp_bar():
+            if self.has_no_hp_bar():
                 self.atack_monster()
 
             # update progress
