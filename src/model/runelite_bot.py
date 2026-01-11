@@ -2472,12 +2472,12 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             obj.width = obj.width * 2 // 3
             obj.height = obj.height * 2 // 3
 
-            for _ in range(5):
+            for _ in range(1):
                 self.mouse.move_to(obj.random_point())
                 self.sleep()
                 time.sleep(1)
                 self.log_msg(f"mouseover text txt_color = {self.get_mouseover_text(colors=txt_color)}")
-                self.log_msg(f"mouseover text color = {self.get_mouseover_text(colors=color)}")
+                continue
                 if self.get_mouseover_text(contains="Take", colors=txt_color) and self.mouse.click(check_red_click=True):
                     self.log_msg(f"Picked up ground item")
                     self.sleep()
