@@ -100,6 +100,7 @@ def scrape_text(
     """
     # Screenshot and isolate colors.
     img_bgr = rect.screenshot()
+    debug.save_image("ocr.png", img_bgr)
     image = isolate_colors(img_bgr, colors)
     debug.save_image("ocr-isolated-colors.png", image)
     result = ""
