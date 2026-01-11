@@ -642,9 +642,10 @@ if __name__ == "__main__":
         from model.osrs.mahogany_homes import MahoganyHomes
         from model.osrs.cooker import Cooker
         from model.osrs.util_tester import OSRSUtilTester
+        from model.osrs.slayer_melee import SlayerMelee
 
         app = App(test=True)
-        app.test(OSRSUtilTester())
+        app.test(SlayerMelee())
 
     app = App()
     app.start()
