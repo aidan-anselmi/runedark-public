@@ -99,11 +99,11 @@ def scrape_text(
             spaces.
     """
     # Screenshot and isolate colors.
-    print(f"colors={colors.lo}-{colors.hi}")
+    # print(f"colors={colors.lo}-{colors.hi}")
     img_bgr = rect.screenshot()
-    debug.save_image("ocr.png", img_bgr)
+    # debug.save_image("ocr.png", img_bgr)
     image = isolate_colors(img_bgr, colors)
-    debug.save_image("ocr-isolated-colors.png", image)
+    # debug.save_image("ocr-isolated-colors.png", image)
     result = ""
     char_list = []
     for char in font:
