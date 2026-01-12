@@ -43,7 +43,7 @@ class SlayerMelee(OSRSBot):
         # make sure directory exists
         dest_dir.mkdir(parents=True, exist_ok=True)
 
-        search_string = "Cooked karambwan, Ring of dueling"
+        search_string = "Cooked karambwan, Ring of dueling, Herb sack"
         image_type = ImageType.ALL
         destination = dest_dir
 
@@ -153,8 +153,6 @@ class SlayerMelee(OSRSBot):
                 while self.high_alch_item():
                     time.sleep(3)
                     self.sleep()
-                if self.is_inv_full():
-                    self.eat_food()
                 if self.full_trip():
                     self.log_msg("Inventory full, returning to bank")
                     self.return_to_bank()
@@ -186,6 +184,10 @@ class SlayerMelee(OSRSBot):
         return False
     
     def full_trip(self) -> bool:
+        if self.is_inv_full():
+            self.fill_herb_sack()
+        if self.is_inv_full():
+            self.eat_food()            
         return self.get_num_item_in_inv("cooked-karambwan.png", "items") == 0 and self.is_inv_full()
 
     def atack_monster(self) -> bool:
@@ -225,3 +227,15 @@ class SlayerMelee(OSRSBot):
                 return False
             self.sleep(0.1)
         return True
+    
+    def fill_herb_sack(self) -> bool:
+        if not self.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
+            self.sleep()
+        if rect := self.find_sprite(self.win.inventory, "herb_sack.png", "items"):
+            self.mouse.move_to(rect.random_point())
+            self.sleep()
+            self.mouse.click()
+            self.sleep()
+            return True
+        return False
