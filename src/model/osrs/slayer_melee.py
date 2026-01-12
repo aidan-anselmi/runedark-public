@@ -127,11 +127,6 @@ class SlayerMelee(OSRSBot):
         last_update = start_time
         xp_timestamp = time.time()
 
-        hp = self.get_hp()
-        self.log_msg(f"Starting HP: {hp}")
-        if hp == -1:
-            return
-
         self.toggle_auto_retaliate(state="on")
         self.sleep()
         pag.press("f2")  # open combat tab
@@ -145,6 +140,7 @@ class SlayerMelee(OSRSBot):
                 return
 
             # heal
+            self.log_msg(f"Current HP: {self.get_hp()}")
             if self.get_hp() != -1:
                 while self.get_hp() <= 65 and self.eat_food():
                     self.sleep()
@@ -228,5 +224,4 @@ class SlayerMelee(OSRSBot):
             if self.has_hp_bar():
                 return False
             self.sleep(0.1)
-        self.log_msg("No HP bar detected.")
         return True
