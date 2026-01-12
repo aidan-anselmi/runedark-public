@@ -43,7 +43,7 @@ class SlayerMelee(OSRSBot):
         # make sure directory exists
         dest_dir.mkdir(parents=True, exist_ok=True)
 
-        search_string = "Cooked karambwan, Ring of dueling, Herb sack"
+        search_string = "Cooked karambwan, Ring of dueling, Herb sack, Gem bag"
         image_type = ImageType.ALL
         destination = dest_dir
 
