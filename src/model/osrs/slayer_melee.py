@@ -163,6 +163,7 @@ class SlayerMelee(OSRSBot):
             if self.has_no_hp_bar():
                 self.atack_monster()
 
+            self.high_alch_item()
             self.check_task_completed()
 
             # update progress
