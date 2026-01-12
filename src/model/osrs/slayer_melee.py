@@ -161,6 +161,8 @@ class SlayerMelee(OSRSBot):
             if self.has_no_hp_bar():
                 self.atack_monster()
 
+            self.check_task_completed()
+
             # update progress
             if time.time() - last_update > 300:
                 self.update_progress((time.time() - start_time) / end_time)
@@ -186,6 +188,8 @@ class SlayerMelee(OSRSBot):
     def full_trip(self) -> bool:
         if self.is_inv_full():
             self.fill_herb_sack()
+        if self.is_inv_full():
+            self.fill_gem_bag()
         if self.is_inv_full():
             self.eat_food()            
         return self.get_num_item_in_inv("cooked-karambwan.png", "items") == 0 and self.is_inv_full()
@@ -251,3 +255,8 @@ class SlayerMelee(OSRSBot):
             self.sleep()
             return True
         return False
+
+    def check_task_completed(self):
+        if self.get_chatbox_text(contains="Slayer", colors=self.cp.bgr.OFF_RED_TEXT):
+            self.log_msg("Slayer task completed!")
+            self.return_to_bank()
