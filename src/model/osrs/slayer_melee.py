@@ -34,7 +34,10 @@ class SlayerMelee(OSRSBot):
         self.bank_color = self.cp.hsv.BLUE_MARK
 
         self.scrape()
+
+        # elf task
         self.task = "Elves"
+        self.task_tile = Point(2331,3173)
 
 
     def scrape(self):
@@ -202,6 +205,7 @@ class SlayerMelee(OSRSBot):
             if not self.move_mouse_to_color_obj(self.monster_color):
                 if i == 9:
                     self.log_msg("Could not find monster to attack")
+                    self.travel_to(self.task_tile, None, "bank_to_elf_task")
                 continue
             if self.get_mouseover_text(contains="Attack") and self.mouse.click(check_red_click=True):
                 self.sleep_while_color_moving(self.monster_color, timeout=5)
@@ -224,7 +228,7 @@ class SlayerMelee(OSRSBot):
             self.travel_to(Point(2352,3163), None, "elf_task_to_bank")
             self.resupply()
             if self.get_num_item_in_inv("cooked-karambwan.png", "items") > 0:
-                self.travel_to(Point(2331,3173), None, "bank_to_elf_task")
+                self.travel_to(self.task_tile, None, "bank_to_elf_task")
                 return True
             return False
 
@@ -237,8 +241,8 @@ class SlayerMelee(OSRSBot):
         self.logout_and_stop_script("[END]")
         return True
     
-    def resupply(self):
-        for _ in range(5):
+    def resupply(self) -> bool:
+        for i in range(5):
             self.move_mouse_to_color_obj(self.bank_color)
             if self.get_mouseover_text(contains="Bank") and self.mouse.click(check_red_click=True):
                 break
@@ -260,7 +264,7 @@ class SlayerMelee(OSRSBot):
             self.mouse.click()
             self.sleep()
         pag.press("esc")
-        return
+        return True
 
     def has_no_hp_bar(self) -> bool:
         for _ in range(20):
