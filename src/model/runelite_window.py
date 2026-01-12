@@ -306,6 +306,7 @@ class RuneLiteWindow(Window):
             imsearch.BOT_IMAGES / "ui_templates" / "minimap-resizable-classic.png",
             client_rect,
         ):
+            print("Found resizable classic minimap.")
             self._minimap_area = (
                 Rectangle(  # For the `game_view` subtraction rectangle.
                     left=mt.left, top=mt.top, width=mt.width + 1, height=mt.height + 15
