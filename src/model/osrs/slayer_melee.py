@@ -240,7 +240,7 @@ class SlayerMelee(OSRSBot):
         self.mouse.click()
         self.sleep_until_bank_open()
 
-        for i in range(8, 28):
+        for i in range(6, 28):
             if self.is_inv_slot_full(i):
                 self.mouse.move_to(self.win.inventory_slots[i].random_point())
                 self.mouse.click()
