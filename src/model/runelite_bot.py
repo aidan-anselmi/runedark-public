@@ -2492,6 +2492,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 self.sleep()
                 self.sleep_while_color_moving(color)
                 return True
+            
 
         return False
 
@@ -2522,7 +2523,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
 
         return False
     
-    def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str, dist_threshold: int = 10) -> None:
+    def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str, dist_threshold: int = 5) -> None:
         if math.dist(self.walker.get_position(), tile_coord) <= dist_threshold:
             self.log_msg(f"Already at {dest_name}.")
             return
