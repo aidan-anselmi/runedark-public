@@ -173,7 +173,6 @@ class SlayerMelee(OSRSBot):
         self.logout_and_stop_script("[END]")
 
     def eat_food(self) -> bool:
-        self.log_msg(f"hp at {self.get_hp()}, eating food")
         if not self.is_control_panel_tab_open("inventory"):
             pag.press("f2")
             self.sleep()
