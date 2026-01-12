@@ -217,91 +217,6 @@ class RuneLiteWindow(Window):
         """
         # Note that `mt` refers to the minimap template.
         # Fixed - Classic layout minimap UI.
-        if mt := imsearch.search_img_in_rect(
-            imsearch.BOT_IMAGES / "ui_templates" / "minimap-fixed-classic.png",
-            client_rect,
-        ):
-            print("Found fixed classic minimap.")
-            self._minimap_area = (
-                Rectangle(  # For the `game_view` subtraction rectangle.
-                    left=mt.left - 1,
-                    top=mt.top,
-                    width=mt.width + 48,
-                    height=mt.height + 4,
-                )
-            )
-            self.compass_orb = Rectangle(
-                left=mt.left + 27, top=mt.top + 2, width=34, height=35
-            )
-            self.compass_orb.subtract_list = self._gen_subtract_boxes(
-                region_name="compass_orb",
-                widths=sw.FIXED_COMPASS_LEFT_WIDTHS,
-                style="left",
-            ) + self._gen_subtract_boxes(
-                region_name="compass_orb",
-                widths=sw.FIXED_COMPASS_RIGHT_WIDTHS,
-                style="right",
-            )
-            self.hp_orb = Rectangle(
-                left=mt.left + 25, top=mt.top + 43, width=28, height=28
-            )
-            self.hp_orb.subtract_list = self._gen_subtract_boxes(
-                region_name="hp_orb", widths=sw.FIXED_ORB_LEFT_WIDTHS, style="left"
-            ) + self._gen_subtract_boxes(
-                region_name="hp_orb", widths=sw.FIXED_ORB_RIGHT_WIDTHS, style="right"
-            )
-            self.prayer_orb = Rectangle(
-                left=mt.left + 25, top=mt.top + 77, width=28, height=28
-            )
-            self.prayer_orb.subtract_list = self._gen_subtract_boxes(
-                region_name="prayer_orb", widths=sw.FIXED_ORB_LEFT_WIDTHS, style="left"
-            ) + self._gen_subtract_boxes(
-                region_name="prayer_orb",
-                widths=sw.FIXED_ORB_RIGHT_WIDTHS,
-                style="right",
-            )
-            self.run_orb = Rectangle(
-                left=mt.left + 35, top=mt.top + 109, width=28, height=28
-            )
-            self.run_orb.subtract_list = self._gen_subtract_boxes(
-                region_name="run_orb", widths=sw.FIXED_ORB_LEFT_WIDTHS, style="left"
-            ) + self._gen_subtract_boxes(
-                region_name="run_orb", widths=sw.FIXED_ORB_RIGHT_WIDTHS, style="right"
-            )
-            self.spec_orb = Rectangle(
-                left=mt.left + 57, top=mt.top + 134, width=28, height=28
-            )
-            self.spec_orb.subtract_list = self._gen_subtract_boxes(
-                region_name="spec_orb", widths=sw.FIXED_ORB_LEFT_WIDTHS, style="left"
-            ) + self._gen_subtract_boxes(
-                region_name="spec_orb", widths=sw.FIXED_ORB_RIGHT_WIDTHS, style="right"
-            )
-            self.hp_orb_text = Rectangle(
-                left=mt.left + 3, top=mt.top + 54, width=22, height=14
-            )
-            self.prayer_orb_text = Rectangle(
-                left=mt.left + 3, top=mt.top + 88, width=22, height=14
-            )
-            self.run_orb_text = Rectangle(
-                left=mt.left + 13, top=mt.top + 120, width=22, height=14
-            )
-            self.spec_orb_text = Rectangle(
-                left=mt.left + 35, top=mt.top + 145, width=22, height=14
-            )
-            self.minimap = Rectangle(
-                left=mt.left + 52, top=mt.top + 4, width=147, height=159
-            )
-            # Take a series of 1-pixel bites out of the minimap to crop it perfectly.
-            self.minimap.subtract_list = self._gen_subtract_boxes(
-                region_name="minimap", widths=sw.FIXED_MINIMAP_LEFT_WIDTHS, style="left"
-            ) + self._gen_subtract_boxes(
-                region_name="minimap",
-                widths=sw.FIXED_MINIMAP_RIGHT_WIDTHS,
-                style="right",
-            )
-            self.mode = "fixed_classic"
-            return True
-
         # Resizable - Classic layout minimap UI.
         if mt := imsearch.search_img_in_rect(
             imsearch.BOT_IMAGES / "ui_templates" / "minimap-resizable-classic.png",
@@ -396,6 +311,92 @@ class RuneLiteWindow(Window):
             )
             self.mode = "resizable_classic"
             return True
+        if mt := imsearch.search_img_in_rect(
+            imsearch.BOT_IMAGES / "ui_templates" / "minimap-fixed-classic.png",
+            client_rect,
+        ):
+            print("Found fixed classic minimap.")
+            self._minimap_area = (
+                Rectangle(  # For the `game_view` subtraction rectangle.
+                    left=mt.left - 1,
+                    top=mt.top,
+                    width=mt.width + 48,
+                    height=mt.height + 4,
+                )
+            )
+            self.compass_orb = Rectangle(
+                left=mt.left + 27, top=mt.top + 2, width=34, height=35
+            )
+            self.compass_orb.subtract_list = self._gen_subtract_boxes(
+                region_name="compass_orb",
+                widths=sw.FIXED_COMPASS_LEFT_WIDTHS,
+                style="left",
+            ) + self._gen_subtract_boxes(
+                region_name="compass_orb",
+                widths=sw.FIXED_COMPASS_RIGHT_WIDTHS,
+                style="right",
+            )
+            self.hp_orb = Rectangle(
+                left=mt.left + 25, top=mt.top + 43, width=28, height=28
+            )
+            self.hp_orb.subtract_list = self._gen_subtract_boxes(
+                region_name="hp_orb", widths=sw.FIXED_ORB_LEFT_WIDTHS, style="left"
+            ) + self._gen_subtract_boxes(
+                region_name="hp_orb", widths=sw.FIXED_ORB_RIGHT_WIDTHS, style="right"
+            )
+            self.prayer_orb = Rectangle(
+                left=mt.left + 25, top=mt.top + 77, width=28, height=28
+            )
+            self.prayer_orb.subtract_list = self._gen_subtract_boxes(
+                region_name="prayer_orb", widths=sw.FIXED_ORB_LEFT_WIDTHS, style="left"
+            ) + self._gen_subtract_boxes(
+                region_name="prayer_orb",
+                widths=sw.FIXED_ORB_RIGHT_WIDTHS,
+                style="right",
+            )
+            self.run_orb = Rectangle(
+                left=mt.left + 35, top=mt.top + 109, width=28, height=28
+            )
+            self.run_orb.subtract_list = self._gen_subtract_boxes(
+                region_name="run_orb", widths=sw.FIXED_ORB_LEFT_WIDTHS, style="left"
+            ) + self._gen_subtract_boxes(
+                region_name="run_orb", widths=sw.FIXED_ORB_RIGHT_WIDTHS, style="right"
+            )
+            self.spec_orb = Rectangle(
+                left=mt.left + 57, top=mt.top + 134, width=28, height=28
+            )
+            self.spec_orb.subtract_list = self._gen_subtract_boxes(
+                region_name="spec_orb", widths=sw.FIXED_ORB_LEFT_WIDTHS, style="left"
+            ) + self._gen_subtract_boxes(
+                region_name="spec_orb", widths=sw.FIXED_ORB_RIGHT_WIDTHS, style="right"
+            )
+            self.hp_orb_text = Rectangle(
+                left=mt.left + 3, top=mt.top + 54, width=22, height=14
+            )
+            self.prayer_orb_text = Rectangle(
+                left=mt.left + 3, top=mt.top + 88, width=22, height=14
+            )
+            self.run_orb_text = Rectangle(
+                left=mt.left + 13, top=mt.top + 120, width=22, height=14
+            )
+            self.spec_orb_text = Rectangle(
+                left=mt.left + 35, top=mt.top + 145, width=22, height=14
+            )
+            self.minimap = Rectangle(
+                left=mt.left + 52, top=mt.top + 4, width=147, height=159
+            )
+            # Take a series of 1-pixel bites out of the minimap to crop it perfectly.
+            self.minimap.subtract_list = self._gen_subtract_boxes(
+                region_name="minimap", widths=sw.FIXED_MINIMAP_LEFT_WIDTHS, style="left"
+            ) + self._gen_subtract_boxes(
+                region_name="minimap",
+                widths=sw.FIXED_MINIMAP_RIGHT_WIDTHS,
+                style="right",
+            )
+            self.mode = "fixed_classic"
+            return True
+
+      
         print("Failed to find minimap.")
         return False
 
