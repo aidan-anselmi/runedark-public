@@ -151,6 +151,7 @@ class SlayerMelee(OSRSBot):
             while self.pickup_ground_item():
                 self.sleep()
                 while self.high_alch_item():
+                    time.sleep(3)
                     self.sleep()
                 if self.is_inv_full():
                     self.eat_food()
