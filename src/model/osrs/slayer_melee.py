@@ -132,6 +132,7 @@ class SlayerMelee(OSRSBot):
         self.toggle_auto_retaliate(state="on")
         self.sleep()
         pag.press("f2")  # open combat tab
+        self.return_to_bank()
 
         while time.time() - start_time < end_time:
             if self.get_total_xp() != -1:
