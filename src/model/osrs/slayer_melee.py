@@ -191,7 +191,7 @@ class SlayerMelee(OSRSBot):
         return self.get_num_item_in_inv("cooked-karambwan.png", "items") == 0 and self.is_inv_full()
 
     def atack_monster(self) -> bool:
-        for _ in range(5):
+        for _ in range(10):
             if not self.move_mouse_to_color_obj(self.monster_color):
                 self.log_msg("Could not find monster!")
                 continue
@@ -233,6 +233,18 @@ class SlayerMelee(OSRSBot):
             pag.press("f2")
             self.sleep()
         if rect := self.find_sprite(self.win.inventory, "herb_sack.png", "items"):
+            self.mouse.move_to(rect.random_point())
+            self.sleep()
+            self.mouse.click()
+            self.sleep()
+            return True
+        return False
+    
+    def fill_gem_bag(self) -> bool:
+        if not self.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
+            self.sleep()
+        if rect := self.find_sprite(self.win.inventory, "gem_bag.png", "items"):
             self.mouse.move_to(rect.random_point())
             self.sleep()
             self.mouse.click()
