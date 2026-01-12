@@ -193,12 +193,13 @@ class SlayerMelee(OSRSBot):
         return self.get_num_item_in_inv("cooked-karambwan.png", "items") == 0 and self.is_inv_full()
 
     def atack_monster(self) -> bool:
-        if not self.move_mouse_to_color_obj(self.monster_color):
-            self.log_msg("Could not find monster!")
-            return False
-        if self.get_mouseover_text(contains="Attack") and self.mouse.click(check_red_click=True):
-            self.sleep_while_color_moving(self.monster_color, timeout=5)
-            return True
+        for _ in range(5):
+            if not self.move_mouse_to_color_obj(self.monster_color):
+                self.log_msg("Could not find monster!")
+                continue
+            if self.get_mouseover_text(contains="Attack") and self.mouse.click(check_red_click=True):
+                self.sleep_while_color_moving(self.monster_color, timeout=5)
+                return True
         return False
 
     def return_to_bank(self) -> bool:
