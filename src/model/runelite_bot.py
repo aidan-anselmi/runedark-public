@@ -29,6 +29,7 @@ from utilities.extract_contours import extract_contours
 from utilities.geometry import Point, Rectangle, RuneLiteObject, cosine_similarity
 from utilities.img_search import BOT_IMAGES, search_img_in_rect
 import utilities.debug as dbg
+from utilities.walker import WalkPath
 
 class RuneLiteBot(Bot, metaclass=ABCMeta):
     """The `RuneLiteBot` class contains bot methods specific to RuneLite (i.e. OSRS).
@@ -2520,3 +2521,20 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             return True
 
         return False
+    
+    def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str, dist_threshold: int = 10) -> None:
+        if math.dist(self.walker.get_position(), tile_coord) <= dist_threshold:
+            self.log_msg(f"Already at {dest_name}.")
+            return
+        
+        self.log_msg(f"Traveling to {dest_name}...")
+        if self.walker.travel_to_dest_along_path(
+            tile_coord,
+            walk_path,
+            dest_name,
+        ):
+            self.log_msg(f"Arrived: {dest_name}")
+        else:
+            self.log_msg(f"Failed to arrive at {dest_name}.")
+        while self.is_traveling():
+            self.sleep()

@@ -28,11 +28,13 @@ class SlayerMelee(OSRSBot):
         self.run_time = 180
         self.options_set = False
 
-        self.walker = Walker(self, dest_square_side_length=10)
+        self.walker = Walker(self, dest_square_side_length=4)
 
         self.monster_color = self.cp.hsv.CYAN_MARK
+        self.bank_color = self.cp.hsv.BLUE_MARK
 
         self.scrape()
+        self.task = "Elves"
 
 
     def scrape(self):
@@ -215,7 +217,15 @@ class SlayerMelee(OSRSBot):
         #         self.mouse.click()
         #         time.sleep(10)
         #         self.logout_and_stop_script("[END]")
-        #         return True        
+        #         return True 
+        if self.task == "Elves":
+            self.travel_to(Point(2352,3163), None, "elf_task_to_bank")
+            self.resupply()
+            if self.get_num_item_in_inv("cooked-karambwan.png", "items") > 0:
+                self.travel_to(Point(2331,3173), None, "bank_to_elf_task")
+                return True
+            return False
+
         pag.press("f4")
         self.sleep()
         self.mouse.move_to(self.win.spellbook_normal[22].random_point())
@@ -225,6 +235,25 @@ class SlayerMelee(OSRSBot):
         self.logout_and_stop_script("[END]")
         return True
     
+    def resupply(self):
+        self.move_mouse_to_color_obj(self.bank_color)
+        self.mouse.click()
+        self.sleep_until_bank_open()
+
+        for i in range(8, 28):
+            if self.is_inv_slot_full(i):
+                self.mouse.move_to(self.win.inventory_slots[i].random_point())
+                self.mouse.click()
+                self.sleep(lo=.3, hi=.5)
+
+        self.open_bank_tab(3)
+        if bwans := self.find_sprite(self.win.bank, "cooked-karambwan-bank.png", "items"):
+            self.mouse.move_to(bwans.random_point())
+            self.sleep()
+            self.mouse.click()
+            self.sleep()
+        return
+
     def has_no_hp_bar(self) -> bool:
         for _ in range(20):
             if self.has_hp_bar():
