@@ -253,7 +253,7 @@ class SlayerMelee(OSRSBot):
                 self.sleep(lo=.3, hi=.5)
 
         self.open_bank_tab(3)
-        if bwans := self.find_sprite(self.win.bank, "cooked-karambwan-bank.png", "items"):
+        if bwans := self.find_sprite(self.win.game_view, "cooked-karambwan-bank.png", "items"):
             self.mouse.move_to(bwans.random_point())
             self.sleep()
             self.mouse.click()
