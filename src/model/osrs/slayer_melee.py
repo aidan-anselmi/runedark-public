@@ -237,8 +237,13 @@ class SlayerMelee(OSRSBot):
         return True
     
     def resupply(self):
-        self.move_mouse_to_color_obj(self.bank_color)
-        self.mouse.click()
+        for _ in range(5):
+            self.move_mouse_to_color_obj(self.bank_color)
+            if self.get_mouseover_text(contains="Bank") and self.mouse.click(check_red_click=True):
+                break
+            if i == 4:
+                self.log_msg("Could not find bank to resupply")
+                return False
         self.sleep_until_bank_open()
 
         for i in range(6, 28):
@@ -290,3 +295,20 @@ class SlayerMelee(OSRSBot):
         if self.get_chatbox_text(contains="Slayer", colors=self.cp.bgr.OFF_RED_TEXT):
             self.log_msg("Slayer task completed!")
             self.return_to_bank()
+
+    def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str, dist_threshold: int = 5) -> None:
+        if math.dist(self.walker.get_position(), tile_coord) <= dist_threshold:
+            self.log_msg(f"Already at {dest_name}.")
+            return
+        
+        self.log_msg(f"Traveling to {dest_name}...")
+        if self.walker.travel_to_dest_along_path(
+            tile_coord,
+            walk_path,
+            dest_name,
+        ):
+            self.log_msg(f"Arrived: {dest_name}")
+        else:
+            self.log_msg(f"Failed to arrive at {dest_name}.")
+        while self.is_traveling():
+            self.sleep()
