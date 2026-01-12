@@ -2010,7 +2010,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         """
         dbg.save_image("hp_orb_text.png", self.win.hp_orb_text.screenshot())
         if hp := ocr.scrape_text(
-            self.win.hp_orb_text, ocr.PLAIN_11, [self.cp.bgr.GREEN, self.cp.bgr.RED, self.cp.bgr.YELLOW]
+            self.win.hp_orb_text, ocr.PLAIN_11, [self.cp.bgr.GREEN, self.cp.bgr.RED]
         ):
             return int("".join(re.findall(r"\d", hp)))
         return -1
