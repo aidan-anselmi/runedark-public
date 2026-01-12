@@ -127,7 +127,10 @@ class SlayerMelee(OSRSBot):
         last_update = start_time
         xp_timestamp = time.time()
 
-        self.log_msg(f"Starting HP: {self.get_hp()}")
+        hp = self.get_hp()
+        self.log_msg(f"Starting HP: {hp}")
+        if hp == -1:
+            return
 
         self.toggle_auto_retaliate(state="on")
         self.sleep()
