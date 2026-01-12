@@ -236,7 +236,7 @@ class SlayerMelee(OSRSBot):
         if not self.is_control_panel_tab_open("inventory"):
             pag.press("f2")
             self.sleep()
-        if rect := self.find_sprite(self.win.inventory, "herb_sack.png", "items"):
+        if rect := self.find_sprite(self.win.inventory, "herb-sack.png", "items"):
             self.mouse.move_to(rect.random_point())
             self.sleep()
             self.mouse.click()
@@ -248,7 +248,7 @@ class SlayerMelee(OSRSBot):
         if not self.is_control_panel_tab_open("inventory"):
             pag.press("f2")
             self.sleep()
-        if rect := self.find_sprite(self.win.inventory, "gem_bag.png", "items"):
+        if rect := self.find_sprite(self.win.inventory, "gem-bag.png", "items"):
             self.mouse.move_to(rect.random_point())
             self.sleep()
             self.mouse.click()
