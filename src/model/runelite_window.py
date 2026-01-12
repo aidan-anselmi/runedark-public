@@ -221,6 +221,7 @@ class RuneLiteWindow(Window):
             imsearch.BOT_IMAGES / "ui_templates" / "minimap-fixed-classic.png",
             client_rect,
         ):
+            print("Found fixed classic minimap.")
             self._minimap_area = (
                 Rectangle(  # For the `game_view` subtraction rectangle.
                     left=mt.left - 1,
