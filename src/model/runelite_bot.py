@@ -9,6 +9,9 @@ from concurrent.futures import ThreadPoolExecutor
 from fractions import Fraction
 from pathlib import Path
 from typing import Dict, List, Literal, Optional, Tuple, Union
+import subprocess
+import time
+import random
 
 import cv2
 import numpy as np
@@ -570,7 +573,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         win_str = "minimap" if minimap else "game window"
         zstyle = "out" if out else "in"
 
-        # Move + ensure focus
+        # Move mouse and force focus
         self.mouse.move_to(win_obj.random_point())
         self.mouse.click()
         self.sleep(0.15, 0.25)
@@ -581,36 +584,34 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 overwrite=overwrite,
             )
 
-        # ---- Linux scroll model ----
-        # One wheel tick = one zoom step
-        MAX_TICKS = 120        # empirically safe full-range
-        MIN_TICKS = 6          # minimum to escape zoom limits
+        # --- REAL Linux wheel behavior ---
+        # Empirically: ~90 wheel ticks from min ↔ max zoom
+        MAX_TICKS = 90
+        MIN_TICKS = 5
 
         ticks = max(
             MIN_TICKS,
             int(MAX_TICKS * percent_zoom),
         )
 
-        # Game-tested truth on Linux:
-        #   scroll DOWN  (+1) → zoom OUT
-        #   scroll UP    (-1) → zoom IN
-        scroll_value = 1 if out else -1
-
-        # Optional: many games require Ctrl+Scroll
-        pag.keyDown("ctrl")
+        # xdotool:
+        # button 4 = scroll UP  (zoom IN)
+        # button 5 = scroll DOWN (zoom OUT)
+        button = "5" if out else "4"
 
         for _ in range(ticks):
-            pag.scroll(scroll_value)
-            self.sleep(0.04, 0.06)
-
-        pag.keyUp("ctrl")
+            subprocess.run(
+                ["xdotool", "click", button],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            time.sleep(random.uniform(0.035, 0.06))
 
         if verbose:
             self.log_msg(
-                f"Zoomed {zstyle} {win_str}.",
+                f"Zoomed {zstyle} {win_str} ({int(percent_zoom * 100)}%).",
                 overwrite=overwrite,
             )
-
 
 
 
