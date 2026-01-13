@@ -562,16 +562,9 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         out: bool = True,
         percent_zoom: float = 1.0,
         minimap: bool = False,
-        max_steps: int = 50,
-        step_duration: float = 0.01,
         verbose: bool = True,
         overwrite: bool = True,
     ) -> None:
-        """
-        Zoom in or out on the game window or minimap (Linux-safe).
-
-        Linux requires very small scroll deltas (±1), repeated many times.
-        """
 
         win_obj = self.win.minimap if minimap else self.win.game_view
         win_str = "minimap" if minimap else "game window"
@@ -583,7 +576,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         if verbose:
             self.log_msg(f"Mouse moved to {win_str}.", overwrite=overwrite)
 
-        self.sleep()
+        self.sleep(0.15, 0.25)
 
         perc_str = int(percent_zoom * 100)
         if verbose:
@@ -592,15 +585,19 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 overwrite=overwrite,
             )
 
-        max_scroll_units = 3600
+        # --- Linux-safe scrolling ---
+        MAX_SCROLL_UNITS = 3600
         MIN_SCROLL_UNITS = 120
 
         total_units = max(
             MIN_SCROLL_UNITS,
-            int(max_scroll_units * percent_zoom),
+            int(MAX_SCROLL_UNITS * percent_zoom),
         )
 
-        direction = 1 if out else -1  # Linux: up = zoom in
+        # Linux / games:
+        # scroll UP  (-1) → zoom IN
+        # scroll DOWN(+1) → zoom OUT
+        direction = 1 if out else -1
 
         for _ in range(total_units):
             pag.scroll(direction)
@@ -611,6 +608,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 f"Zoomed {zstyle} {win_str} ({perc_str}%).",
                 overwrite=overwrite,
             )
+
 
     def zoom_everything_out_completely(
         self,
