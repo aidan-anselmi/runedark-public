@@ -35,9 +35,18 @@ class SlayerMelee(OSRSBot):
 
         self.scrape()
 
+        
+        
+
         # elf task
-        self.task = ""
+        # self.task = "Elves"
+        # self.task_tile = Point(2331,3173)
+        # self.bank_tile = Point(2352,3163)
+
+        # Suqah task
+        self.task = "Suqah"
         self.task_tile = Point(2331,3173)
+        self.bank_tile = Point(2137,3854)
 
 
     def scrape(self):
@@ -224,14 +233,12 @@ class SlayerMelee(OSRSBot):
         #         time.sleep(10)
         #         self.logout_and_stop_script("[END]")
         #         return True 
-        if self.task == "Elves":
-            self.travel_to(Point(2352,3163), None, "elf_task_to_bank")
-            self.resupply()
-            if self.get_num_item_in_inv("cooked-karambwan.png", "items") > 0:
-                self.travel_to(self.task_tile, None, "bank_to_elf_task")
-                return True
-            return False
+        if self.task == "Elves" or self.task == "Suqah":
+            return self.run_and_back()
 
+        return self.bank_castle_wars()
+    
+    def bank_castle_wars(self) -> bool:
         pag.press("f4")
         self.sleep()
         self.mouse.move_to(self.win.spellbook_normal[22].random_point())
@@ -240,6 +247,14 @@ class SlayerMelee(OSRSBot):
         time.sleep(10)
         self.stop()
         return True
+    
+    def run_and_back(self) -> bool:
+        self.travel_to(self.bank_tile, None, f"{self.task}_task_to_bank")
+        self.resupply()
+        if self.get_num_item_in_inv("cooked-karambwan.png", "items") > 0:
+            self.travel_to(self.task_tile, None, f"bank_to_{self.task.lower()}_task")
+            return True
+        return False
     
     def resupply(self) -> bool:
         for i in range(5):
