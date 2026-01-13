@@ -586,8 +586,8 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
 
         # --- REAL Linux wheel behavior ---
         # Empirically: ~90 wheel ticks from min ↔ max zoom
-        MAX_TICKS = 90
-        MIN_TICKS = 5
+        MAX_TICKS = 34
+        MIN_TICKS = 1
 
         ticks = max(
             MIN_TICKS,
