@@ -70,6 +70,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         """
         super().__init__(game_title, bot_title, description, window)
         self.num_relogs = 0  # How many times we have logged in and out of RuneLite.
+        self.consec_mouseover_failures = 0  # Consecutive failures to read mouseover.           
 
     # --- OCR ---
     def get_mouseover_text(
@@ -599,7 +600,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             self.log_msg(
                 f"Zooming {win_str} {zstyle} ({perc_str:d}%)...", overwrite=overwrite
             )
-        max_zoom_units = 3600
+        max_zoom_units = 896
         sign = -1 if out else 1
         scroll_amount = int(np.ceil(max_zoom_units * percent_zoom))
         num_steps = int(np.ceil(max_steps * percent_zoom))
