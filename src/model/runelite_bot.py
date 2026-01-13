@@ -567,55 +567,56 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         verbose: bool = True,
         overwrite: bool = True,
     ) -> None:
-        """Zoom in or out on the game window or minimap.
-
-        Note that 3600 is the amount of backward scrolling necessary to zoom all the
-        way out from a fully-zoomed-in game window.
-
-        Args:
-            out (bool, optional): Zoom out if True, zoom in if False. Defaults to True.
-            percent_zoom (float, optional): How much to zoom. Defaults to 1.0 (100%).
-            minimap (bool, optional): Zoom the minimap if True, otherwise zoom the game
-                window. Defaults to False.
-            max_steps (int, optional): The maximum number of scroll steps to use. Use
-                this to calibrate overall scroll animation speed. Defaults to 50.
-            step_duration (float, optional): Seconds to wait between scroll steps. Use
-                this to calibrate overall scroll animation speed. Defaults to 0.01.
-            verbose (bool, optional): Whether to print log messages. Defaults to True.
-            overwrite (bool, optional): Whether to reduce log message spam. Defaults to
-                True.
         """
-        # We can only zoom via scroll if the cursor is on the game window or minimap.
+        Zoom in or out on the game window or minimap (Linux-safe).
+
+        Linux requires very small scroll deltas (±1), repeated many times.
+        """
+
         win_obj = self.win.minimap if minimap else self.win.game_view
         win_str = "minimap" if minimap else "game window"
         zstyle = "out" if out else "in"
+
         if verbose:
             self.log_msg(f"Moving mouse to {win_str}...")
         self.mouse.move_to(win_obj.random_point())
         if verbose:
             self.log_msg(f"Mouse moved to {win_str}.", overwrite=overwrite)
+
         self.sleep()
+
         perc_str = int(percent_zoom * 100)
         if verbose:
             self.log_msg(
-                f"Zooming {win_str} {zstyle} ({perc_str:d}%)...", overwrite=overwrite
+                f"Zooming {win_str} {zstyle} ({perc_str}%)...",
+                overwrite=overwrite,
             )
-        max_zoom_units = 3600
-        sign = -1 if out else 1
-        scroll_amount = int(np.ceil(max_zoom_units * percent_zoom))
-        num_steps = int(np.ceil(max_steps * percent_zoom))
-        scroll_per_step = int(np.ceil(scroll_amount / num_steps)) * sign
-        sleep_per_step = abs(step_duration / max_zoom_units)
-        # Humans scroll with the mouse in short bursts.
-        num_steps_scroll_burst = num_steps // random.randint(3, 5)
-        for step in range(num_steps):
-            if step % num_steps_scroll_burst == 0:
-                self.sleep(0.3, 0.4)
-            pag.scroll(scroll_per_step)
-            self.sleep(sleep_per_step, 1.5 * sleep_per_step)
+
+        # Linux-friendly scroll model
+        max_scroll_units = 3600  # logical full zoom range
+        total_units = int(max_scroll_units * percent_zoom)
+
+        # Direction: Linux uses same sign convention as Windows
+        direction = -1 if out else 1
+
+        # Break into many tiny steps
+        steps = max(1, int(max_steps * percent_zoom))
+        units_per_step = max(1, total_units // steps)
+
+        for step in range(steps):
+            # Occasional human-like pauses
+            if step % random.randint(6, 10) == 0:
+                self.sleep(0.25, 0.45)
+
+            # Scroll ONE unit at a time (critical for Linux)
+            for _ in range(units_per_step):
+                pag.scroll(direction * 1)
+                self.sleep(step_duration, step_duration * 1.5)
+
         if verbose:
             self.log_msg(
-                f"Zoomed {zstyle} {win_str} ({perc_str:d}%).", overwrite=overwrite
+                f"Zoomed {zstyle} {win_str} ({perc_str}%).",
+                overwrite=overwrite,
             )
 
     def zoom_everything_out_completely(
