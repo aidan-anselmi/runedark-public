@@ -36,7 +36,7 @@ class SlayerMelee(OSRSBot):
         self.scrape()
 
         # elf task
-        self.task = "Elves"
+        self.task = ""
         self.task_tile = Point(2331,3173)
 
 
@@ -135,7 +135,7 @@ class SlayerMelee(OSRSBot):
         self.toggle_auto_retaliate(state="on")
         self.sleep()
         pag.press("f2")  # open combat tab
-        self.resupply()
+        #self.resupply()
 
         while time.time() - start_time < end_time:
             if self.get_total_xp() != -1:
@@ -238,7 +238,7 @@ class SlayerMelee(OSRSBot):
         self.sleep()
         self.mouse.click()
         time.sleep(10)
-        self.logout_and_stop_script("[END]")
+        self.stop()
         return True
     
     def resupply(self) -> bool:
