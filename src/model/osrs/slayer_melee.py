@@ -36,7 +36,7 @@ class SlayerMelee(OSRSBot):
         self.scrape()
 
         
-        
+        self.task = ""
 
         # elf task
         # self.task = "Elves"
@@ -44,9 +44,9 @@ class SlayerMelee(OSRSBot):
         # self.bank_tile = Point(2352,3163)
 
         # Suqah task
-        self.task = "Suqah"
-        self.task_tile = Point(2331,3173)
-        self.bank_tile = Point(2137,3854)
+        # self.task = "Suqah"
+        # self.task_tile = Point(2331,3173)
+        # self.bank_tile = Point(2137,3854)
 
 
     def scrape(self):
