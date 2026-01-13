@@ -570,44 +570,48 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         win_str = "minimap" if minimap else "game window"
         zstyle = "out" if out else "in"
 
-        if verbose:
-            self.log_msg(f"Moving mouse to {win_str}...")
+        # Move + ensure focus
         self.mouse.move_to(win_obj.random_point())
-        if verbose:
-            self.log_msg(f"Mouse moved to {win_str}.", overwrite=overwrite)
-
+        self.mouse.click()
         self.sleep(0.15, 0.25)
 
-        perc_str = int(percent_zoom * 100)
         if verbose:
             self.log_msg(
-                f"Zooming {win_str} {zstyle} ({perc_str}%)...",
+                f"Zooming {win_str} {zstyle} ({int(percent_zoom * 100)}%)...",
                 overwrite=overwrite,
             )
 
-        # --- Linux-safe scrolling ---
-        MAX_SCROLL_UNITS = 3600
-        MIN_SCROLL_UNITS = 120
+        # ---- Linux scroll model ----
+        # One wheel tick = one zoom step
+        MAX_TICKS = 120        # empirically safe full-range
+        MIN_TICKS = 6          # minimum to escape zoom limits
 
-        total_units = max(
-            MIN_SCROLL_UNITS,
-            int(MAX_SCROLL_UNITS * percent_zoom),
+        ticks = max(
+            MIN_TICKS,
+            int(MAX_TICKS * percent_zoom),
         )
 
-        # Linux / games:
-        # scroll UP  (-1) → zoom IN
-        # scroll DOWN(+1) → zoom OUT
-        direction = 1 if out else -1
+        # Game-tested truth on Linux:
+        #   scroll DOWN  (+1) → zoom OUT
+        #   scroll UP    (-1) → zoom IN
+        scroll_value = 1 if out else -1
 
-        for _ in range(total_units):
-            pag.scroll(direction)
-            self.sleep(0.03, 0.05)
+        # Optional: many games require Ctrl+Scroll
+        pag.keyDown("ctrl")
+
+        for _ in range(ticks):
+            pag.scroll(scroll_value)
+            self.sleep(0.04, 0.06)
+
+        pag.keyUp("ctrl")
 
         if verbose:
             self.log_msg(
-                f"Zoomed {zstyle} {win_str} ({perc_str}%).",
+                f"Zoomed {zstyle} {win_str}.",
                 overwrite=overwrite,
             )
+
+
 
 
     def zoom_everything_out_completely(
