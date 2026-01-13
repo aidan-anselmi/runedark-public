@@ -217,7 +217,7 @@ class SlayerMelee(OSRSBot):
                 if i == 9:
                     self.log_msg("Could not find monster to attack")
                     if self.task:
-                        self.travel_to(self.task_tile, None, "bank_to_elf_task")
+                        self.travel_to(self.task_tile, None, f"bank_to_{self.task.lower()}_task")
                 continue
             if self.get_mouseover_text(contains="Attack") and self.mouse.click(check_red_click=True):
                 self.sleep_while_color_moving(self.monster_color, timeout=5)
@@ -316,7 +316,7 @@ class SlayerMelee(OSRSBot):
             return
         
         self.log_msg(f"Traveling to {dest_name}...")
-        if self.walker.travel_to_dest_along_path(
+        if walk_path and self.walker.travel_to_dest_along_path(
             tile_coord,
             walk_path,
             dest_name,
