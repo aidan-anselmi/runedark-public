@@ -91,11 +91,27 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 found, False if the provided keyword was not found. If no keywords were
                 provided, all text in the mouseover area is returned, no spaces.
         """
+
+        if not self.consec_mouseover_failures:
+            self.consec_mouseover_failures = 0
+
+        res = None
         if colors is None:
             colors = [self.cp.bgr.OFF_WHITE_TEXT, self.cp.bgr.OFF_CYAN_TEXT]
         if contains is None:
-            return ocr.scrape_text(self.win.mouseover, ocr.BOLD_12, colors)
-        return bool(ocr.find_textbox(contains, self.win.mouseover, ocr.BOLD_12, colors))
+            res = ocr.scrape_text(self.win.mouseover, ocr.BOLD_12, colors)
+        else:
+            res = bool(ocr.find_textbox(contains, self.win.mouseover, ocr.BOLD_12, colors))
+
+        if not res:
+            self.consec_mouseover_failures += 1
+        else:
+            self.consec_mouseover_failures = 0
+
+        if self.consec_mouseover_failures % 10 == 0 and self.consec_mouseover_failures != 0:
+            self.move_camera(horizontal=random.choice([-15, 15]), vertical=0)
+
+        return res
 
     def get_chatbox_text(
         self,

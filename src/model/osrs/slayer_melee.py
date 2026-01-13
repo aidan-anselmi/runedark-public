@@ -144,7 +144,7 @@ class SlayerMelee(OSRSBot):
         self.toggle_auto_retaliate(state="on")
         self.sleep()
         pag.press("f2")  # open combat tab
-        #self.resupply()
+        self.zoom(percent_zoom=440.0/896.0)
 
         while time.time() - start_time < end_time:
             if self.get_total_xp() != -1:
@@ -214,7 +214,8 @@ class SlayerMelee(OSRSBot):
             if not self.move_mouse_to_color_obj(self.monster_color):
                 if i == 9:
                     self.log_msg("Could not find monster to attack")
-                    self.travel_to(self.task_tile, None, "bank_to_elf_task")
+                    if self.task:
+                        self.travel_to(self.task_tile, None, "bank_to_elf_task")
                 continue
             if self.get_mouseover_text(contains="Attack") and self.mouse.click(check_red_click=True):
                 self.sleep_while_color_moving(self.monster_color, timeout=5)
@@ -223,16 +224,6 @@ class SlayerMelee(OSRSBot):
 
     def return_to_bank(self) -> bool:
         self.log_msg("Returning to bank...")
-        # pag.press("f5")
-        # self.sleep()
-        # for _ in range(5):
-        #     if rect := self.find_sprite(self.win.inventory, "ring_of_dueling.png", "items"):
-        #         self.mouse.move_to(rect.random_point())
-        #         self.sleep()
-        #         self.mouse.click()
-        #         time.sleep(10)
-        #         self.logout_and_stop_script("[END]")
-        #         return True 
         if self.task == "Elves" or self.task == "Suqah":
             return self.run_and_back()
 
