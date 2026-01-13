@@ -144,7 +144,9 @@ class SlayerMelee(OSRSBot):
         self.toggle_auto_retaliate(state="on")
         self.sleep()
         pag.press("f2")  # open combat tab
-        self.zoom(percent_zoom=440.0/896.0)
+        self.zoom_everything_out_completely()
+        self.zoom(percent_zoom=440.0/896.0, instant=True)
+        
 
         while time.time() - start_time < end_time:
             if self.get_total_xp() != -1:
