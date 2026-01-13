@@ -145,7 +145,7 @@ class SlayerMelee(OSRSBot):
         self.sleep()
         pag.press("f2")  # open combat tab
         self.zoom(out=True, verbose=False)
-        self.zoom(percent_zoom=.9, out=False)
+        self.zoom(percent_zoom=.01, out=False)
         
 
         while time.time() - start_time < end_time:
