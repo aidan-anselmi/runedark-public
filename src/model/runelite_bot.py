@@ -600,7 +600,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             self.log_msg(
                 f"Zooming {win_str} {zstyle} ({perc_str:d}%)...", overwrite=overwrite
             )
-        max_zoom_units = 896
+        max_zoom_units = 3600
         sign = -1 if out else 1
         scroll_amount = int(np.ceil(max_zoom_units * percent_zoom))
         num_steps = int(np.ceil(max_steps * percent_zoom))
