@@ -605,7 +605,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
-            time.sleep(random.uniform(0.035, 0.06))
+            time.sleep(random.uniform(0.01, 0.03))
 
         if verbose:
             self.log_msg(
