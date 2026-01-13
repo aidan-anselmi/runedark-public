@@ -592,26 +592,19 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 overwrite=overwrite,
             )
 
-        # Linux-friendly scroll model
-        max_scroll_units = 3600  # logical full zoom range
-        total_units = int(max_scroll_units * percent_zoom)
+        max_scroll_units = 3600
+        MIN_SCROLL_UNITS = 120
 
-        # Direction: Linux uses same sign convention as Windows
-        direction = -1 if out else 1
+        total_units = max(
+            MIN_SCROLL_UNITS,
+            int(max_scroll_units * percent_zoom),
+        )
 
-        # Break into many tiny steps
-        steps = max(1, int(max_steps * percent_zoom))
-        units_per_step = max(1, total_units // steps)
+        direction = 1 if out else -1  # Linux: up = zoom in
 
-        for step in range(steps):
-            # Occasional human-like pauses
-            if step % random.randint(6, 10) == 0:
-                self.sleep(0.25, 0.45)
-
-            # Scroll ONE unit at a time (critical for Linux)
-            for _ in range(units_per_step):
-                pag.scroll(direction * 1)
-                self.sleep(step_duration, step_duration * 1.5)
+        for _ in range(total_units):
+            pag.scroll(direction)
+            self.sleep(0.03, 0.05)
 
         if verbose:
             self.log_msg(
