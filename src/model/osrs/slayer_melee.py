@@ -171,7 +171,7 @@ class SlayerMelee(OSRSBot):
             self.pickup_ground_item()                
 
             # fight 
-            if self.has_no_hp_bar():
+            if self.check_idle_notifier_status("out_of_combat"):
                 self.atack_monster()
 
             # bank
