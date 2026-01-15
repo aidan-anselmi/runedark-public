@@ -147,6 +147,8 @@ class SlayerMelee(OSRSBot):
         self.zoom(out=True, verbose=False)      # hard reset
         self.zoom(out=False, percent_zoom=0.4) # now this works
 
+        self.has_no_hp_bar_consec = 0
+
 
         while time.time() - start_time < end_time:
             if self.get_total_xp() != -1:
@@ -165,21 +167,18 @@ class SlayerMelee(OSRSBot):
                     self.return_to_bank()
 
             # loot
-            while self.pickup_ground_item():
-                self.sleep()
-                while self.high_alch_item():
-                    time.sleep(3)
-                    self.sleep()
-                if self.full_trip():
-                    self.log_msg("Inventory full, returning to bank")
-                    self.return_to_bank()
+            if self.find_ground_items() and self.is_inv_full():
+                self.eat_food()
+            self.high_alch_item()
+            self.pickup_ground_item()                
 
             # fight 
             if self.has_no_hp_bar():
                 self.atack_monster()
 
-            self.high_alch_item()
-            self.check_task_completed()
+            # bank
+            if self.full_trip() or self.check_task_completed():
+                self.return_to_bank()            
 
             # update progress
             if time.time() - last_update > 300:
@@ -206,10 +205,11 @@ class SlayerMelee(OSRSBot):
         if self.is_inv_full():
             self.fill_herb_sack()
         if self.is_inv_full():
-            self.fill_gem_bag()
-        if self.is_inv_full():
-            self.eat_food()            
-        return self.get_num_item_in_inv("cooked-karambwan.png", "items") == 0 and self.is_inv_full()
+            self.fill_gem_bag()         
+        res = self.get_num_item_in_inv("cooked-karambwan.png", "items") == 0 and self.is_inv_full()
+        if res:
+            self.log_msg("Inventory full, returning to bank")
+        return res
 
     def atack_monster(self) -> bool:
         for i in range(10):
@@ -275,11 +275,17 @@ class SlayerMelee(OSRSBot):
         return True
 
     def has_no_hp_bar(self) -> bool:
-        for _ in range(20):
+        for _ in range(5):
             if self.has_hp_bar():
                 return False
             self.sleep(0.1)
-        return True
+
+        if self.has_no_hp_bar_consec % 4 == 0:
+            self.has_no_hp_bar_consec = 1
+            return True
+        else:
+            self.has_no_hp_bar_consec += 1
+        return False
     
     def fill_herb_sack(self) -> bool:
         if not self.is_control_panel_tab_open("inventory"):
@@ -305,10 +311,11 @@ class SlayerMelee(OSRSBot):
             return True
         return False
 
-    def check_task_completed(self):
+    def check_task_completed(self) -> bool:
         if self.get_chatbox_text(contains="Slayer", colors=self.cp.bgr.OFF_RED_TEXT):
             self.log_msg("Slayer task completed!")
-            self.return_to_bank()
+            return True
+        return False
 
     def travel_to(self, tile_coord: Point, walk_path: WalkPath, dest_name: str, dist_threshold: int = 5) -> None:
         if math.dist(self.walker.get_position(), tile_coord) <= dist_threshold:

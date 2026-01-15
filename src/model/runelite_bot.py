@@ -74,6 +74,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         super().__init__(game_title, bot_title, description, window)
         self.num_relogs = 0  # How many times we have logged in and out of RuneLite.
         self.consec_mouseover_failures = 0  # Consecutive failures to read mouseover.           
+        self.last_high_alch_timestamp = 0.0
 
     # --- OCR ---
     def get_mouseover_text(
@@ -864,6 +865,14 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 return True
         return False
 
+    def exit_context_menu(self, pad: int = 120, exit_direction: Literal["up", "down", "left", "right"] = "up"):
+        dx, dy = round(1.1 * pad), round(1.1 * pad)
+        dx = -dx if exit_direction == "left" else dx
+        dy = -dy if exit_direction == "up" else dy
+        (x, y) = (dx, 0) if exit_direction in ["left", "right"] else (0, dy)
+        self.mouse.move_rel(x, y)
+        return
+
     # --- Mouse Utilities ---
     def right_click_select_context_menu(
         self,
@@ -903,6 +912,8 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         Returns:
             bool: True if text was detected and clicked, False otherwise.
         """
+        
+
         posn = pag.position()
         self.mouse.right_click()
         self.sleep()  # A human takes a second to look at the options.
@@ -922,11 +933,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             exit_txt = exit_txt.lower().replace(" ", "")
             pattern = rf"{exit_txt}\D"  # \D matches any non-digit character.
             if re.search(pattern, txt):
-                dx, dy = round(1.1 * pad), round(1.1 * pad)
-                dx = -dx if exit_direction == "left" else dx
-                dy = -dy if exit_direction == "up" else dy
-                (x, y) = (dx, 0) if exit_direction in ["left", "right"] else (0, dy)
-                self.mouse.move_rel(x, y)
+                self.exit_context_menu(pad=pad, exit_direction=exit_direction)
                 return False
         if ocr_rect := ocr.find_textbox(req_txt, rc_rect, font=font, colors=color):
             # Note that if the mouse strays too far, the context menu will disappear.
@@ -936,6 +943,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             self.mouse.click()
             self.sleep()
             return True
+        self.exit_context_menu(pad=pad, exit_direction=exit_direction)
         return False
 
     def move_mouse_to_color_obj(
@@ -1177,6 +1185,8 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         Returns:
             bool: True if we have a full backpack, False otherwise.
         """
+        if not self.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
         return self.get_num_empty_inv_slots() == 0
 
     def is_inv_empty(self) -> bool:
@@ -1185,6 +1195,8 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         Returns:
             bool: True if we have an empty backpack, False otherwise.
         """
+        if not self.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
         return self.get_num_empty_inv_slots() == 28
 
     def is_inv_not_full(self) -> bool:
@@ -1193,9 +1205,13 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         Returns:
             bool: True if there is at least one empty slot in our backpack, else False.
         """
+        if not self.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
         return self.get_num_empty_inv_slots() > 0
 
     def is_inv_nonempty(self) -> bool:
+        if not self.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
         num_full = 28 - self.get_num_empty_inv_slots()
         return num_full > 0
 
@@ -1212,6 +1228,8 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         Returns:
             bool: True if the slot is full, False otherwise.
         """
+        if not self.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
         item_path = BOT_IMAGES / "inventory" / "empty-slot.png"
         empty_slot = search_img_in_rect(item_path, self.win.inventory_slots[slot_ind])
         state = "empty" if empty_slot else "full"
@@ -2484,11 +2502,14 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             time.sleep(0.1)
         return False
 
+    def find_ground_items(self) -> List[RuneLiteObject]:
+        return self.find_colors(self.win.game_view, color = self.cp.hsv.GROUND_ITEM_COLOR)
+
     def pickup_ground_item(self) -> bool:
         color = self.cp.hsv.GROUND_ITEM_COLOR
         txt_color = self.cp.bgr.PURPLE_DROPDOWN_TEXT
 
-        if not self.is_inv_full() and (obj := self.find_colors(self.win.game_view, color)):
+        if not self.is_inv_full() and (obj := self.find_ground_items()):
             obj = obj[0]
 
             # trim rectangle since the entire thing is not a clickbox
@@ -2514,6 +2535,11 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
     def high_alch_item(self, color: Color = None) -> bool:
         if color is None:
             color = self.cp.hsv.GREEN_MARK
+
+        if time.time() - self.last_high_alch_timestamp < 3.0:
+            return False
+        else:
+            self.last_high_alch_timestamp = time.time()        
 
         if not self.is_control_panel_tab_open("inventory"):
             pag.press("f2")
