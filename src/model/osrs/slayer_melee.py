@@ -217,7 +217,7 @@ class SlayerMelee(OSRSBot):
         return res
 
     def atack_monster(self) -> bool:
-        if self.last_attack_monster_timestamp + 5 > time.time():
+        if self.last_attack_monster_timestamp + 3 > time.time():
             return False
         
         for i in range(10):
