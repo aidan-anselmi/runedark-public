@@ -149,6 +149,7 @@ class SlayerMelee(OSRSBot):
 
         self.has_no_hp_bar_consec = 0
         self.last_attack_monster_timestamp = 0
+        self.last_out_of_combat_timestamp = 0
 
 
         while time.time() - self.start_time < end_time:
@@ -172,7 +173,7 @@ class SlayerMelee(OSRSBot):
             self.pickup_ground_item()                
 
             # fight 
-            if self.check_idle_notifier_status("out_of_combat") or self.has_no_hp_bar():
+            if self.out_of_combat() or self.has_no_hp_bar():
                 self.atack_monster()
 
             # bank
@@ -189,6 +190,14 @@ class SlayerMelee(OSRSBot):
         self.update_progress(1)
         self.log_msg("[END]")
         self.logout_and_stop_script("[END]")
+
+    def out_of_combat(self) -> bool:
+        if time.time() - self.last_out_of_combat_timestamp < 3:
+            return False
+        res = self.check_idle_notifier_status("out_of_combat")
+        if res:
+            self.last_out_of_combat_timestamp = time.time()
+        return res
 
     def eat_food(self) -> bool:
         if not self.is_control_panel_tab_open("inventory"):
