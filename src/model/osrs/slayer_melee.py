@@ -146,6 +146,7 @@ class SlayerMelee(OSRSBot):
         pag.press("f2")  # open combat tab
 
         self.has_no_hp_bar_consec = 0
+        self.last_attack_monster_timestamp = 0
 
 
         while time.time() - start_time < end_time:
@@ -210,6 +211,9 @@ class SlayerMelee(OSRSBot):
         return res
 
     def atack_monster(self) -> bool:
+        if self.last_attack_monster_timestamp + 5 > time.time():
+            return False
+        
         for i in range(10):
             if not self.move_mouse_to_color_obj(self.monster_color):
                 if i == 9:
@@ -218,7 +222,7 @@ class SlayerMelee(OSRSBot):
                         self.travel_to(self.task_tile, None, f"bank_to_{self.task.lower()}_task")
                 continue
             if self.get_mouseover_text(contains="Attack") and self.mouse.click(check_red_click=True):
-                self.sleep_while_color_moving(self.monster_color, timeout=5)
+                self.last_attack_monster_timestamp = time.time()
                 return True
         return False
 
