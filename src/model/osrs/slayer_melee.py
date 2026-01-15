@@ -204,6 +204,9 @@ class SlayerMelee(OSRSBot):
         return False
     
     def get_food_rects(self) -> List[RuneLiteObject]:
+        if not self.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
+            self.sleep()
         return self.find_colors(self.win.inventory, self.food_color)
 
     def full_trip(self) -> bool:
@@ -211,7 +214,7 @@ class SlayerMelee(OSRSBot):
             self.fill_herb_sack()
         if self.is_inv_full():
             self.fill_gem_bag()         
-        res = len(self.get_food_rects()) == 0 and self.is_inv_full()
+        res = len(self.get_food_rects()) == 0 and len(self.get_food_rects()) == 0 and self.is_inv_full()
         if res:
             self.log_msg("Inventory full, returning to bank")
         return res
