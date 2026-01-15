@@ -2503,7 +2503,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         return False
 
     def find_ground_items(self) -> List[RuneLiteObject]:
-        return self.find_colors(self.win.game_view, color = self.cp.hsv.GROUND_ITEM_COLOR)
+        return self.find_colors(self.win.game_view, colors = [self.cp.hsv.GROUND_ITEM_COLOR, self.cp.hsv.GROUND_ITEM_TEXT_OUTLINE])
 
     def pickup_ground_item(self) -> bool:
         color = self.cp.hsv.GROUND_ITEM_COLOR
