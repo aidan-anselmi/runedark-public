@@ -152,11 +152,9 @@ class SlayerMelee(OSRSBot):
 
 
         while time.time() - self.start_time < end_time:
-            if self.get_total_xp() != -1:
-                xp_timestamp = time.time()
-            if time.time() - xp_timestamp > 300:
-                self.log_msg("No XP gain detected for 5 minutes, stopping script.")
-                self.logout_and_stop_script("[END]")
+            if self.has_not_gained_xp(duration=300):
+                self.log_msg("No XP gained for 5 minutes, returning to bank")
+                self.return_to_bank()
                 return
 
             # heal

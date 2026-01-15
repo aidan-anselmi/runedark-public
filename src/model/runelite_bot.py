@@ -76,6 +76,8 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         self.consec_mouseover_failures = 0  # Consecutive failures to read mouseover.           
         self.last_high_alch_timestamp = 0.0
 
+        self.xp_timestamp = time.time()
+
     # --- OCR ---
     def get_mouseover_text(
         self,
@@ -2564,3 +2566,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
 
         return False
     
+    def has_not_gained_xp(self, duration: int = 300) -> bool:
+        if self.get_total_xp() != -1:
+            self.xp_timestamp = time.time()
+        return time.time() - self.xp_timestamp > duration
