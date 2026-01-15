@@ -308,7 +308,10 @@ def isolate_contours(image: cv2.Mat, color: Union[Color, List[Color]]) -> np.arr
     # Convert from BGR to HSV color space.
     image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # Create a mask with pixels within range as white and all others as black.
-    mask = cv2.inRange(image, color.lo, color.hi)
+    masks = [cv2.inRange(image, c.lower, c.upper) for c in color]
+    mask = masks[0]
+    for mask_ in masks[1:]:
+        mask = cv2.bitwise_or(mask, mask_)
     cv2.imwrite("test.png", mask)
     # Apply the `mask` to keep only colored pixels in `image` that correspond to white
     # pixels in `mask` (i.e. get the masked region, but with colored pixels).
