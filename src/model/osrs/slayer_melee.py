@@ -144,8 +144,6 @@ class SlayerMelee(OSRSBot):
         self.toggle_auto_retaliate(state="on")
         self.sleep()
         pag.press("f2")  # open combat tab
-        self.zoom(out=True, verbose=False)      # hard reset
-        self.zoom(out=False, percent_zoom=0.4) # now this works
 
         self.has_no_hp_bar_consec = 0
 
