@@ -195,7 +195,7 @@ class SlayerMelee(OSRSBot):
             pag.press("f2")
             self.sleep()
         if rect := self.get_food_rects():
-            rect = rect[0]
+            rect = rect[-1]
             self.mouse.move_to(rect.random_point())
             self.sleep()
             self.mouse.click()
