@@ -184,6 +184,8 @@ class SlayerMelee(OSRSBot):
                 self.update_progress((time.time() - self.start_time) / end_time)
                 last_update = time.time()
 
+            time.sleep(.1)
+
         self.update_progress(1)
         self.log_msg("[END]")
         self.logout_and_stop_script("[END]")
@@ -284,7 +286,7 @@ class SlayerMelee(OSRSBot):
         if self.has_hp_bar():
             return False
 
-        if self.has_no_hp_bar_consec % 30 == 0:
+        if self.has_no_hp_bar_consec % 50 == 0:
             self.has_no_hp_bar_consec = 1
             return True
         else:
