@@ -192,7 +192,7 @@ class SlayerMelee(OSRSBot):
         self.logout_and_stop_script("[END]")
 
     def out_of_combat(self) -> bool:
-        if time.time() - self.last_out_of_combat_timestamp < 3:
+        if time.time() - self.last_out_of_combat_timestamp < 5:
             return False
         res = self.check_idle_notifier_status("out_of_combat")
         if res:
