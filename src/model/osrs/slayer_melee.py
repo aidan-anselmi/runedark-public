@@ -136,9 +136,9 @@ class SlayerMelee(OSRSBot):
 
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
         self.log_msg(f"[START] ({run_time_str})", overwrite=True)
-        start_time = time.time()
+        self.start_time = time.time()
         end_time = int(self.run_time) * 60  # Measured in seconds.
-        last_update = start_time
+        last_update = self.start_time
         xp_timestamp = time.time()
 
         self.toggle_auto_retaliate(state="on")
@@ -149,7 +149,7 @@ class SlayerMelee(OSRSBot):
         self.last_attack_monster_timestamp = 0
 
 
-        while time.time() - start_time < end_time:
+        while time.time() - self.start_time < end_time:
             if self.get_total_xp() != -1:
                 xp_timestamp = time.time()
             if time.time() - xp_timestamp > 300:
@@ -181,7 +181,7 @@ class SlayerMelee(OSRSBot):
 
             # update progress
             if time.time() - last_update > 300:
-                self.update_progress((time.time() - start_time) / end_time)
+                self.update_progress((time.time() - self.start_time) / end_time)
                 last_update = time.time()
 
         self.update_progress(1)
@@ -315,6 +315,10 @@ class SlayerMelee(OSRSBot):
 
     def check_task_completed(self) -> bool:
         if self.get_chatbox_text(contains="Slayer", colors=self.cp.bgr.OFF_RED_TEXT):
+            # can't finish task for first 3 minutes of running 
+            if self.start_time + 180 > time.time():
+                return False
+
             self.log_msg("Slayer task completed!")
             return True
         return False
