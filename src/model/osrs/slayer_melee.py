@@ -1,10 +1,11 @@
 import math
 import time
+from typing import List
 
 import utilities.random_util as rd
 from model.osrs.osrs_bot import OSRSBot
 from model.osrs.power_chopper import OSRSPowerChopper
-from utilities.geometry import Point
+from utilities.geometry import Point, RuneLiteObject
 from utilities.mappings import item_ids as iid
 from utilities.mappings import locations as loc
 from utilities.walker import Walker, WalkPath
@@ -32,6 +33,7 @@ class SlayerMelee(OSRSBot):
 
         self.monster_color = self.cp.hsv.CYAN_MARK
         self.bank_color = self.cp.hsv.BLUE_MARK
+        self.food_color = Color(((0, 245, 245), (1, 255, 255)))
 
         self.scrape()
 
@@ -192,7 +194,8 @@ class SlayerMelee(OSRSBot):
         if not self.is_control_panel_tab_open("inventory"):
             pag.press("f2")
             self.sleep()
-        if rect := self.find_sprite(self.win.inventory, "cooked-karambwan.png", "items"):
+        if rect := self.get_food_rects():
+            rect = rect[0]
             self.mouse.move_to(rect.random_point())
             self.sleep()
             self.mouse.click()
@@ -200,12 +203,15 @@ class SlayerMelee(OSRSBot):
             return True
         return False
     
+    def get_food_rects(self) -> List[RuneLiteObject]:
+        return self.find_colors(self.win.inventory, self.food_color)
+
     def full_trip(self) -> bool:
         if self.is_inv_full():
             self.fill_herb_sack()
         if self.is_inv_full():
             self.fill_gem_bag()         
-        res = self.get_num_item_in_inv("cooked-karambwan.png", "items") == 0 and self.is_inv_full()
+        res = len(self.get_food_rects()) == 0 and self.is_inv_full()
         if res:
             self.log_msg("Inventory full, returning to bank")
         return res
@@ -246,7 +252,7 @@ class SlayerMelee(OSRSBot):
     def run_and_back(self) -> bool:
         self.travel_to(self.bank_tile, None, f"{self.task}_task_to_bank")
         self.resupply()
-        if self.get_num_item_in_inv("cooked-karambwan.png", "items") > 0:
+        if len(self.get_food_rects()) > 0:
             self.travel_to(self.task_tile, None, f"bank_to_{self.task.lower()}_task")
             return True
         return False
