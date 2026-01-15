@@ -278,7 +278,7 @@ class SlayerMelee(OSRSBot):
                 return False
             self.sleep(0.1)
 
-        if self.has_no_hp_bar_consec % 4 == 0:
+        if self.has_no_hp_bar_consec % 6 == 0:
             self.has_no_hp_bar_consec = 1
             return True
         else:
