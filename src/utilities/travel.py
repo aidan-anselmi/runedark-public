@@ -50,6 +50,7 @@ class Traveler():
 
         self.bot.log_msg(f"Starting travel at step {step} {travel_steps[step].description}")
         for step in travel_steps[step:]:
+            self.bot.toggle_run(state="on")
             if not self.handle_step(step):
                 self.bot.log_msg(f"Failed to handle travel step: {step.description}")
                 return False

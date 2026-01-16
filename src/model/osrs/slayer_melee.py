@@ -74,7 +74,7 @@ class SlayerMelee(OSRSBot):
         # make sure directory exists
         dest_dir.mkdir(parents=True, exist_ok=True)
 
-        search_string = "Cooked karambwan, Ring of dueling, Herb sack, Gem bag"
+        search_string = "Cooked karambwan, Open herb sack, Open gem bag"
         image_type = ImageType.ALL
         destination = dest_dir
 
@@ -169,9 +169,6 @@ class SlayerMelee(OSRSBot):
         else:
             self.traveler.travel(self.to_task_travel_steps)
 
-        self.bank_and_return()
-        return
-
         # ensure auto retaliate is on
         self.toggle_auto_retaliate(state="on")
         self.sleep()
@@ -199,10 +196,13 @@ class SlayerMelee(OSRSBot):
                 self.atack_monster()
 
             # bank
-            if self.full_trip() or self.check_task_completed():
+            if self.full_trip():
                 self.sleep(lo=1, hi=2)
                 self.loot()
                 self.bank_and_return()            
+            if self.check_task_completed():
+                self.bank()
+                self.stop()
 
             self.adjust_camera()
 
@@ -279,16 +279,21 @@ class SlayerMelee(OSRSBot):
                 self.last_attack_monster_timestamp = time.time()
                 return True
         return False
+    
+    def bank(self) -> bool:
+        if self.to_bank_travel_steps:
+            for _ in range(5):
+                if self.traveler.travel(self.to_bank_travel_steps):
+                    return True
+                
+        self.log_msg("Could not travel to bank via travel steps, using GE to bank")
+        return self.bank_ge()
 
     def bank_and_return(self) -> bool:
         self.log_msg("Returning to bank...")
 
         if self.to_bank_travel_steps:
-            got_to_bank = False
-            for _ in range(5):
-                if self.traveler.travel(self.to_bank_travel_steps):
-                    got_to_bank = True
-                    break
+            got_to_bank = self.bank()
             
             supplied = False
             if got_to_bank:
@@ -325,6 +330,35 @@ class SlayerMelee(OSRSBot):
         return False
     
     def resupply(self) -> bool:
+        if not self.open_bank():
+            return False
+
+        for png in ["open-herb-sack.png", "open-gem-bag.png"]:
+            if herb_sack := self.find_sprite(self.win.inventory, png, "items"):
+                self.mouse.move_to(herb_sack.random_point())
+                self.sleep()
+                if self.get_mouseover_text(contains="Empty"):
+                    self.mouse.click()
+                    self.sleep()
+                self.sleep()
+
+        for i in range(5, 28):
+            if self.is_inv_slot_full(i):
+                self.mouse.move_to(self.win.inventory_slots[i].random_point())
+                self.mouse.click()
+                self.sleep(lo=.3, hi=.5)
+
+        self.withdraw_bwans()
+        if self.get_hp() < 80:
+            while self.get_hp() < 80:
+                self.eat_food()
+                self.sleep()
+            self.open_bank()
+            self.withdraw_bwans()
+
+        return True
+    
+    def open_bank(self) -> bool:
         if not self.is_bank_window_open():
             for i in range(5):
                 self.move_mouse_to_color_obj(self.bank_color)
@@ -334,21 +368,19 @@ class SlayerMelee(OSRSBot):
                     self.log_msg("Could not find bank to resupply")
                     return False
             self.sleep_until_bank_open()
-
-        for i in range(6, 28):
-            if self.is_inv_slot_full(i):
-                self.mouse.move_to(self.win.inventory_slots[i].random_point())
-                self.mouse.click()
-                self.sleep(lo=.3, hi=.5)
-
+        return True
+    
+    def withdraw_bwans(self) -> bool:
         self.open_bank_tab(3)
         if bwans := self.find_sprite(self.win.game_view, "cooked-karambwan-bank.png", "items"):
             self.mouse.move_to(bwans.random_point())
             self.sleep()
-            self.mouse.click()
+            if not self.right_click_select_context_menu("Withdraw-All"):
+                self.log_msg("Could not withdraw bwans")
+                self.sleep()
+                pag.press("esc")
+                return False
             self.sleep()
-        pag.press("esc")
-        return True
 
     def has_no_hp_bar(self) -> bool:
         if self.has_hp_bar():
@@ -359,30 +391,6 @@ class SlayerMelee(OSRSBot):
             return True
         else:
             self.has_no_hp_bar_consec += 1
-        return False
-    
-    def fill_herb_sack(self) -> bool:
-        if not self.is_control_panel_tab_open("inventory"):
-            pag.press("f2")
-            self.sleep()
-        if rect := self.find_sprite(self.win.inventory, "herb-sack.png", "items"):
-            self.mouse.move_to(rect.random_point())
-            self.sleep()
-            self.mouse.click()
-            self.sleep()
-            return True
-        return False
-    
-    def fill_gem_bag(self) -> bool:
-        if not self.is_control_panel_tab_open("inventory"):
-            pag.press("f2")
-            self.sleep()
-        if rect := self.find_sprite(self.win.inventory, "gem-bag.png", "items"):
-            self.mouse.move_to(rect.random_point())
-            self.sleep()
-            self.mouse.click()
-            self.sleep()
-            return True
         return False
 
     def check_task_completed(self) -> bool:
