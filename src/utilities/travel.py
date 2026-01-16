@@ -28,8 +28,7 @@ class TravelStep():
         self.step_type = step_type
         self.description = description
         self.mouseover_text = mouseover_text
-        if not color:
-            self.color = self.cp.hsv.PINK_MARK
+        self.color = color
 
 class Traveler():
     def __init__(self, bot: RuneLiteBot, walker: Walker):
@@ -76,6 +75,9 @@ class Traveler():
             for _ in range(5):
                 if self.walker.travel_to_dest_along_path(step.end, None, self.format_points(step.start, step.end)):
                     break
+        
+        if not step.color:
+            step.color = self.bot.cp.hsv.PINK_MARK
 
         if step.step_type is StepType.stairs:
             return self.click_object_at_step(step)
