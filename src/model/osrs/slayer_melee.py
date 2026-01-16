@@ -168,6 +168,8 @@ class SlayerMelee(OSRSBot):
             self.bank_and_return()
         else:
             self.traveler.travel(self.to_task_travel_steps)
+
+        self.bank_and_return()
         return
 
         # ensure auto retaliate is on
