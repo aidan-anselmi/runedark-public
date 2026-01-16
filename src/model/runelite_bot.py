@@ -2204,7 +2204,10 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             colors=self.cp.bgr.WHITE,
             exclude_chars=[char for char in ocr.PROBLEMATIC_CHARS if char != ","],
         ):
-            x, y, plane = tuple(map(int, text.replace("Tile", "").split(",")))
+            try:
+                x, y, plane = tuple(map(int, text.replace("Tile", "").split(",")))
+            except ValueError:
+                self.log_msg(f"Could not parse tile info: '{text}'")
         return x, y, plane
 
     def get_chunk_id(self) -> int:
