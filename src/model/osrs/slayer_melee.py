@@ -341,7 +341,7 @@ class SlayerMelee(OSRSBot):
             #     self.mouse.move_to(herb_sack.random_point())
             #     self.sleep()
             # else:
-            self.mouse.move_to(self.win.inventory_slots[i].random_point())
+            self.mouse.move_to(self.win.inventory_slots[i + 1].random_point())
             self.sleep()
             if self.get_mouseover_text(contains="Empty"):
                 self.mouse.click()
