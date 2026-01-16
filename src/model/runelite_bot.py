@@ -2539,7 +2539,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
 
     def high_alch_item(self, color: Color = None) -> bool:
         if color is None:
-            color = Color(((59, 245, 245), (61, 255, 255)))
+            color = Color(((59, 235, 235), (61, 255, 255)))
 
         if time.time() - self.last_high_alch_timestamp < 3.0:
             return False
