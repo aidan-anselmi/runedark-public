@@ -35,7 +35,7 @@ class Traveler():
         self.bot = bot
         self.walker = walker
 
-    def travel(self, travel_steps: list[TravelStep], retries: int = 3) -> bool:
+    def travel(self, travel_steps: list[TravelStep], retries: int = 5) -> bool:
         for _ in range(retries):
             if self.travel_once(travel_steps):
                 return True
