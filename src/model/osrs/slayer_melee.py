@@ -207,7 +207,9 @@ class SlayerMelee(OSRSBot):
                 self.bank()
                 self.stop()
 
+            # misc
             self.adjust_camera()
+            self.toggle_run_on_if_enough_energy()
 
             # update progress
             if time.time() - last_update > 300:
