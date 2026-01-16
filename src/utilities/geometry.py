@@ -7,7 +7,7 @@ import numpy as np
 
 import utilities.random_util as rd
 
-Point = NamedTuple("Point", x=int, y=int)
+Point = NamedTuple("Point", x=int, y=int, z=int=0)
 
 # TO DO: Remove this global variable. This is a temporary fix for a bug in mss.
 sct = mss.mss()
