@@ -42,15 +42,14 @@ class Traveler():
         return False
 
     def travel_once(self, travel_steps: list[TravelStep]) -> bool:
-        self.travel_steps = travel_steps
         step = self.get_start_step(travel_steps)
 
-        if step >= len(self.travel_steps):
+        if step >= len(travel_steps):
             self.bot.log_msg("Already at the end of the travel steps.")
             return True
 
-        self.bot.log_msg(f"Starting travel at step {step} {self.travel_steps[step].description}")
-        for step in self.travel_steps[step:]:
+        self.bot.log_msg(f"Starting travel at step {step} {travel_steps[step].description}")
+        for step in travel_steps[step:]:
             if not self.handle_step(step):
                 self.bot.log_msg(f"Failed to handle travel step: {step.description}")
                 return False
@@ -64,15 +63,16 @@ class Traveler():
                 break
             else:
                 self.bot.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
+        self.bot.log_msg(f"Current location: {cur_location}")
 
         if not cur_location:
             return -1 
 
         closest_step = 0
         closest_dist = float('inf')
-        for i in range(len(self.travel_steps)):
-            if math.dist(self.travel_steps[i].start, cur_location) < closest_dist or math.dist(self.travel_steps[i].end, cur_location) < closest_dist:
-                closest_dist = math.dist(self.travel_steps[i].start, cur_location)
+        for i in range(len(travel_steps)):
+            if math.dist(travel_steps[i].start, cur_location) < closest_dist or math.dist(travel_steps[i].end, cur_location) < closest_dist:
+                closest_dist = math.dist(travel_steps[i].start, cur_location)
                 closest_step = i
         return closest_step
 
