@@ -150,6 +150,7 @@ class SlayerMelee(OSRSBot):
         self.has_no_hp_bar_consec = 0
         self.last_attack_monster_timestamp = 0
         self.last_out_of_combat_timestamp = 0
+        self.camera_move_combat_timestamp = 0
 
 
         while time.time() - self.start_time < end_time:
@@ -167,11 +168,7 @@ class SlayerMelee(OSRSBot):
                     self.return_to_bank()
 
             # loot
-            while self.find_ground_items():
-                self.high_alch_item()
-                if self.is_inv_full():
-                    self.eat_food()
-                self.pickup_ground_item()                
+            self.loot()
 
             # fight 
             if self.out_of_combat() or self.has_no_hp_bar():
@@ -179,10 +176,11 @@ class SlayerMelee(OSRSBot):
 
             # bank
             if self.full_trip() or self.check_task_completed():
-                self.sleep()
-                while not self.is_inv_full() and self.find_ground_items():
-                    self.pickup_ground_item()  
+                self.sleep(lo=1, hi=2)
+                self.loot()
                 self.return_to_bank()            
+
+            self.move_camera()
 
             # update progress
             if time.time() - last_update > 300:
@@ -194,6 +192,20 @@ class SlayerMelee(OSRSBot):
         self.update_progress(1)
         self.log_msg("[END]")
         self.logout_and_stop_script("[END]")
+
+    def loot(self):
+        while self.find_ground_items() and not self.full_trip():
+            self.high_alch_item()
+            if self.is_inv_full():
+                self.eat_food()
+            self.pickup_ground_item()   
+
+    def move_camera(self):
+        if time.time() - self.camera_move_combat_timestamp < 20:
+            return
+        if random.random() < 0.01:
+            self.camera_move_combat_timestamp = time.time()
+            self.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
 
     def out_of_combat(self) -> bool:
         if time.time() - self.last_out_of_combat_timestamp < 5:
@@ -222,11 +234,7 @@ class SlayerMelee(OSRSBot):
             self.sleep()
         return self.find_colors(self.win.inventory, self.food_color)
 
-    def full_trip(self) -> bool:
-        if self.is_inv_full():
-            self.fill_herb_sack()
-        if self.is_inv_full():
-            self.fill_gem_bag()         
+    def full_trip(self) -> bool:         
         res = len(self.get_food_rects()) == 0 and len(self.get_food_rects()) == 0 and self.is_inv_full()
         if res:
             self.log_msg("Inventory full, returning to bank")

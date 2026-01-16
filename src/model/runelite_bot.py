@@ -116,7 +116,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             self.consec_mouseover_failures = 0
 
         if self.consec_mouseover_failures % 10 == 0 and self.consec_mouseover_failures != 0:
-            self.move_camera(horizontal=random.choice([-15, 15]), vertical=0)
+            self.move_camera(horizontal=random.choice([-20, 20]), vertical=0)
 
         return res
 

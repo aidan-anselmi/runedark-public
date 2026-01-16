@@ -69,8 +69,9 @@ class Walker:
                 break
             time.sleep(0.3)
         self.position = posn
-        self.x, self.y, _ = self.position  # Ignore the z-coordinate (i.e. plane).
+        self.x, self.y, self.z = self.position  # Ignore the z-coordinate (i.e. plane).
         self.loc = Point(self.x, self.y)
+        self.full_loc = Point(self.x, self.y, self.z)
 
     def update_camera_angle(self) -> None:
         """Update the `camera_angle` (measured as degrees clockwise from north)."""
@@ -380,3 +381,12 @@ class Walker:
         """
         self.update_position()
         return self.loc
+    
+    def get_full_position(self) -> Point:
+        """Get the current position of our character in tile space.
+
+        Returns:
+            Point: The current position of our character, measured in tiles.
+        """
+        self.update_position()
+        return self.full_loc
