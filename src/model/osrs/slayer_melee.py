@@ -167,6 +167,7 @@ class SlayerMelee(OSRSBot):
             self.log_msg("No food detected in inventory, traveling to bank to resupply")
             self.bank_and_return()
         else:
+            self.log_msg("Traveling to slayer task...")
             self.traveler.travel(self.to_task_travel_steps)
 
         # ensure auto retaliate is on
