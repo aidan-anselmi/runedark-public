@@ -13,6 +13,7 @@ class StepType(Enum):
     stairs = "stairs"
     door = "door"
     house_portal = "house_portal"
+    walk = "walk"
 
 class TravelStep():
     def __init__(self, 
@@ -83,7 +84,7 @@ class Traveler():
     
     def travel_to_step_end(self, step: TravelStep) -> bool:
         traveled_to = True
-        if step.step_type in [StepType.stairs, StepType.door]:
+        if step.step_type in [StepType.stairs, StepType.door, StepType.walk]:
             if math.dist(step.end, self.get_cur_location()) < 10:
                 return True
 
