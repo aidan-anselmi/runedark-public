@@ -180,7 +180,7 @@ class SlayerMelee(OSRSBot):
                 self.loot()
                 self.return_to_bank()            
 
-            self.move_camera()
+            self.adjust_camera()
 
             # update progress
             if time.time() - last_update > 300:
@@ -200,7 +200,7 @@ class SlayerMelee(OSRSBot):
                 self.eat_food()
             self.pickup_ground_item()   
 
-    def move_camera(self):
+    def adjust_camera(self):
         if time.time() - self.camera_move_combat_timestamp < 20:
             return
         if random.random() < 0.01:

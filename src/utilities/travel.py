@@ -29,6 +29,9 @@ class Traveler():
         self.walker = walker
 
     def travel(self):
+        step = self.get_start_step()
+        self.log_msg(f"Starting travel at step {step.description}")
+        
         for step in self.travel_steps:
             self.handle_step(step)
             
@@ -51,9 +54,10 @@ class Traveler():
         return closest_step
 
     def handle_step(self, step: TravelStep) -> bool:
-        for _ in range(5):
-            if self.walker.travel_to_dest_along_path(step.end, None, self.description):
-                break
+        if step.step_type in [StepType.stairs, StepType.door]:
+            for _ in range(5):
+                if self.walker.travel_to_dest_along_path(step.end, None, self.description):
+                    break
 
         if step.step_type is StepType.stairs:
             return False
