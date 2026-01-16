@@ -367,9 +367,16 @@ class SlayerMelee(OSRSBot):
                 self.sleep()
             self.open_bank()
             self.withdraw_bwans()
+            self.sleep()
 
         pag.press("esc")
         self.sleep()
+
+        if self.is_bank_window_open():
+            self.sleep()
+            pag.press("esc")
+            self.sleep()
+
         return True
     
     def open_bank(self) -> bool:
