@@ -1,6 +1,9 @@
 import math
+from model.runelite_bot import RuneLiteBot
 from utilities.geometry import Point, RuneLiteObject
 from enum import Enum
+from utilities.color_util import Color
+import time
 
 from utilities.walker import Walker
 
@@ -16,27 +19,31 @@ class TravelStep():
                  end: Point,
                  step_type: StepType,
                  description: str = "", 
-                 
+                 mouseover_text : str = "",
+                 color : Color = None,
                  ):
         self.start = start
         self.end = end
         self.step_type = step_type
         self.description = description
+        self.mouseover_text = mouseover_text
+        if not color:
+            self.color = self.cp.hsv.PINK_MARK
 
 class Traveler():
-    def __init__(self, travel_steps: list[TravelStep], walker: Walker):
-        self.travel_steps = travel_steps
+    def __init__(self, bot: RuneLiteBot, walker: Walker):
+        self.bot = bot
         self.walker = walker
 
-    def travel(self):
-        step = self.get_start_step()
-        self.log_msg(f"Starting travel at step {step.description}")
-        
-        for step in self.travel_steps:
+    def travel(self, travel_steps: list[TravelStep]):
+        self.travel_steps = travel_steps
+        step = self.get_start_step(travel_steps)
+        self.bot.log_msg(f"Starting travel at step {step} {self.travel_steps[step].description}")
+        for step in self.travel_steps[step:]:
             self.handle_step(step)
             
 
-    def get_start_step(self) -> int:
+    def get_start_step(self, travel_steps: list[TravelStep]) -> int:
         cur_location = None
         for _ in range(5):
             cur_location = self.walker.get_position()
@@ -56,13 +63,27 @@ class Traveler():
     def handle_step(self, step: TravelStep) -> bool:
         if step.step_type in [StepType.stairs, StepType.door]:
             for _ in range(5):
-                if self.walker.travel_to_dest_along_path(step.end, None, self.description):
+                if self.walker.travel_to_dest_along_path(step.end, None, self.format_points(step.start, step.end)):
                     break
 
         if step.step_type is StepType.stairs:
-            return False
+            return self.click_object_at_step(step)
         elif step.step_type is StepType.door:
-            return False
+            if self.bot.find_colors(self.bot.win.game_view, step.color):
+                return self.click_object_at_step(step)
+            return True
         return False
+
+    def format_points(self, p1: Point, p2: Point) -> str:
+        return f"({p1.x}, {p1.y}) -> ({p2.x}, {p2.y})"
     
-    def format_point()
+    def click_object_at_step(self, step: TravelStep) -> bool:
+        for _ in range(5):
+            if self.bot.move_mouse_to_color_obj(step.color):
+                if step.mouseover_text and not self.bot.get_mouseover_text(contains=step.mouseover_text):
+                    continue
+                if self.bot.mouse.click(check_red_click=True):
+                    time.sleep(.5)
+                    self.bot.sleep_while_color_moving(step.color)
+                    return True
+        return False

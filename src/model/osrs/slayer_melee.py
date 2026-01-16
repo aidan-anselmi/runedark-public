@@ -18,6 +18,7 @@ import cv2
 import pyautogui as pag
 import random
 import random
+from utilities.travel import TravelStep, Traveler, StepType
 
 class SlayerMelee(OSRSBot):
     def __init__(self):
@@ -49,6 +50,21 @@ class SlayerMelee(OSRSBot):
         # self.task = "Suqah"
         # self.task_tile = Point(2331,3173)
         # self.bank_tile = Point(2137,3854)
+
+        # Wyrm task
+        self.task = "Wyrms"
+        self.to_task_travel_steps = [
+            TravelStep(Point(1324, 3824, 0), Point(1311, 3807, 0), StepType.stairs, "bank to elevator", mouseover_text="Activate"),
+            TravelStep(Point(1311, 10188, 0), Point(1303, 10205, 0), StepType.stairs, "entrance to rocks", mouseover_text="Climb"),
+            TravelStep(Point(1301, 10205, 0), Point(1271, 10175, 0), StepType.stairs, "rocks to lava gap", mouseover_text="Jump"),
+            TravelStep(Point(1271, 10170, 0), Point(1269, 10159, 0), StepType.stairs, "lava gap to wyrms"),
+        ]
+        self.to_bank_travel_steps = [
+            TravelStep(Point(1269, 10159, 0), Point(1271, 10170, 0), StepType.stairs, "wyrms to lava gap", mouseover_text="Jump"),
+            TravelStep(Point(1271, 10175, 0), Point(1301, 10205, 0), StepType.stairs, "lava gap to rocks", mouseover_text="Climb"),
+            TravelStep(Point(1303, 10205, 0), Point(1311, 10188, 0), StepType.stairs, "rocks to entrance", mouseover_text="Exit"),
+            TravelStep(Point(1311, 3807, 0), Point(1324, 3824, 0), StepType.stairs, "elevator to bank", mouseover_text="Use"),
+        ]
 
 
     def scrape(self):
@@ -141,22 +157,23 @@ class SlayerMelee(OSRSBot):
         self.start_time = time.time()
         end_time = int(self.run_time) * 60  # Measured in seconds.
         last_update = self.start_time
-        xp_timestamp = time.time()
-
-        self.toggle_auto_retaliate(state="on")
-        self.sleep()
-        pag.press("f2")  # open combat tab
 
         self.has_no_hp_bar_consec = 0
         self.last_attack_monster_timestamp = 0
         self.last_out_of_combat_timestamp = 0
         self.camera_move_combat_timestamp = 0
 
+        self.traveler = Traveler(self, self.walker)
+
+        # ensure auto retaliate is on
+        self.toggle_auto_retaliate(state="on")
+        self.sleep()
+        pag.press("f2")
 
         while time.time() - self.start_time < end_time:
             if self.has_not_gained_xp(duration=300):
                 self.log_msg("No XP gained for 5 minutes, returning to bank")
-                self.return_to_bank()
+                self.bank_and_return()
                 return
 
             # heal
@@ -165,7 +182,7 @@ class SlayerMelee(OSRSBot):
                     self.sleep()
                 if self.get_hp() <= 40:
                     self.log_msg("HP low after eating, returning to banks")
-                    self.return_to_bank()
+                    self.bank_and_return()
 
             # loot
             self.loot()
@@ -178,7 +195,7 @@ class SlayerMelee(OSRSBot):
             if self.full_trip() or self.check_task_completed():
                 self.sleep(lo=1, hi=2)
                 self.loot()
-                self.return_to_bank()            
+                self.bank_and_return()            
 
             self.adjust_camera()
 
@@ -256,20 +273,39 @@ class SlayerMelee(OSRSBot):
                 return True
         return False
 
-    def return_to_bank(self) -> bool:
+    def bank_and_return(self) -> bool:
         self.log_msg("Returning to bank...")
-        if self.task == "Elves" or self.task == "Suqah":
-            return self.run_and_back()
 
-        return self.bank_castle_wars()
+        if self.to_bank_travel_steps:
+            got_to_bank = False
+            for _ in range(5):
+                if self.traveler.travel(self.to_bank_travel_steps):
+                    got_to_bank = True
+                    break
+            
+            supplied = False
+            if got_to_bank:
+                for _ in range(5):
+                    supplied = self.resupply()
+                    if supplied:
+                        break
+
+            if self.to_task_travel_steps and supplied:
+                self.log_msg(f"Returning to {self.task} task...")
+                for _ in range(5):
+                    if self.traveler.travel(self.to_task_travel_steps):
+                        return True
+                self.log_msg(f"Could not return to {self.task} task after banking")
+                return False
+
+        return self.bank_ge()
     
-    def bank_castle_wars(self) -> bool:
+    def bank_ge(self) -> bool:
         pag.press("f4")
         self.sleep()
-        self.mouse.move_to(self.win.spellbook_normal[22].random_point())
+        self.mouse.move_to(self.win.spellbook_normal[15].random_point())
         self.sleep()
         self.mouse.click()
-        time.sleep(10)
         self.stop()
         return True
     
@@ -282,14 +318,15 @@ class SlayerMelee(OSRSBot):
         return False
     
     def resupply(self) -> bool:
-        for i in range(5):
-            self.move_mouse_to_color_obj(self.bank_color)
-            if self.get_mouseover_text(contains="Bank") and self.mouse.click(check_red_click=True):
-                break
-            if i == 4:
-                self.log_msg("Could not find bank to resupply")
-                return False
-        self.sleep_until_bank_open()
+        if not self.is_bank_window_open():
+            for i in range(5):
+                self.move_mouse_to_color_obj(self.bank_color)
+                if self.get_mouseover_text(contains="Bank") and self.mouse.click(check_red_click=True):
+                    break
+                if i == 4:
+                    self.log_msg("Could not find bank to resupply")
+                    return False
+            self.sleep_until_bank_open()
 
         for i in range(6, 28):
             if self.is_inv_slot_full(i):

@@ -1392,9 +1392,9 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         """
         if verbose:
             self.log_msg(f"Attempting to toggle auto retaliate: {state}")
-        self.mouse.move_to(self.win.cp_tabs[0].random_point())
-        self.mouse.click()
-        self.sleep()
+        if not self.is_control_panel_tab_open("combat"):
+            pag.press("f1")
+            self.sleep()
 
         folderpath = BOT_IMAGES / "combat"
         filename = "autoretal-off.png" if state == "on" else "autoretal-on.png"
