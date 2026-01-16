@@ -879,7 +879,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
     def right_click_select_context_menu(
         self,
         req_txt: str,
-        pad: int = 120,
+        pad: int = 130,
         font: ocr.FontDict = ocr.BOLD_12,
         color: Color = cp.bgr.WHITE_DROPDOWN_TEXT,
         exit_txt: str = None,
@@ -2529,7 +2529,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 self.sleep_while_color_moving(color)
                 return True
             elif self.right_click_select_context_menu(req_txt=f"Take", color=txt_color):
-                self.log_msg(f"Picked up ground item via context menu")
+                # self.log_msg(f"Picked up ground item via context menu")
                 self.sleep()
                 self.sleep_while_color_moving(color)
                 return True

@@ -279,6 +279,7 @@ class SlayerMelee(OSRSBot):
                 continue
             if self.get_mouseover_text(contains="Attack") and self.mouse.click(check_red_click=True):
                 self.last_attack_monster_timestamp = time.time()
+                self.move_mouse_randomly()
                 return True
         return False
     
