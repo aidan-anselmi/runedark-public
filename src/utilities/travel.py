@@ -1,5 +1,7 @@
 import math
 import random
+
+from matplotlib.pyplot import step
 from model.runelite_bot import RuneLiteBot
 from utilities.geometry import Point, RuneLiteObject
 from enum import Enum
@@ -105,6 +107,8 @@ class Traveler():
         if not step.color:
             step.color = self.bot.cp.hsv.PINK_MARK
 
+        if step.step_type is StepType.walk:
+            return True
         if step.step_type is StepType.stairs:
             return self.click_object_at_step(step)
         elif step.step_type is StepType.door:
