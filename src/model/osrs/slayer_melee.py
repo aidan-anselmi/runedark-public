@@ -336,13 +336,12 @@ class SlayerMelee(OSRSBot):
             return False
 
         for i, png in enumerate(["open-herb-sack.png", "open-gem-bag.png"]):
-            if herb_sack := self.find_sprite(self.win.inventory, png, "items"):
-                self.mouse.move_to(herb_sack.random_point())
-                self.sleep()
-            else:
-                self.mouse.move_to(self.win.inventory_slots[i].random_point())
-                self.sleep()
-
+            # if herb_sack := self.find_sprite(self.win.inventory, png, "items"):
+            #     self.mouse.move_to(herb_sack.random_point())
+            #     self.sleep()
+            # else:
+            self.mouse.move_to(self.win.inventory_slots[i].random_point())
+            self.sleep()
             if self.get_mouseover_text(contains="Empty"):
                 self.mouse.click()
                 self.sleep()
