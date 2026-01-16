@@ -71,7 +71,7 @@ class Walker:
         self.position = posn
         self.x, self.y, self.z = self.position  # Ignore the z-coordinate (i.e. plane).
         self.loc = Point(self.x, self.y)
-        self.full_loc = Point(self.x, self.y, self.z)
+        self.full_loc = Point(self.x, self.y)
 
     def update_camera_angle(self) -> None:
         """Update the `camera_angle` (measured as degrees clockwise from north)."""
