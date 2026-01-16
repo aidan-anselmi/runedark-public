@@ -52,7 +52,7 @@ class Traveler():
 
     def get_start_step(self, travel_steps: list[TravelStep]) -> int:
         cur_location = None
-        for _ in range(5):
+        for _ in range(10):
             cur_location = self.walker.get_position()
             if cur_location != Point(-1, -1):
                 break
