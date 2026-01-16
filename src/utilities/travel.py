@@ -43,10 +43,9 @@ class Traveler():
 
     def travel_once(self, travel_steps: list[TravelStep]) -> bool:
         step = self.get_start_step(travel_steps)
-
-        if step >= len(travel_steps):
-            self.bot.log_msg("Already at the end of the travel steps.")
-            return True
+        if step == -1:
+            self.bot.log_msg("Could not determine starting travel step.")
+            return False
 
         self.bot.log_msg(f"Starting travel at step {step} {travel_steps[step].description}")
         for step in travel_steps[step:]:
@@ -64,15 +63,17 @@ class Traveler():
             else:
                 self.bot.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
         self.bot.log_msg(f"Current location: {cur_location}")
-
         if not cur_location:
             return -1 
 
         closest_step = 0
         closest_dist = float('inf')
         for i in range(len(travel_steps)):
-            if math.dist(travel_steps[i].start, cur_location) < closest_dist or math.dist(travel_steps[i].end, cur_location) < closest_dist:
+            if math.dist(travel_steps[i].start, cur_location) < closest_dist:
                 closest_dist = math.dist(travel_steps[i].start, cur_location)
+                closest_step = i
+            if math.dist(travel_steps[i].end, cur_location) < closest_dist:
+                closest_dist = math.dist(travel_steps[i].end, cur_location)
                 closest_step = i
         return closest_step
 
