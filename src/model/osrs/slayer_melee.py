@@ -192,6 +192,7 @@ class SlayerMelee(OSRSBot):
 
             # loot
             self.loot()
+            self.high_alch_item()
 
             # fight 
             if self.out_of_combat() or self.has_no_hp_bar():
