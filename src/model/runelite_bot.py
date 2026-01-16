@@ -1479,7 +1479,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         self.log_msg(f"Could not select combat style: {combat_style}")
         return False
 
-    def toggle_run(self, state: Literal["on", "off"], verbose: bool = True) -> bool:
+    def toggle_run(self, state: Literal["on", "off"], verbose: bool = False) -> bool:
         """Toggle whether our character should run (on) or walk (off).
 
         Args:
@@ -1525,8 +1525,8 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         current_energy = self.get_run_energy()
         if current_energy >= min_energy:
             return self.toggle_run(state="on")
-        msg = f"Not enough energy to toggle run on ({current_energy} < {min_energy})."
-        self.log_msg(msg)
+        # msg = f"Not enough energy to toggle run on ({current_energy} < {min_energy})."
+        # self.log_msg(msg)
         return False
 
     def open_chat_tab(
