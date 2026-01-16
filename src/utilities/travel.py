@@ -54,8 +54,11 @@ class Traveler():
         cur_location = None
         for _ in range(5):
             cur_location = self.walker.get_position()
-            if cur_location != Point(-1, -1, -1):
+            if cur_location != Point(-1, -1):
                 break
+            else:
+                self.bot.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
+
         if not cur_location:
             return -1 
 
