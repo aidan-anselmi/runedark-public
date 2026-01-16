@@ -167,10 +167,11 @@ class SlayerMelee(OSRSBot):
                     self.return_to_bank()
 
             # loot
-            if self.find_ground_items() and self.is_inv_full():
-                self.eat_food()
-            self.high_alch_item()
-            self.pickup_ground_item()                
+            while self.find_ground_items():
+                self.high_alch_item()
+                if self.is_inv_full():
+                    self.eat_food()
+                self.pickup_ground_item()                
 
             # fight 
             if self.out_of_combat() or self.has_no_hp_bar():
