@@ -55,13 +55,7 @@ class Traveler():
         return True
 
     def get_start_step(self, travel_steps: list[TravelStep]) -> int:
-        cur_location = None
-        for _ in range(10):
-            cur_location = self.walker.get_position()
-            if cur_location != Point(-1, -1):
-                break
-            else:
-                self.bot.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
+        cur_location = self.get_cur_location()
         self.bot.log_msg(f"Current location: {cur_location}")
         if not cur_location:
             return -1 
@@ -76,15 +70,32 @@ class Traveler():
                 closest_dist = math.dist(travel_steps[i].end, cur_location)
                 closest_step = i
         return closest_step
-
-    def handle_step(self, step: TravelStep) -> bool:
+    
+    def get_cur_location(self) -> Point:
+        cur_location = Point(-1, -1)
+        for _ in range(10):
+            cur_location = self.walker.get_position()
+            if cur_location != Point(-1, -1):
+                break
+            else:
+                self.bot.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
+        return cur_location
+    
+    def travel_to_step_end(self, step: TravelStep) -> bool:
         traveled_to = True
         if step.step_type in [StepType.stairs, StepType.door]:
+            if math.dist(step.end, self.get_cur_location()) < 10:
+                return True
+
             traveled_to = False
             for _ in range(5):
                 if self.walker.travel_to_dest_along_path(step.end, None, self.format_points(step.start, step.end)):
                     traveled_to = True
                     break
+        return traveled_to
+
+    def handle_step(self, step: TravelStep) -> bool:
+        traveled_to = self.travel_to_step_end(step)
         if not traveled_to:
             self.bot.log_msg(f"Failed to walk to step end: {step.description}")
             return False
