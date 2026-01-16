@@ -163,7 +163,8 @@ class SlayerMelee(OSRSBot):
         self.camera_move_combat_timestamp = 0
 
         self.traveler = Traveler(self, self.walker)
-        if self.get_food_rects() == 0:
+
+        if len(self.get_food_rects()) == 0:
             self.log_msg("No food detected in inventory, traveling to bank to resupply")
             self.bank_and_return()
         else:
@@ -334,13 +335,16 @@ class SlayerMelee(OSRSBot):
         if not self.open_bank():
             return False
 
-        for png in ["open-herb-sack.png", "open-gem-bag.png"]:
+        for i, png in enumerate(["open-herb-sack.png", "open-gem-bag.png"]):
             if herb_sack := self.find_sprite(self.win.inventory, png, "items"):
                 self.mouse.move_to(herb_sack.random_point())
                 self.sleep()
-                if self.get_mouseover_text(contains="Empty"):
-                    self.mouse.click()
-                    self.sleep()
+            else:
+                self.mouse.move_to(self.win.inventory_slots[i].random_point())
+                self.sleep()
+
+            if self.get_mouseover_text(contains="Empty"):
+                self.mouse.click()
                 self.sleep()
 
         for i in range(5, 28):
