@@ -17,7 +17,6 @@ from utilities.mappings.colors_rgb import BLUE, BLUE, GREEN, CYAN, YELLOW
 import cv2
 import pyautogui as pag
 import random
-import random
 from utilities.travel import TravelStep, Traveler, StepType
 
 class SlayerMelee(OSRSBot):

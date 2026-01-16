@@ -1,4 +1,5 @@
 import math
+import random
 from model.runelite_bot import RuneLiteBot
 from utilities.geometry import Point, RuneLiteObject
 from enum import Enum
@@ -81,6 +82,7 @@ class Traveler():
         for _ in range(5):
             if self.bot.move_mouse_to_color_obj(step.color):
                 if step.mouseover_text and not self.bot.get_mouseover_text(contains=step.mouseover_text):
+                    self.bot.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
                     continue
                 if self.bot.mouse.click(check_red_click=True):
                     time.sleep(.5)
