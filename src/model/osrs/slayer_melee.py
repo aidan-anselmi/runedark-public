@@ -350,8 +350,10 @@ class SlayerMelee(OSRSBot):
         for i in range(5, 28):
             if self.is_inv_slot_full(i):
                 self.mouse.move_to(self.win.inventory_slots[i].random_point())
-                self.right_click_select_context_menu("Deposit-All")
-                self.sleep(lo=.3, hi=.5)
+                for _ in range(3):
+                    if self.right_click_select_context_menu("Deposit-All"):
+                        break
+                self.sleep(lo=.6, hi=1)
 
         self.withdraw_bwans()
         if self.get_hp() < 80:
