@@ -1392,7 +1392,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         """
         if verbose:
             self.log_msg(f"Attempting to toggle auto retaliate: {state}")
-        if not self.is_control_panel_tab_open("combat"):
+        if not self.is_control_panel_tab_open("combat_options"):
             pag.press("f1")
             self.sleep()
 
