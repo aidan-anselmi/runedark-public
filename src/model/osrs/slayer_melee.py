@@ -178,6 +178,9 @@ class SlayerMelee(OSRSBot):
 
             # bank
             if self.full_trip() or self.check_task_completed():
+                self.sleep()
+                while not self.is_inv_full() and self.find_ground_items():
+                    self.pickup_ground_item()  
                 self.return_to_bank()            
 
             # update progress
