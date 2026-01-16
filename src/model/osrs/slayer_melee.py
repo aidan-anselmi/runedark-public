@@ -383,7 +383,7 @@ class SlayerMelee(OSRSBot):
         if bwans := self.find_sprite(self.win.game_view, "cooked-karambwan-bank.png", "items"):
             self.mouse.move_to(bwans.random_point())
             self.sleep()
-            if not self.right_click_select_context_menu("Withdraw-All", screenshot=True):
+            if not self.right_click_select_context_menu("Withdraw-All", pad=130, screenshot=True):
                 self.log_msg("Could not withdraw bwans")
                 self.sleep()
                 return False
