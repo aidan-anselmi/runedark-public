@@ -354,12 +354,16 @@ class SlayerMelee(OSRSBot):
 
         self.withdraw_bwans()
         if self.get_hp() < 80:
+            pag.press("esc")
+            self.sleep()
             while self.get_hp() < 80:
                 self.eat_food()
                 self.sleep()
             self.open_bank()
             self.withdraw_bwans()
 
+        pag.press("esc")
+        self.sleep()
         return True
     
     def open_bank(self) -> bool:
@@ -382,7 +386,6 @@ class SlayerMelee(OSRSBot):
             if not self.right_click_select_context_menu("Withdraw-All"):
                 self.log_msg("Could not withdraw bwans")
                 self.sleep()
-                pag.press("esc")
                 return False
             self.sleep()
 
