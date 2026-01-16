@@ -163,6 +163,11 @@ class SlayerMelee(OSRSBot):
         self.camera_move_combat_timestamp = 0
 
         self.traveler = Traveler(self, self.walker)
+        if self.get_food_rects() == 0:
+            self.log_msg("No food detected in inventory, traveling to bank to resupply")
+            self.bank_and_return()
+        else:
+            self.traveler.travel(self.to_task_travel_steps)
 
         # ensure auto retaliate is on
         self.toggle_auto_retaliate(state="on")

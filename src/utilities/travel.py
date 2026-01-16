@@ -36,13 +36,20 @@ class Traveler():
         self.bot = bot
         self.walker = walker
 
-    def travel(self, travel_steps: list[TravelStep]):
+    def travel(self, travel_steps: list[TravelStep]) -> bool:
         self.travel_steps = travel_steps
         step = self.get_start_step(travel_steps)
+
+        if step >= len(self.travel_steps):
+            self.bot.log_msg("Already at the end of the travel steps.")
+            return True
+
         self.bot.log_msg(f"Starting travel at step {step} {self.travel_steps[step].description}")
         for step in self.travel_steps[step:]:
-            self.handle_step(step)
-            
+            if not self.handle_step(step):
+                self.bot.log_msg(f"Failed to handle travel step: {step.description}")
+                return False
+        return True
 
     def get_start_step(self, travel_steps: list[TravelStep]) -> int:
         cur_location = None
@@ -59,6 +66,9 @@ class Traveler():
             if math.dist(self.travel_steps[i].start, cur_location) < closest_dist:
                 closest_dist = math.dist(self.travel_steps[i].start, cur_location)
                 closest_step = i
+            if math.dist(self.travel_steps[i].end, cur_location) < closest_dist:
+                closest_dist = math.dist(self.travel_steps[i].end, cur_location)
+                closest_step = i + 1
         return closest_step
 
     def handle_step(self, step: TravelStep) -> bool:
