@@ -35,7 +35,13 @@ class Traveler():
         self.bot = bot
         self.walker = walker
 
-    def travel(self, travel_steps: list[TravelStep]) -> bool:
+    def travel(self, travel_steps: list[TravelStep], retries: int = 3) -> bool:
+        for _ in range(retries):
+            if self.travel_once(travel_steps):
+                return True
+        return False
+
+    def travel_once(self, travel_steps: list[TravelStep]) -> bool:
         self.travel_steps = travel_steps
         step = self.get_start_step(travel_steps)
 
@@ -65,19 +71,22 @@ class Traveler():
         closest_step = 0
         closest_dist = float('inf')
         for i in range(len(self.travel_steps)):
-            if math.dist(self.travel_steps[i].start, cur_location) < closest_dist:
+            if math.dist(self.travel_steps[i].start, cur_location) < closest_dist or math.dist(self.travel_steps[i].end, cur_location) < closest_dist:
                 closest_dist = math.dist(self.travel_steps[i].start, cur_location)
                 closest_step = i
-            if math.dist(self.travel_steps[i].end, cur_location) < closest_dist:
-                closest_dist = math.dist(self.travel_steps[i].end, cur_location)
-                closest_step = i + 1
         return closest_step
 
     def handle_step(self, step: TravelStep) -> bool:
+        traveled_to = True
         if step.step_type in [StepType.stairs, StepType.door]:
+            traveled_to = False
             for _ in range(5):
                 if self.walker.travel_to_dest_along_path(step.end, None, self.format_points(step.start, step.end)):
+                    traveled_to = True
                     break
+        if not traveled_to:
+            self.bot.log_msg(f"Failed to walk to step end: {step.description}")
+            return False
         
         if not step.color:
             step.color = self.bot.cp.hsv.PINK_MARK
