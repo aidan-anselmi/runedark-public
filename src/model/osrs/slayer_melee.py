@@ -351,7 +351,7 @@ class SlayerMelee(OSRSBot):
             if self.is_inv_slot_full(i):
                 self.mouse.move_to(self.win.inventory_slots[i].random_point())
                 for _ in range(3):
-                    if self.right_click_select_context_menu("Deposit-All", screenshot=True):
+                    if self.right_click_select_context_menu("Deposit-All", pad=160, screenshot=True):
                         break
                 self.sleep(lo=.6, hi=1)
 
