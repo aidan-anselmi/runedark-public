@@ -1235,7 +1235,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         item_path = BOT_IMAGES / "inventory" / "empty-slot.png"
         empty_slot = search_img_in_rect(item_path, self.win.inventory_slots[slot_ind])
         state = "empty" if empty_slot else "full"
-        self.log_msg(f"Inventory slot index {slot_ind} is {state}.")
+        # self.log_msg(f"Inventory slot index {slot_ind} is {state}.")
         return state == "full"
 
     def get_inv_drop_traversal_path(self) -> List[int]:
