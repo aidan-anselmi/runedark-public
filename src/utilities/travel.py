@@ -331,9 +331,10 @@ class SpiritTreeStep(TravelStep):
         self.tree_key = tree_key
 
     def handle(self, traveler: "Traveler") -> bool:
-        if not self.travel_to_end(traveler):
-            traveler.bot.log_msg(f"Failed to walk to spirit tree: {self.description}")
-            return False
+        if self.start and self.end:
+            if not self.travel_to_end(traveler):
+                traveler.bot.log_msg(f"Failed to walk to spirit tree: {self.description}")
+                return False
 
         if not traveler.click_object_at_step(self):
             return False
