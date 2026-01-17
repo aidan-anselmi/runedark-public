@@ -95,7 +95,7 @@ class SlayerMelee(OSRSBot):
         self.task = "Fire giant"
         self.to_task_travel_steps = [
             TeleportSpellStep("home", "tele home"),
-            SpiritTreeStep(tree_key="2", color=self.cp.hsv.RED_MARK, description="home spirit tree"),
+            SpiritTreeStep(tree_key="2", color=self.cp.hsv.RED_MARK, description="home spirit tree", start=Point(1922, 5707)),
             StairsStep(Point(2462, 3444), Point(2430, 3424), "spirit tree to cave", mouseover_text="Enter"),
             WalkStep(Point(2429, 9824), Point(2397, 9778), "cave to fire giants"),
         ]

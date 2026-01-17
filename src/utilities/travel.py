@@ -340,7 +340,7 @@ class SpiritTreeStep(TravelStep):
             return False
         
         def in_spirit_tree_menu() -> bool:
-            return ocr.find_textbox("Spirit Tree Locations", rect=traveler.bot.win.game_view, font=ocr.QUILL, colors=traveler.bot.cp.bgr.OFF_BROWN_TEXT)
+            return ocr.find_textbox("Spirit Tree Locations", rect=traveler.bot.win.game_view, font=ocr.QUILL, colors=traveler.bot.cp.bgr.REAL_OFF_BROWN_TEXT)
 
         for _ in range(25):
             if in_spirit_tree_menu():
