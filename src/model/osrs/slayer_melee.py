@@ -8,6 +8,7 @@ from model.osrs.power_chopper import OSRSPowerChopper
 from utilities.geometry import Point, RuneLiteObject
 from utilities.mappings import item_ids as iid
 from utilities.mappings import locations as loc
+from utilities.travel_step import StepType
 from utilities.walker import Walker, WalkPath
 from utilities.color_util import Color
 from utilities.sprite_scraper import SpriteScraper, ImageType
@@ -17,7 +18,7 @@ from utilities.mappings.colors_rgb import BLUE, BLUE, GREEN, CYAN, YELLOW
 import cv2
 import pyautogui as pag
 import random
-from utilities.travel import TravelStep, Traveler, StepType
+from utilities.travel import *
 
 pag.FAILSAFE = False
 
@@ -53,18 +54,42 @@ class SlayerMelee(OSRSBot):
         # self.bank_tile = Point(2137,3854)
 
         # Wyrm task
-        self.task = "Wyrms"
+        # self.task = "Wyrms"
+        # self.to_task_travel_steps = [
+        #     TravelStep(Point(1324, 3824), Point(1311, 3807), "bank to elevator", mouseover_text="Activate", extra_wait_time=4),
+        #     TravelStep(Point(1311, 10188), Point(1303, 10205), "entrance to rocks", mouseover_text="Climb"),
+        #     TravelStep(Point(1301, 10205), Point(1271, 10175), "rocks to lava gap", mouseover_text="Jump"),
+        #     TravelStep(Point(1271, 10170), Point(1269, 10159), StepType.walk, "lava gap to wyrms"),
+        # ]
+        # self.to_bank_travel_steps = [
+        #     TravelStep(Point(1269, 10159), Point(1271, 10170), "wyrms to lava gap", mouseover_text="Jump"),
+        #     TravelStep(Point(1271, 10175), Point(1301, 10205), "lava gap to rocks", mouseover_text="Climb"),
+        #     TravelStep(Point(1303, 10205), Point(1311, 10188), "rocks to entrance", mouseover_text="Exit", extra_wait_time=4),
+        #     TravelStep(Point(1311, 3807), Point(1324, 3824), "elevator to bank", mouseover_text="Use"),
+        # ]
         self.to_task_travel_steps = [
-            TravelStep(Point(1324, 3824), Point(1311, 3807), StepType.stairs, "bank to elevator", mouseover_text="Activate", extra_wait_time=4),
-            TravelStep(Point(1311, 10188), Point(1303, 10205), StepType.stairs, "entrance to rocks", mouseover_text="Climb"),
-            TravelStep(Point(1301, 10205), Point(1271, 10175), StepType.stairs, "rocks to lava gap", mouseover_text="Jump"),
-            TravelStep(Point(1271, 10170), Point(1269, 10159), StepType.walk, "lava gap to wyrms"),
+            StairsStep(Point(1324, 3824), Point(1311, 3807), "bank to elevator", mouseover_text="Activate", extra_wait_time=4),
+            StairsStep(Point(1311, 10188), Point(1303, 10205), "entrance to rocks", mouseover_text="Climb"),
+            StairsStep(Point(1301, 10205), Point(1271, 10175), "rocks to lava gap", mouseover_text="Jump"),
+            WalkStep(Point(1271, 10170), Point(1269, 10159), "lava gap to wyrms"),
         ]
         self.to_bank_travel_steps = [
-            TravelStep(Point(1269, 10159), Point(1271, 10170), StepType.stairs, "wyrms to lava gap", mouseover_text="Jump"),
-            TravelStep(Point(1271, 10175), Point(1301, 10205), StepType.stairs, "lava gap to rocks", mouseover_text="Climb"),
-            TravelStep(Point(1303, 10205), Point(1311, 10188), StepType.stairs, "rocks to entrance", mouseover_text="Exit", extra_wait_time=4),
-            TravelStep(Point(1311, 3807), Point(1324, 3824), StepType.stairs, "elevator to bank", mouseover_text="Use"),
+            StairsStep(Point(1269, 10159), Point(1271, 10170), "wyrms to lava gap", mouseover_text="Jump"),
+            StairsStep(Point(1271, 10175), Point(1301, 10205), "lava gap to rocks", mouseover_text="Climb"),
+            StairsStep(Point(1303, 10205), Point(1311, 10188), "rocks to entrance", mouseover_text="Exit", extra_wait_time=4),
+            StairsStep(Point(1311, 3807), Point(1324, 3824), "elevator to bank", mouseover_text="Use"),
+        ]
+
+        self.task = "Ankou"
+        self.to_task_travel_steps = [
+            TeleportSpellStep("home", "tele home"),
+            StairsStep(Point(1922, 5707), Point(1929, 5731), "home kourend portal", mouseover_text="Enter"),
+            StairsStep(Point(1641, 3673), Point(1639, 3673), "enter statue", mouseover_text="Investigate"),
+            StairsStep(Point(1666, 10050), Point(1648, 10009), "entrance to cracl", mouseover_text="Squeeze"),
+        ]
+        self.to_bank_travel_steps = [
+            TeleportSpellStep("ge", "bank to ge"),
+            StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
         ]
 
 
