@@ -2553,7 +2553,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             pag.press("f4")
             self.sleep()
             self.mouse.move_to(self.win.spellbook_normal[35].random_point())
-            if not self.get_mouseover_text(contains="Cast High Level Alchemy", colors=[self.cp.bgr.OFF_WHITE_TEXT, self.cp.bgr.OFF_GREEN_TEXT]):
+            if not self.get_mouseover_text(contains="CastHigh", colors=[self.cp.bgr.OFF_WHITE_TEXT, self.cp.bgr.OFF_GREEN_TEXT]):
                 pag.press("f2")
                 self.sleep()
                 return False
