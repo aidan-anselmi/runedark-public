@@ -294,7 +294,7 @@ class TeleportSpellStep(TravelStep):
         description: str = "",
         extra_wait_time: float = 0.0,
     ):
-        super().__init__(description, extra_wait_time)
+        super().__init__(description=description, extra_wait_time=extra_wait_time)
         self.tele_dest = tele_dest
 
     def handle(self, traveler: "Traveler") -> bool:
