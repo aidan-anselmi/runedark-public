@@ -190,6 +190,33 @@ class Traveler:
             if self.travel_once(travel_steps):
                 return True
         return False
+    
+    def get_start_step(self, travel_steps: list[TravelStep]) -> int:
+        cur_location = self.get_cur_location()
+        self.bot.log_msg(f"Current location: {cur_location}")
+        if not cur_location:
+            return -1 
+
+        closest_step = 0
+        closest_dist = float('inf')
+        for i in range(len(travel_steps)):
+            if math.dist(travel_steps[i].start, cur_location) < closest_dist:
+                closest_dist = math.dist(travel_steps[i].start, cur_location)
+                closest_step = i
+            if math.dist(travel_steps[i].end, cur_location) < closest_dist:
+                closest_dist = math.dist(travel_steps[i].end, cur_location)
+                closest_step = i
+        return closest_step
+    
+    def get_cur_location(self) -> Point:
+        cur_location = Point(-1, -1)
+        for _ in range(10):
+            cur_location = self.walker.get_position()
+            if cur_location != Point(-1, -1):
+                break
+            else:
+                self.bot.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
+        return cur_location
 
     def travel_once(self, travel_steps: list[TravelStep]) -> bool:
         start_idx = self.get_start_step(travel_steps)
