@@ -315,10 +315,10 @@ class TeleportSpellStep(TravelStep):
 class SpiritTreeStep(TravelStep):
     def __init__(
         self,
-        start: Point,
-        end: Point,
         tree_key: str,
         color: Color,
+        start: Point = None,
+        end: Point = None,
         description: str = "",
     ):
         super().__init__(
