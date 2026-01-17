@@ -282,7 +282,7 @@ class SlayerMelee(OSRSBot):
                 if i == 9:
                     self.log_msg("Could not find monster to attack")
                     if self.task:
-                        self.travel_to(self.task_tile, None, f"bank_to_{self.task.lower()}_task")
+                        self.traveler.travel(self.to_task_travel_steps)
                 continue
             if self.get_mouseover_text(contains="Cast"):
                 self.mouse.click()
@@ -299,7 +299,8 @@ class SlayerMelee(OSRSBot):
                     return True
                 
         self.log_msg("Could not travel to bank via travel steps, using GE to bank")
-        return self.bank_ge()
+        # return self.bank_ge()
+        return
 
     def bank_and_return(self) -> bool:
         self.log_msg("Returning to bank...")
