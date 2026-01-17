@@ -191,7 +191,7 @@ class Traveler:
         for _ in range(retries):
             if self.travel_once(travel_steps):
                 if after_percent_zoom:
-                    self.bot.zoom(out=False, percent=after_percent_zoom)
+                    self.bot.zoom(out=False, percent_zoom=after_percent_zoom)
                 return True
         return False
     
