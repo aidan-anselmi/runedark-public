@@ -91,7 +91,7 @@ class Traveler():
     def travel_to_step_end(self, step: TravelStep) -> bool:
         traveled_to = True
         if step.step_type in [StepType.stairs, StepType.door, StepType.walk]:
-            if math.dist(step.end, self.get_cur_location()) < 10:
+            if math.dist(step.end, self.get_cur_location()) < 6:
                 return True
 
             traveled_to = False
@@ -133,4 +133,6 @@ class Traveler():
                     time.sleep(.5)
                     self.bot.sleep_while_color_moving(step.color)
                     return True
+            else:
+                self.bot.log_msg(f"Could not find object for step: {step.description}")
         return False
