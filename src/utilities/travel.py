@@ -200,10 +200,12 @@ class Traveler:
         closest_step = 0
         closest_dist = 100 # must be within 100 units to start
         for i in range(len(travel_steps)):
-            if travel_steps[i].start and math.dist(travel_steps[i].start, cur_location) < closest_dist:
+            if travel_steps[i].start is None or travel_steps[i].end is None:
+                continue
+            if math.dist(travel_steps[i].start, cur_location) < closest_dist:
                 closest_dist = math.dist(travel_steps[i].start, cur_location)
                 closest_step = i
-            if travel_steps[i].end and math.dist(travel_steps[i].end, cur_location) < closest_dist:
+            if math.dist(travel_steps[i].end, cur_location) < closest_dist:
                 closest_dist = math.dist(travel_steps[i].end, cur_location)
                 closest_step = i
         return closest_step
@@ -217,6 +219,23 @@ class Traveler:
             else:
                 self.bot.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
         return cur_location
+    
+    def format_points(self, p1: Point, p2: Point) -> str:
+        return f"({p1.x}, {p1.y}) -> ({p2.x}, {p2.y})"
+    
+    def click_object_at_step(self, step: TravelStep) -> bool:
+        for _ in range(5):
+            if self.bot.move_mouse_to_color_obj(step.color):
+                if step.mouseover_text and not self.bot.get_mouseover_text(contains=step.mouseover_text):
+                    self.bot.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
+                    continue
+                if self.bot.mouse.click(check_red_click=True):
+                    time.sleep(.5)
+                    self.bot.sleep_while_color_moving(step.color)
+                    return True
+            else:
+                self.bot.log_msg(f"Could not find object for step: {step.description}")
+        return False
 
     def travel_once(self, travel_steps: list[TravelStep]) -> bool:
         start_idx = self.get_start_step(travel_steps)
