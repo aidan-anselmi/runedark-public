@@ -225,11 +225,13 @@ class SlayerMelee(OSRSBot):
         self.logout_and_stop_script("[END]")
 
     def loot(self):
-        while self.find_ground_items() and not self.full_trip():
+        i = 0 
+        while self.find_ground_items() and not self.full_trip() and i < 10:
             self.high_alch_item()
             if self.is_inv_full():
                 self.eat_food()
-            self.pickup_ground_item()   
+            self.pickup_ground_item()
+            i += 1
 
     def adjust_camera(self):
         if time.time() - self.camera_move_combat_timestamp < 20:
