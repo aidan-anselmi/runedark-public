@@ -19,6 +19,8 @@ import pyautogui as pag
 import random
 from utilities.travel import TravelStep, Traveler, StepType
 
+pag.FAILSAFE = False
+
 class SlayerMelee(OSRSBot):
     def __init__(self):
         bot_title = "Slayer Melee"  # i.e. "<Script Name>"
