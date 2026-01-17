@@ -35,7 +35,7 @@ class SlayerMelee(OSRSBot):
         self.walker = Walker(self, dest_square_side_length=4)
 
         self.monster_color = self.cp.hsv.CYAN_MARK
-        self.bank_color = self.cp.hsv.BLUE_MARK
+        self.bank_color = self.cp.hsv.PINK_MARK
         self.food_color = Color(((0, 245, 245), (1, 255, 255)))
 
         self.scrape()
