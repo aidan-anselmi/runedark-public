@@ -151,8 +151,8 @@ import pyautogui as pag
 class TravelStep(ABC):
     def __init__(
         self,
-        start: Point = -1,
-        end: Point = -1,
+        start: Point = None,
+        end: Point = None,
         description: str = "",
         mouseover_text: str = "",
         color: Color = None,
