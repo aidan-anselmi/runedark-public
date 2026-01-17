@@ -202,6 +202,7 @@ class Traveler:
         for i in range(len(travel_steps)):
             if travel_steps[i].start is None or travel_steps[i].end is None:
                 continue
+            print(f"start {travel_steps[i].start} cur location: {cur_location}")
             if math.dist(travel_steps[i].start, cur_location) < closest_dist:
                 closest_dist = math.dist(travel_steps[i].start, cur_location)
                 closest_step = i
