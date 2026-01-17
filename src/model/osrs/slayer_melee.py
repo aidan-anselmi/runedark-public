@@ -201,7 +201,7 @@ class SlayerMelee(OSRSBot):
         self.last_attack_monster_timestamp = 0
         self.last_out_of_combat_timestamp = 0
         self.camera_move_combat_timestamp = 0
-        self.after_percent_zoom=0.2
+        self.after_percent_zoom=0.25
 
         self.traveler = Traveler(self, self.walker)
 
@@ -325,6 +325,7 @@ class SlayerMelee(OSRSBot):
                 continue
             if self.get_mouseover_text(contains="Cast"):
                 self.mouse.click()
+                self.sleep()
             if self.get_mouseover_text(contains="Attack") and self.mouse.click(check_red_click=True):
                 self.last_attack_monster_timestamp = time.time()
                 self.move_mouse_randomly()
@@ -441,6 +442,7 @@ class SlayerMelee(OSRSBot):
             self.sleep()
 
     def has_no_hp_bar(self) -> bool:
+        return not self.has_hp_bar()
         if self.has_hp_bar():
             return False
 
