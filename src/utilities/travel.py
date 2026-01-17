@@ -204,13 +204,10 @@ class Traveler:
         closest_step = 0
         closest_dist = 100 # must be within 100 units to start
         for i in range(len(travel_steps)):
-            if travel_steps[i].start is None or travel_steps[i].end is None:
-                continue
-            # print(f"start {travel_steps[i].start} cur location: {cur_location}")
-            if math.dist(travel_steps[i].start, cur_location) < closest_dist:
+            if travel_steps[i].start and math.dist(travel_steps[i].start, cur_location) < closest_dist:
                 closest_dist = math.dist(travel_steps[i].start, cur_location)
                 closest_step = i
-            if math.dist(travel_steps[i].end, cur_location) < closest_dist:
+            if travel_steps[i].end and math.dist(travel_steps[i].end, cur_location) < closest_dist:
                 closest_dist = math.dist(travel_steps[i].end, cur_location)
                 closest_step = i
         return closest_step
