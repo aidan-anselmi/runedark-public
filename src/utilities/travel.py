@@ -25,6 +25,7 @@ class TravelStep():
                  description: str = "", 
                  mouseover_text : str = "",
                  color : Color = None,
+                 extra_wait_time: float = 0.0
                  ):
         self.start = start
         self.end = end
@@ -32,6 +33,7 @@ class TravelStep():
         self.description = description
         self.mouseover_text = mouseover_text
         self.color = color
+        self.extra_wait_time = extra_wait_time
 
 class Traveler():
     def __init__(self, bot: RuneLiteBot, walker: Walker):
@@ -56,6 +58,7 @@ class Traveler():
             if not self.handle_step(step):
                 self.bot.log_msg(f"Failed to handle travel step: {step.description}")
                 return False
+            time.sleep(step.extra_wait_time)
         return True
 
     def get_start_step(self, travel_steps: list[TravelStep]) -> int:

@@ -55,7 +55,7 @@ class SlayerMelee(OSRSBot):
         # Wyrm task
         self.task = "Wyrms"
         self.to_task_travel_steps = [
-            TravelStep(Point(1324, 3824), Point(1311, 3807), StepType.stairs, "bank to elevator", mouseover_text="Activate"),
+            TravelStep(Point(1324, 3824), Point(1311, 3807), StepType.stairs, "bank to elevator", mouseover_text="Activate", extra_wait_time=4),
             TravelStep(Point(1311, 10188), Point(1303, 10205), StepType.stairs, "entrance to rocks", mouseover_text="Climb"),
             TravelStep(Point(1301, 10205), Point(1271, 10175), StepType.stairs, "rocks to lava gap", mouseover_text="Jump"),
             TravelStep(Point(1271, 10170), Point(1269, 10159), StepType.walk, "lava gap to wyrms"),
@@ -63,7 +63,7 @@ class SlayerMelee(OSRSBot):
         self.to_bank_travel_steps = [
             TravelStep(Point(1269, 10159), Point(1271, 10170), StepType.stairs, "wyrms to lava gap", mouseover_text="Jump"),
             TravelStep(Point(1271, 10175), Point(1301, 10205), StepType.stairs, "lava gap to rocks", mouseover_text="Climb"),
-            TravelStep(Point(1303, 10205), Point(1311, 10188), StepType.stairs, "rocks to entrance", mouseover_text="Exit"),
+            TravelStep(Point(1303, 10205), Point(1311, 10188), StepType.stairs, "rocks to entrance", mouseover_text="Exit", extra_wait_time=4),
             TravelStep(Point(1311, 3807), Point(1324, 3824), StepType.stairs, "elevator to bank", mouseover_text="Use"),
         ]
 
