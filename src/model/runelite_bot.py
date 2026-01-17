@@ -2024,9 +2024,6 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         )
         # Take a screenshot of of the rectangle.
         char_screenshot_bgr = char_rect.screenshot()
-        # char_screenshot_hsv = cv2.cvtColor(char_screenshot_bgr, cv2.COLOR_BGR2HSV)
-        # dbg.save_image("char_screenshot_hsv.png", char_screenshot_hsv)
-        # Isolate HP bars in the rectangle.
         hp_bars = isolate_colors(
             char_screenshot_bgr, [self.cp.bgr.RED, self.cp.bgr.GREEN]
         )
