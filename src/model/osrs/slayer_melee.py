@@ -282,6 +282,9 @@ class SlayerMelee(OSRSBot):
                     if self.task:
                         self.travel_to(self.task_tile, None, f"bank_to_{self.task.lower()}_task")
                 continue
+            if self.get_mouseover_text(contains="Cast"):
+                self.mouse.click()
+                return False
             if self.get_mouseover_text(contains="Attack") and self.mouse.click(check_red_click=True):
                 self.last_attack_monster_timestamp = time.time()
                 self.move_mouse_randomly()

@@ -2537,10 +2537,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
 
         return False
 
-    def high_alch_item(self, color: Color = None) -> bool:
-        if color is None:
-            color = Color(((58, 200, 200), (62, 255, 255)))
-
+    def high_alch_item(self, color: Color = Color(((58, 200, 200), (62, 255, 255)))) -> bool:
         if time.time() - self.last_high_alch_timestamp < 3.0:
             return False
         else:
@@ -2556,7 +2553,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             pag.press("f4")
             self.sleep()
             self.mouse.move_to(self.win.spellbook_normal[35].random_point())
-            if not self.get_mouseover_text(contains="Cast"):
+            if not self.get_mouseover_text(contains="Cast High Level Alchemy", colors=[self.cp.bgr.OFF_WHITE_TEXT, self.cp.bgr.OFF_GREEN_TEXT]):
                 pag.press("f2")
                 self.sleep()
                 return False
