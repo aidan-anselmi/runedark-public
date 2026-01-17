@@ -2561,7 +2561,8 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
             self.sleep()
             self.mouse.move_to(item.random_point())
             self.mouse.click()
-            self.sleep()
+            self.sleep(lo=.4, hi=.6)
+            pag.press("f2")
             return True
 
         return False

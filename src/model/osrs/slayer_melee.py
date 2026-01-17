@@ -271,12 +271,12 @@ class SlayerMelee(OSRSBot):
             self.log_msg("Inventory full, returning to bank")
         return res
 
-    def atack_monster(self) -> bool:
+    def atack_monster(self, order = 0) -> bool:
         if self.last_attack_monster_timestamp + 3 > time.time():
             return False
         
         for i in range(10):
-            if not self.move_mouse_to_color_obj(self.monster_color):
+            if not self.move_mouse_to_color_obj(self.monster_color, order=order):
                 if i == 9:
                     self.log_msg("Could not find monster to attack")
                     if self.task:
@@ -284,7 +284,6 @@ class SlayerMelee(OSRSBot):
                 continue
             if self.get_mouseover_text(contains="Cast"):
                 self.mouse.click()
-                return False
             if self.get_mouseover_text(contains="Attack") and self.mouse.click(check_red_click=True):
                 self.last_attack_monster_timestamp = time.time()
                 self.move_mouse_randomly()
