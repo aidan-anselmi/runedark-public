@@ -425,7 +425,7 @@ class SlayerMelee(OSRSBot):
             for i in range(5):
                 if not self.move_mouse_to_color_obj(self.bank_color):
                     continue
-                if self.get_mouseover_text(contains="Bank") and self.mouse.click(check_red_click=True):
+                if self.get_mouseover_text(contains=["Bank", "Use"]) and self.mouse.click(check_red_click=True):
                     break
                 if i == 4:
                     self.log_msg("Could not find bank to resupply")
