@@ -80,17 +80,7 @@ class SlayerMelee(OSRSBot):
             StairsStep(Point(1311, 3807), Point(1324, 3824), "elevator to bank", mouseover_text="Use"),
         ]
 
-        self.task = "Ankou"
-        self.to_task_travel_steps = [
-            TeleportSpellStep("home", "tele home"),
-            StairsStep(Point(1922, 5707), Point(1929, 5731), "home kourend portal", mouseover_text="Enter"),
-            StairsStep(Point(1641, 3673), Point(1639, 3673), "enter statue", mouseover_text="Investigate"),
-            StairsStep(Point(1666, 10050), Point(1648, 10009), "entrance to cracl", mouseover_text="Squeeze"),
-        ]
-        self.to_bank_travel_steps = [
-            TeleportSpellStep("ge", "bank to ge"),
-            StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
-        ]
+
 
         self.task = "Fire giant"
         self.to_task_travel_steps = [
@@ -98,6 +88,18 @@ class SlayerMelee(OSRSBot):
             SpiritTreeStep(tree_key="2", color=self.cp.hsv.RED_MARK, description="home spirit tree", start=Point(1922, 5707)),
             StairsStep(Point(2462, 3444), Point(2430, 3424), "spirit tree to cave", mouseover_text="Enter"),
             WalkStep(Point(2429, 9824), Point(2397, 9778), "cave to fire giants"),
+        ]
+        self.to_bank_travel_steps = [
+            TeleportSpellStep("ge", "bank to ge"),
+            StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
+        ]
+
+        self.task = "Ankou"
+        self.to_task_travel_steps = [
+            TeleportSpellStep("home", "tele home"),
+            StairsStep(start=Point(1922, 5707), description="home kourend portal", mouseover_text="Enter"),
+            StairsStep(Point(1641, 3673), Point(1639, 3673), "enter statue", mouseover_text="Investigate"),
+            StairsStep(Point(1666, 10050), Point(1648, 10009), "entrance to cracl", mouseover_text="Squeeze"),
         ]
         self.to_bank_travel_steps = [
             TeleportSpellStep("ge", "bank to ge"),
