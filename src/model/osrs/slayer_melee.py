@@ -234,7 +234,7 @@ class SlayerMelee(OSRSBot):
             self.high_alch_item()
 
             # fight 
-            if self.out_of_combat() or self.has_no_hp_bar():
+            if self.has_no_hp_bar():
                 self.atack_monster()
 
             # bank
@@ -442,7 +442,7 @@ class SlayerMelee(OSRSBot):
         if self.has_hp_bar():
             return False
 
-        if self.has_no_hp_bar_consec % 50 == 0:
+        if self.has_no_hp_bar_consec % 10 == 0:
             self.has_no_hp_bar_consec = 1
             return True
         else:
