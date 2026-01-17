@@ -281,7 +281,7 @@ class SlayerMelee(OSRSBot):
             if not self.move_mouse_to_color_obj(self.monster_color, order=order):
                 if i == 9:
                     self.log_msg("Could not find monster to attack")
-                    if self.task:
+                    if self.to_task_travel_steps:
                         self.traveler.travel(self.to_task_travel_steps)
                 continue
             if self.get_mouseover_text(contains="Cast"):
