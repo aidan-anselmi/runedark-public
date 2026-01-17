@@ -404,7 +404,9 @@ class SlayerMelee(OSRSBot):
             while self.get_hp() < 80:
                 self.eat_food()
                 self.sleep()
-            self.open_bank()
+            if not self.open_bank():
+                self.log_msg("Could not open bank to withdraw bwans after healing")
+                return False
             self.withdraw_bwans()
             self.sleep()
 
@@ -421,17 +423,21 @@ class SlayerMelee(OSRSBot):
     def open_bank(self) -> bool:
         if not self.is_bank_window_open():
             for i in range(5):
-                self.move_mouse_to_color_obj(self.bank_color)
+                if not self.move_mouse_to_color_obj(self.bank_color):
+                    continue
                 if self.get_mouseover_text(contains="Bank") and self.mouse.click(check_red_click=True):
                     break
                 if i == 4:
                     self.log_msg("Could not find bank to resupply")
                     return False
             self.sleep_until_bank_open()
-        return True
+        return self.is_bank_window_open()
     
     def withdraw_bwans(self) -> bool:
-        self.open_bank_tab(3)
+        if not self.is_bank_window_open():
+            return False
+        if not self.find_sprite(self.win.game_view, "cooked-karambwan-bank.png", "items"):
+            self.open_bank_tab(3)
         if bwans := self.find_sprite(self.win.game_view, "cooked-karambwan-bank.png", "items"):
             self.mouse.move_to(bwans.random_point())
             self.sleep()
