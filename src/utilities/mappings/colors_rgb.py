@@ -18,7 +18,6 @@ OFF_WHITE_TEXT = ((190, 190, 190), (255, 255, 255))
 OFF_YELLOW_TEXT = ((190, 190, 0), (255, 255, 120))
 OFF_ORANGE_TEXT = ((180, 100, 30), (255, 166, 103))
 OFF_BROWN_TEXT = ((51, 39, 27), (69, 50, 32))
-REAL_OFF_BROWN_TEXT = (52, 52, 18)
 
 # Orb text color scale.
 ORB_TEXT_100_90 = (GREEN, (51, 255, 0))
@@ -47,3 +46,4 @@ ORB_GREEN = ((0, 255, 0), (255, 255, 0))
 ORB_RED = ((255, 0, 0), (255, 255, 0))
 
 # 
+SPIRIT_TREE_MENU_TEXT = (50, 40, 5)

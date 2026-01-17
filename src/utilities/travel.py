@@ -187,7 +187,7 @@ class Traveler:
         self.walker = walker
 
     def travel(self, travel_steps: list[TravelStep], retries: int = 5, after_percent_zoom=None) -> bool:
-        self.bot.zoom_everything_out_completely()
+        self.bot.zoom(out=True)
         for _ in range(retries):
             if self.travel_once(travel_steps):
                 if after_percent_zoom:
@@ -337,7 +337,7 @@ class SpiritTreeStep(TravelStep):
             return False
         
         def in_spirit_tree_menu() -> bool:
-            return ocr.find_textbox("Spirit Tree Locations", rect=traveler.bot.win.game_view, font=ocr.QUILL, colors=traveler.bot.cp.bgr.REAL_OFF_BROWN_TEXT)
+            return ocr.find_textbox("Spirit Tree Locations", rect=traveler.bot.win.game_view, font=ocr.QUILL, colors=traveler.bot.cp.bgr.SPIRIT_TREE_MENU_TEXT)
 
         for _ in range(25):
             if in_spirit_tree_menu():
