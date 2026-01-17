@@ -371,14 +371,6 @@ class SlayerMelee(OSRSBot):
         self.stop()
         return True
     
-    def run_and_back(self) -> bool:
-        self.travel_to(self.bank_tile, None, f"{self.task}_task_to_bank")
-        self.resupply()
-        if len(self.get_food_rects()) > 0:
-            self.travel_to(self.task_tile, None, f"bank_to_{self.task.lower()}_task")
-            return True
-        return False
-    
     def resupply(self) -> bool:
         if not self.open_bank():
             return False
