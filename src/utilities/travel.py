@@ -147,6 +147,7 @@ from utilities.geometry import Point
 from utilities.color_util import Color
 from utilities.walker import Walker
 import pyautogui as pag
+import utilities.ocr as ocr
 
 class TravelStep(ABC):
     def __init__(
@@ -170,7 +171,7 @@ class TravelStep(ABC):
         pass
 
     def travel_to_end(self, traveler: "Traveler") -> bool:
-        if math.dist(self.end, traveler.get_cur_location()) < 6:
+        if math.dist(self.end, traveler.get_cur_location()) < 4:
             return True
 
         for _ in range(5):
@@ -185,9 +186,12 @@ class Traveler:
         self.bot = bot
         self.walker = walker
 
-    def travel(self, travel_steps: list[TravelStep], retries: int = 5) -> bool:
+    def travel(self, travel_steps: list[TravelStep], retries: int = 5, after_percent_zoom=None) -> bool:
+        self.bot.zoom_everything_out_completely()
         for _ in range(retries):
             if self.travel_once(travel_steps):
+                if after_percent_zoom:
+                    self.bot.zoom(out=False, percent=after_percent_zoom)
                 return True
         return False
     
@@ -202,7 +206,7 @@ class Traveler:
         for i in range(len(travel_steps)):
             if travel_steps[i].start is None or travel_steps[i].end is None:
                 continue
-            print(f"start {travel_steps[i].start} cur location: {cur_location}")
+            # print(f"start {travel_steps[i].start} cur location: {cur_location}")
             if math.dist(travel_steps[i].start, cur_location) < closest_dist:
                 closest_dist = math.dist(travel_steps[i].start, cur_location)
                 closest_step = i
@@ -305,5 +309,46 @@ class TeleportSpellStep(TravelStep):
         if self.tele_dest == "home":
             traveler.bot.mouse.move_to(traveler.bot.win.spellbook_normal[22].random_point())
         traveler.bot.mouse.click()
+        traveler.bot.sleep(lo=4.0, hi=5.0)
+        return True
+    
+class SpiritTreeStep(TravelStep):
+    def __init__(
+        self,
+        start: Point,
+        end: Point,
+        tree_key: str,
+        color: Color,
+        description: str = "",
+    ):
+        super().__init__(
+            start=start,
+            end=end,
+            description=description,
+            color=color,
+            mouseover_text="Travel",
+        )
+        self.tree_key = tree_key
+
+    def handle(self, traveler: "Traveler") -> bool:
+        if not self.travel_to_end(traveler):
+            traveler.bot.log_msg(f"Failed to walk to spirit tree: {self.description}")
+            return False
+
+        if not traveler.click_object_at_step(self):
+            return False
+        
+        def in_spirit_tree_menu() -> bool:
+            return ocr.find_textbox("Spirit Tree Locations", rect=traveler.bot.win.game_view, font=ocr.QUILL, colors=traveler.bot.cp.bgr.OFF_BROWN_TEXT)
+
+        for _ in range(25):
+            if in_spirit_tree_menu():
+                break
+            time.sleep(.2)
+        if not in_spirit_tree_menu():
+            traveler.bot.log_msg("Failed to open spirit tree menu.")
+            return False
+
+        pag.press(self.tree_key)
         traveler.bot.sleep(lo=4.0, hi=5.0)
         return True

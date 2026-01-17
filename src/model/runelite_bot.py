@@ -568,7 +568,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         out: bool = True,
         percent_zoom: float = 1.0,
         minimap: bool = False,
-        verbose: bool = True,
+        verbose: bool = False,
         overwrite: bool = True,
     ) -> None:
 

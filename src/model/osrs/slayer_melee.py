@@ -92,6 +92,17 @@ class SlayerMelee(OSRSBot):
             StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
         ]
 
+        self.task = "Fire giant"
+        self.to_task_travel_steps = [
+            TeleportSpellStep("home", "tele home"),
+            SpiritTreeStep(Point(1922, 5707), Point(1929, 5731), tree_key="2", color=self.cp.hsv.RED_MARK, description="home spirit tree"),
+            StairsStep(Point(2462, 3444), Point(2430, 3424), "spirit tree to cave", mouseover_text="Enter"),
+            WalkStep(Point(2429, 9824), Point(2397, 9778), "cave to fire giants"),
+        ]
+        self.to_bank_travel_steps = [
+            TeleportSpellStep("ge", "bank to ge"),
+            StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
+        ]
 
     def scrape(self):
         scraper = SpriteScraper()
@@ -188,6 +199,7 @@ class SlayerMelee(OSRSBot):
         self.last_attack_monster_timestamp = 0
         self.last_out_of_combat_timestamp = 0
         self.camera_move_combat_timestamp = 0
+        self.after_percent_zoom=0.2
 
         self.traveler = Traveler(self, self.walker)
 
@@ -196,7 +208,7 @@ class SlayerMelee(OSRSBot):
             self.bank_and_return()
         else:
             self.log_msg("Traveling to slayer task...")
-            self.traveler.travel(self.to_task_travel_steps)
+            self.traveler.travel(self.to_task_travel_steps, after_percent_zoom=self.after_percent_zoom)
 
         # ensure auto retaliate is on
         self.toggle_auto_retaliate(state="on")
@@ -320,7 +332,7 @@ class SlayerMelee(OSRSBot):
     def bank(self) -> bool:
         if self.to_bank_travel_steps:
             for _ in range(5):
-                if self.traveler.travel(self.to_bank_travel_steps):
+                if self.traveler.travel(self.to_bank_travel_steps, self.after_percent_zoom):
                     return True
                 
         self.log_msg("Could not travel to bank via travel steps, using GE to bank")
@@ -343,7 +355,7 @@ class SlayerMelee(OSRSBot):
             if self.to_task_travel_steps and supplied:
                 self.log_msg(f"Returning to {self.task} task...")
                 for _ in range(5):
-                    if self.traveler.travel(self.to_task_travel_steps):
+                    if self.traveler.travel(self.to_task_travel_steps, self.after_percent_zoom):
                         return True
                 self.log_msg(f"Could not return to {self.task} task after banking")
                 return False
