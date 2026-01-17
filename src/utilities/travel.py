@@ -270,17 +270,19 @@ class WalkStep(TravelStep):
 
 class StairsStep(TravelStep):
     def handle(self, traveler: "Traveler") -> bool:
-        if not self.travel_to_end(traveler):
-            traveler.bot.log_msg(f"Failed to walk to stairs: {self.description}")
-            return False
+        if self.start and self.end:
+            if not self.travel_to_end(traveler):
+                traveler.bot.log_msg(f"Failed to walk to stairs: {self.description}")
+                return False
 
         return traveler.click_object_at_step(self)
 
 class DoorStep(TravelStep):
     def handle(self, traveler: "Traveler") -> bool:
-        if not self.travel_to_end(traveler):
-            traveler.bot.log_msg(f"Failed to walk to door: {self.description}")
-            return False
+        if self.start and self.end:
+            if not self.travel_to_end(traveler):
+                traveler.bot.log_msg(f"Failed to walk to door: {self.description}")
+                return False
 
         if traveler.bot.find_colors(traveler.bot.win.game_view, self.color):
             return traveler.click_object_at_step(self)
