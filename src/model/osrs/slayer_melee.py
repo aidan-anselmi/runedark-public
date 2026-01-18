@@ -188,7 +188,7 @@ class SlayerMelee(OSRSBot):
         self.last_attack_monster_timestamp = 0
         self.last_out_of_combat_timestamp = 0
         self.camera_move_combat_timestamp = 0
-        self.after_percent_zoom=0.25
+        self.after_percent_zoom=0.3
 
         self.traveler = Traveler(self, self.walker)
 
