@@ -576,6 +576,8 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         win_str = "minimap" if minimap else "game window"
         zstyle = "out" if out else "in"
 
+        self.mouse.move_to(win_obj.random_point())
+
         if verbose:
             self.log_msg(
                 f"Zooming {win_str} {zstyle} ({int(percent_zoom * 100)}%)...",
