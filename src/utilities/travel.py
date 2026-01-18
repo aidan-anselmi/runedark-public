@@ -48,6 +48,9 @@ class Traveler:
         self.walker = walker
 
     def travel(self, travel_steps: list[TravelStep], retries: int = 5, after_percent_zoom=None) -> bool:
+        if not travel_steps:
+            return True
+
         self.bot.zoom(out=True)
         for _ in range(retries):
             if self.travel_once(travel_steps):
