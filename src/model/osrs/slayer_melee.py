@@ -210,6 +210,7 @@ class SlayerMelee(OSRSBot):
         else:
             self.log_msg("Traveling to slayer task...")
             self.traveler.travel(self.to_task_travel_steps, after_percent_zoom=self.after_percent_zoom)
+        self.xp_timestamp = time.time()
 
         # ensure auto retaliate is on
         self.toggle_auto_retaliate(state="on")
