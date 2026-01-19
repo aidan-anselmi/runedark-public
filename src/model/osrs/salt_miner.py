@@ -151,6 +151,9 @@ class SaltMiner(OSRSBot):
                 self.update_progress((time.time() - self.start_time) / end_time)
                 last_update = time.time()
 
+            if self.is_inv_full():
+                self.note_basalt()
+
             if not self.is_player_doing_action("Mining", rect=self.action_win) and not self.strayed_far():
                 if not self.mine_salt():
                     self.consec_no_mine_checks += 1
@@ -161,11 +164,7 @@ class SaltMiner(OSRSBot):
                     self.traveler.travel(self.return_to_mine_steps)
             else:
                 self.log_msg("Strayed far, returning to mine.")
-                self.traveler.travel(self.return_to_mine_steps)
-
-            if self.is_inv_full():
-                self.note_basalt()
-                    
+                self.traveler.travel(self.return_to_mine_steps)                    
 
             # check for no xp gain
             if self.has_not_gained_xp(duration=300):
@@ -216,7 +215,7 @@ class SaltMiner(OSRSBot):
             return False
 
         basalt_rect = self.find_sprite(win=self.win.game_view, png="basalt.png", folder="items")
-        snowflake_rect = self.find_colors(win=self.win.game_view, colors=self.snowflake_color)
+        snowflake_rect = self.find_colors(self.win.game_view, colors=self.snowflake_color)
         if basalt_rect and snowflake_rect:
             snowflake_rect = snowflake_rect[0]
 
