@@ -915,7 +915,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
 
         posn = pag.position()
         self.mouse.right_click()
-        self.sleep()  # A human takes a second to look at the options.
+        self.sleep(lo=0.5, hi=1)  # A human takes a second to look at the options.
         # Draw a rectangle around where we just clicked to gather context.
         rc_rect = self.mouse.get_rect_around_point(posn, pad=pad)
         if screenshot:  # Using this is helpful for calibrating `pad`.
