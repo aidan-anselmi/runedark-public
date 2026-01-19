@@ -236,4 +236,5 @@ class SaltMiner(OSRSBot):
             self.log_msg("Failed to travel to noter.")
             return False
 
+        self.log_msg("Noted basalt.")
         return True
