@@ -39,7 +39,7 @@ class SlayerMelee(OSRSBot):
         self.food_color = Color(((0, 245, 245), (1, 255, 255)))
 
         self.scrape()
-        self.task = "bloodveld"
+        self.task = "armored zombie"
         self.set_directions()
 
     def scrape(self):
@@ -156,6 +156,18 @@ class SlayerMelee(OSRSBot):
                 TeleportSpellStep("ge", "bank to ge"),
                 StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
             ]
+
+        if self.task == "armored zombie":
+            self.to_task_travel_steps = [
+                DigsitePendantStep(1, "tele to digsite"),
+                StairsStep(Point(3342, 3441), Point(3342, 3515), "digsite to entrance", mouseover_text="Enter"),
+                StairsStep(start=Point(3560, 4552), description="digsite to entrance", mouseover_text="Climb", extra_wait_time=600),
+                StairsStep(start=Point(3342, 3441), description="digsite to entrance", mouseover_text="Enter"),
+            ]
+            self.to_bank_travel_steps = [
+                TeleportSpellStep("ge", "bank to ge"),
+                StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
+            ]
         return
 
     def main_loop(self):
@@ -205,11 +217,6 @@ class SlayerMelee(OSRSBot):
         pag.press("f2")
 
         while time.time() - self.start_time < end_time:
-            if self.has_not_gained_xp(duration=300):
-                self.log_msg("No XP gained for 5 minutes, returning to bank")
-                self.bank_and_return()
-                return
-
             # heal
             if self.get_hp() != -1:
                 while self.get_hp() <= 60 and self.eat_food():
@@ -243,6 +250,13 @@ class SlayerMelee(OSRSBot):
             if time.time() - last_update > 300:
                 self.update_progress((time.time() - self.start_time) / end_time)
                 last_update = time.time()
+
+            # check for no xp gain
+            if self.has_not_gained_xp(duration=300):
+                self.log_msg("No XP gained for 5 minutes, returning to bank")
+                self.bank()
+                self.stop()
+                return
 
             time.sleep(.1)
 
@@ -346,6 +360,7 @@ class SlayerMelee(OSRSBot):
                 self.log_msg(f"Returning to {self.task} task...")
                 for _ in range(5):
                     if self.traveler.travel(self.to_task_travel_steps, after_percent_zoom=self.after_percent_zoom):
+                        self.xp_timestamp = time.time()
                         return True
                 self.log_msg(f"Could not return to {self.task} task after banking")
                 return False

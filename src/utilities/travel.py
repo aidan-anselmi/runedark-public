@@ -216,3 +216,26 @@ class SpiritTreeStep(TravelStep):
         pag.press(self.tree_key)
         traveler.bot.sleep(lo=4.0, hi=5.0)
         return True
+    
+class DigsitePendantStep(TravelStep):
+    def __init__(
+        self,
+        rub_key: str,
+        description: str = "",
+    ):
+        super().__init__(
+            description=description,
+        )
+        self.rub_key = rub_key
+            
+    def handle(self, traveler: "Traveler") -> bool:
+        pag.press("f2")
+        if pendant := traveler.bot.find_sprite(traveler.bot.win.inventory, "digsite-pendant.png", folder="items"):
+            traveler.bot.mouse.move_to(pendant.random_point())
+            if traveler.bot.right_click_select_context_menu("Rub") and traveler.bot.wait_till_interface_text("Digsite", font=ocr.QUILL_8, color=traveler.bot.cp.bgr.BLACK):
+                traveler.bot.sleep()
+                pag.press(self.rub_key)
+                traveler.bot.sleep(lo=3.5, hi=5.0)
+                return True
+                
+        return False
