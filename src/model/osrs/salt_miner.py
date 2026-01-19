@@ -163,7 +163,7 @@ class SaltMiner(OSRSBot):
                 # chance to break
                 if rd.random_chance(0.1):
                     self.sleep(lo=2.0, hi=3.0)
-                if rd.random_chance(0.05):
+                elif rd.random_chance(0.05):
                     self.sleep(lo=5, hi=15)
 
                 if not self.mine_salt():
