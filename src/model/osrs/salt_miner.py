@@ -220,6 +220,7 @@ class SaltMiner(OSRSBot):
             snowflake_rect = snowflake_rect[0]
 
             self.mouse.move_to(basalt_rect.random_point())
+            self.sleep()
             if not self.get_mouseover_text(contains="Use"):
                 self.log_msg("Could not get basalt mouseover text.")
                 return False
