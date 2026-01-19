@@ -160,6 +160,12 @@ class SaltMiner(OSRSBot):
                 self.traveler.travel(self.return_to_mine_steps)    
  
             if not self.is_player_doing_action("Mining", rect=self.action_win):
+                # chance to break
+                if rd.random_chance(0.1):
+                    self.sleep(lo=2.0, hi=3.0)
+                if rd.random_chance(0.05):
+                    self.sleep(lo=5, hi=15)
+
                 if not self.mine_salt():
                     self.consec_no_mine_checks += 1
                 else:
