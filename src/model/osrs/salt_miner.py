@@ -123,7 +123,7 @@ class SaltMiner(OSRSBot):
         self.traveler = Traveler(self, self.walker)
         self.to_noter_steps = [StairsStep(Point(2838, 10336), Point(2845, 10351), "Up mine stairs", "Climb", extra_wait_time=2.5),]
         self.return_to_mine_steps = [
-            StairsStep(Point(2872, 3935), Point(2867, 3938), "Down mine stairs", "Descend", extra_wait_time=2.5),
+            StairsStep(Point(2872, 3935), Point(2869, 3941), "Down mine stairs", "Descend", extra_wait_time=2.5),
             WalkStep(Point(2845, 10351), Point(2838, 10336), "Walk to mine"),
         ]
 
