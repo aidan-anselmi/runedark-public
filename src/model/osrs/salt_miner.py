@@ -214,7 +214,7 @@ class SaltMiner(OSRSBot):
             self.log_msg("Failed to travel to noter.")
             return False
 
-        basalt_rect = self.find_sprite(win=self.win.game_view, png="basalt.png", folder="items")
+        basalt_rect = self.find_sprite(win=self.win.inventory, png="basalt.png", folder="items")
         snowflake_rect = self.find_colors(self.win.game_view, colors=self.snowflake_color)
         if basalt_rect and snowflake_rect:
             snowflake_rect = snowflake_rect[0]
