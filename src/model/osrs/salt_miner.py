@@ -253,7 +253,7 @@ class SaltMiner(OSRSBot):
             if not self.mouse.click(check_red_click=True):
                 self.log_msg("Could not click noter on snowflake.")
                 return False
-            self.sleep()
+            self.sleep_while_color_moving(self.snowflake_color)
         else:
             self.log_msg("Could not find basalt or noter.")
             if not basalt_rect:
