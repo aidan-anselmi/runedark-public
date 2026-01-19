@@ -232,7 +232,7 @@ class DigsitePendantStep(TravelStep):
         pag.press("f2")
         if pendant := traveler.bot.find_sprite(traveler.bot.win.inventory, "digsite-pendant.png", folder="items"):
             traveler.bot.mouse.move_to(pendant.random_point())
-            if traveler.bot.right_click_select_context_menu("Rub") and traveler.bot.wait_till_interface_text("Digsite", font=ocr.QUILL_8, color=traveler.bot.cp.bgr.BLACK):
+            if traveler.bot.right_click_select_context_menu("Rub", screenshot=True) and traveler.bot.wait_till_interface_text("Digsite", font=ocr.QUILL_8, color=traveler.bot.cp.bgr.BLACK):
                 traveler.bot.sleep()
                 pag.press(self.rub_key)
                 traveler.bot.sleep(lo=3.5, hi=5.0)
