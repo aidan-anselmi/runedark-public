@@ -643,6 +643,7 @@ if __name__ == "__main__":
         from model.osrs.cooker import Cooker
         from model.osrs.util_tester import OSRSUtilTester
         from model.osrs.slayer_melee import SlayerMelee
+        from model.osrs.salt_miner import OSRSExample
 
         app = App(test=True)
         app.test(SlayerMelee())

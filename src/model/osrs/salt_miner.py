@@ -1,9 +1,12 @@
 import time
 
+from model.example.example_bot import ExampleBot
+import random
+
 from model.osrs.osrs_bot import OSRSBot
 
 
-class OSRSExample(OSRSBot):
+class SaltMiner(OSRSBot):
     def __init__(self):
         bot_title = "Exhibit A"
         description = (
@@ -87,18 +90,47 @@ class OSRSExample(OSRSBot):
         self.start_time = time.time()
         end_time = int(self.run_time) * 60  # Measured in seconds.
         last_update = self.start_time
+
+        self.salt_1_color = self.cp.hsv.CYAN_MARK
+        self.salt_2_color = self.cp.hsv.PINK_MARK
+        self.salt_3_color = self.cp.hsv.YELLOW_MARK
+
         while time.time() - self.start_time < end_time:
             # update progress
             if time.time() - last_update > 300:
                 self.update_progress((time.time() - self.start_time) / end_time)
                 last_update = time.time()
 
+            if not self.is_player_doing_action("Mining"):
+                self.mine_salt()
+
             # check for no xp gain
             if self.has_not_gained_xp(duration=300):
                 self.log_msg("No XP gained for 5 minutes, returning to bank")
                 self.logout_and_stop_script()
                 return
+            
+            time.sleep(.5)
 
         self.update_progress(1)
         self.log_msg("[END]")
         self.stop()
+
+    def mine_salt(self):
+        # 1/3 chance to mine each salt type
+        salt_choice = random.choice([1, 2, 3])
+        if salt_choice == 1:
+            salt_color = self.salt_1_color
+        elif salt_choice == 2:
+            salt_color = self.salt_2_color
+        else:
+            salt_color = self.salt_3_color
+        for _ in range(5):
+            if self.move_mouse_to_color_obj(salt_color):
+                if self.mouse.click(check_red_click=True):
+                    time.sleep(.5)
+                    self.sleep_while_color_moving(salt_color)
+                    return True
+            else:
+                self.log_msg("Could not find salt to mine.")
+        return False
