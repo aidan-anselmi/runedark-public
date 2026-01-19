@@ -231,6 +231,9 @@ class SaltMiner(OSRSBot):
                 self.log_msg("Could not get snowflake mouseover text.")
                 return False
             self.sleep()
+        else:
+            self.log_msg("Could not find basalt or noter.")
+            return False
 
         if not self.traveler.travel(self.return_to_mine_steps):
             self.log_msg("Failed to travel to noter.")
