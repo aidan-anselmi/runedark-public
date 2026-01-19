@@ -159,7 +159,7 @@ class SlayerMelee(OSRSBot):
 
         if self.task == "armored zombie":
             self.to_task_travel_steps = [
-                DigsitePendantStep(1, "tele to digsite"),
+                DigsitePendantStep("1", "tele to digsite"),
                 StairsStep(Point(3342, 3441), Point(3342, 3515), "digsite to entrance", mouseover_text="Enter"),
                 StairsStep(start=Point(3560, 4552), description="digsite to entrance", mouseover_text="Climb", extra_wait_time=600),
                 StairsStep(start=Point(3342, 3441), description="digsite to entrance", mouseover_text="Enter"),
