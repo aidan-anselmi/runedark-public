@@ -13,7 +13,7 @@ class OSRSExample(OSRSBot):
         super().__init__(bot_title=bot_title, description=description)
         # We can set default option values here if we'd like, and potentially override
         # needing to open the options panel.
-        self.run_time = 10
+        self.run_time = 120
         self.options_set = False
 
     def create_options(self):

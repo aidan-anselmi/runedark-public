@@ -16,7 +16,7 @@ class SaltMiner(OSRSBot):
         super().__init__(bot_title=bot_title, description=description)
         # We can set default option values here if we'd like, and potentially override
         # needing to open the options panel.
-        self.run_time = 10
+        self.run_time = 120
         self.options_set = False
 
     def create_options(self):
@@ -110,6 +110,7 @@ class SaltMiner(OSRSBot):
                 self.logout_and_stop_script()
                 return
             
+            self.toggle_run_on_if_enough_energy()
             time.sleep(.5)
 
         self.update_progress(1)
@@ -127,10 +128,13 @@ class SaltMiner(OSRSBot):
             salt_color = self.salt_3_color
         for _ in range(5):
             if self.move_mouse_to_color_obj(salt_color):
-                if self.mouse.click(check_red_click=True):
+                if res := self.mouse.click(check_red_click=True):
+                    if random.random() < 0.2:
+                        self.sleep()
+                        res = self.move_mouse_to_color_obj(salt_color) and self.mouse.click(check_red_click=True)
                     time.sleep(.5)
                     self.sleep_while_color_moving(salt_color)
-                    return True
+                    return res
             else:
                 self.log_msg("Could not find salt to mine.")
         return False
