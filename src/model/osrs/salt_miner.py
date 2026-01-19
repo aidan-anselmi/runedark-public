@@ -1,9 +1,24 @@
+import math
 import time
+from typing import List
 
-from model.example.example_bot import ExampleBot
-import random
-
+import utilities.random_util as rd
 from model.osrs.osrs_bot import OSRSBot
+from model.osrs.power_chopper import OSRSPowerChopper
+from utilities.geometry import Point, RuneLiteObject
+from utilities.mappings import item_ids as iid
+from utilities.mappings import locations as loc
+from utilities.travel_step import StepType
+from utilities.walker import Walker, WalkPath
+from utilities.color_util import Color
+from utilities.sprite_scraper import SpriteScraper, ImageType
+import pytweening
+from pathlib import Path
+from utilities.mappings.colors_rgb import BLUE, BLUE, GREEN, CYAN, YELLOW
+import cv2
+import pyautogui as pag
+import random
+from utilities.travel import *
 
 
 class SaltMiner(OSRSBot):
@@ -18,6 +33,25 @@ class SaltMiner(OSRSBot):
         # needing to open the options panel.
         self.run_time = 120
         self.options_set = False
+        self.scrape()
+
+    def scrape(self):
+        scraper = SpriteScraper()
+
+        # set destination directory to src/images/bot/items (project-relative)
+        dest_dir = Path(__file__).resolve().parents[2].joinpath("img", "bot", "items")
+        # make sure directory exists
+        dest_dir.mkdir(parents=True, exist_ok=True)
+
+        search_string = "Basalt"
+        image_type = ImageType.ALL
+        destination = dest_dir
+
+        self.path = scraper.search_and_download(
+            search_string=search_string,
+            image_type=image_type,
+            destination=destination,)
+        return 
 
     def create_options(self):
         """Add bot options.
@@ -85,15 +119,31 @@ class SaltMiner(OSRSBot):
         `Bot` and `RuneLiteBot` classes. Leveraging these methods significantly
         accelerates the development process.
         """
+        self.walker = Walker(self, dest_square_side_length=4)
+        self.traveler = Traveler(self, self.walker)
+        self.to_noter_steps = [StairsStep(Point(2838, 10336), Point(2845, 10351), "Up mine stairs", "Climb", 2.5),]
+        self.return_to_mine_steps = [
+            StairsStep(Point(2872, 3935), Point(2867, 3938), "Down mine stairs", "Descend", 2.5),
+            WalkStep(Point(2845, 10351), Point(2838, 10336), "Walk to mine"),
+        ]
+
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
         self.log_msg(f"[START] ({run_time_str})", overwrite=True)
         self.start_time = time.time()
         end_time = int(self.run_time) * 60  # Measured in seconds.
         last_update = self.start_time
 
+        self.action_win = self.win.current_action
+        self.action_win.top += 58
+        self.action_win.height += 3
+
         self.salt_1_color = self.cp.hsv.CYAN_MARK
         self.salt_2_color = self.cp.hsv.PINK_MARK
         self.salt_3_color = self.cp.hsv.YELLOW_MARK
+        self.salt_4_color = self.cp.hsv.GREEN_MARK
+        self.snowflake_color = self.cp.hsv.CYAN_MARK
+
+        self.consec_no_mine_checks = 0
 
         while time.time() - self.start_time < end_time:
             # update progress
@@ -101,8 +151,20 @@ class SaltMiner(OSRSBot):
                 self.update_progress((time.time() - self.start_time) / end_time)
                 last_update = time.time()
 
-            if not self.is_player_doing_action("Mining"):
-                self.mine_salt()
+            if not self.is_player_doing_action("Mining", rect=self.action_win) and math.dist(self.traveler.get_cur_location(), Point(2838, 10336)) < 25:
+                if not self.mine_salt():
+                    self.consec_no_mine_checks += 1
+                else:
+                    self.consec_no_mine_checks = 0
+
+                if self.consec_no_mine_checks > 5:
+                    self.traveler.travel(self.return_to_mine_steps)
+            else:
+                self.traveler.travel(self.return_to_mine_steps)
+
+            if self.is_inv_full():
+                self.note_basalt()
+                    
 
             # check for no xp gain
             if self.has_not_gained_xp(duration=300):
@@ -117,15 +179,17 @@ class SaltMiner(OSRSBot):
         self.log_msg("[END]")
         self.stop()
 
-    def mine_salt(self):
+    def mine_salt(self) -> bool:
         # 1/3 chance to mine each salt type
-        salt_choice = random.choice([1, 2, 3])
+        salt_choice = random.choice([1, 2, 3, 4])
         if salt_choice == 1:
             salt_color = self.salt_1_color
         elif salt_choice == 2:
             salt_color = self.salt_2_color
-        else:
+        elif salt_choice == 3:
             salt_color = self.salt_3_color
+        elif salt_choice == 4:
+            salt_color = self.salt_4_color
         for _ in range(5):
             if self.move_mouse_to_color_obj(salt_color):
                 if res := self.mouse.click(check_red_click=True):
@@ -138,3 +202,32 @@ class SaltMiner(OSRSBot):
             else:
                 self.log_msg("Could not find salt to mine.")
         return False
+    
+    def note_basalt(self) -> bool:
+        if not self.traveler.travel(self.to_noter_steps):
+            self.log_msg("Failed to travel to noter.")
+            return False
+
+        basalt_rect = self.find_sprite(win=self.win.game_view, png="basalt.png", folder="items")
+        snowflake_rect = self.find_colors(win=self.win.game_view, colors=self.snowflake_color)
+        if basalt_rect and snowflake_rect:
+            snowflake_rect = snowflake_rect[0]
+
+            self.mouse.move_to(basalt_rect.random_point())
+            if not self.get_mouseover_text(contains="Use"):
+                self.log_msg("Could not get basalt mouseover text.")
+                return False
+            self.sleep()
+            self.mouse.click()
+            self.sleep()
+            self.mouse.move_to(snowflake_rect.random_point())
+            if not self.get_mouseover_text(contains="Use") and not self.mouse.click(check_red_click=True):
+                self.log_msg("Could not get snowflake mouseover text.")
+                return False
+            self.sleep()
+
+        if not self.traveler.travel(self.return_to_mine_steps):
+            self.log_msg("Failed to travel to noter.")
+            return False
+
+        return True
