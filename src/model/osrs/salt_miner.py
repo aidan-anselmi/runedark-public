@@ -184,8 +184,12 @@ class SaltMiner(OSRSBot):
         cur_location = self.traveler.get_cur_location()
         if cur_location == Point(-1, -1):
             return False
-        return math.dist(cur_location, Point(2838, 10336)) > 35
-    
+        res = math.dist(cur_location, Point(2838, 10336)) > 35
+        if res:
+            self.log_msg("Strayed far from mine.")
+            self.log_msg(f"Current location: {cur_location} | distance: {math.dist(cur_location, Point(2838, 10336))}")
+        return res
+
     def at_noter(self) -> bool:
         cur_location = self.traveler.get_cur_location()
         if cur_location == Point(-1, -1):
