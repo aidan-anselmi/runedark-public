@@ -155,17 +155,18 @@ class SaltMiner(OSRSBot):
                 if not self.note_basalt():
                     continue
 
-            if not self.is_player_doing_action("Mining", rect=self.action_win) and not self.strayed_far():
+            if self.strayed_far():
+                self.log_msg("Strayed far, returning to mine.")
+                self.traveler.travel(self.return_to_mine_steps)    
+ 
+            if not self.is_player_doing_action("Mining", rect=self.action_win):
                 if not self.mine_salt():
                     self.consec_no_mine_checks += 1
                 else:
                     self.consec_no_mine_checks = 0
 
                 if self.consec_no_mine_checks > 5:
-                    self.traveler.travel(self.return_to_mine_steps)
-            else:
-                self.log_msg("Strayed far, returning to mine.")
-                self.traveler.travel(self.return_to_mine_steps)                    
+                    self.traveler.travel(self.return_to_mine_steps)                               
 
             # check for no xp gain
             if self.has_not_gained_xp(duration=300):
