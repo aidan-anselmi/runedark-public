@@ -152,7 +152,8 @@ class SaltMiner(OSRSBot):
                 last_update = time.time()
 
             if self.is_inv_full():
-                self.note_basalt()
+                if not self.note_basalt():
+                    continue
 
             if not self.is_player_doing_action("Mining", rect=self.action_win) and not self.strayed_far():
                 if not self.mine_salt():
@@ -228,6 +229,7 @@ class SaltMiner(OSRSBot):
             self.mouse.click()
             self.sleep()
             self.mouse.move_to(snowflake_rect.random_point())
+            self.sleep()
             if not self.get_mouseover_text(contains="Use") and not self.mouse.click(check_red_click=True):
                 self.log_msg("Could not get snowflake mouseover text.")
                 return False
