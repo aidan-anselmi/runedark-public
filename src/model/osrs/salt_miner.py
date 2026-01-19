@@ -121,9 +121,9 @@ class SaltMiner(OSRSBot):
         """
         self.walker = Walker(self, dest_square_side_length=4)
         self.traveler = Traveler(self, self.walker)
-        self.to_noter_steps = [StairsStep(Point(2838, 10336), Point(2845, 10351), "Up mine stairs", "Climb", 2.5),]
+        self.to_noter_steps = [StairsStep(Point(2838, 10336), Point(2845, 10351), "Up mine stairs", "Climb", extra_wait_time=2.5),]
         self.return_to_mine_steps = [
-            StairsStep(Point(2872, 3935), Point(2867, 3938), "Down mine stairs", "Descend", 2.5),
+            StairsStep(Point(2872, 3935), Point(2867, 3938), "Down mine stairs", "Descend", extra_wait_time=2.5),
             WalkStep(Point(2845, 10351), Point(2838, 10336), "Walk to mine"),
         ]
 
@@ -151,7 +151,7 @@ class SaltMiner(OSRSBot):
                 self.update_progress((time.time() - self.start_time) / end_time)
                 last_update = time.time()
 
-            if not self.is_player_doing_action("Mining", rect=self.action_win) and math.dist(self.traveler.get_cur_location(), Point(2838, 10336)) < 25:
+            if not self.is_player_doing_action("Mining", rect=self.action_win) and not self.strayed_far():
                 if not self.mine_salt():
                     self.consec_no_mine_checks += 1
                 else:
@@ -160,6 +160,7 @@ class SaltMiner(OSRSBot):
                 if self.consec_no_mine_checks > 5:
                     self.traveler.travel(self.return_to_mine_steps)
             else:
+                self.log_msg("Strayed far, returning to mine.")
                 self.traveler.travel(self.return_to_mine_steps)
 
             if self.is_inv_full():
@@ -179,16 +180,22 @@ class SaltMiner(OSRSBot):
         self.log_msg("[END]")
         self.stop()
 
+    def strayed_far(self) -> bool:
+        cur_location = self.traveler.get_cur_location()
+        if cur_location == Point(-1, -1):
+            return False
+        return math.dist(cur_location, Point(2838, 10336)) > 25
+
     def mine_salt(self) -> bool:
         # 1/3 chance to mine each salt type
-        salt_choice = random.choice([1, 2, 3, 4])
-        if salt_choice == 1:
+        salt_choice = random.choice([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+        if salt_choice < 2:
             salt_color = self.salt_1_color
-        elif salt_choice == 2:
+        elif salt_choice < 5:
             salt_color = self.salt_2_color
-        elif salt_choice == 3:
+        elif salt_choice < 8:
             salt_color = self.salt_3_color
-        elif salt_choice == 4:
+        else:
             salt_color = self.salt_4_color
         for _ in range(5):
             if self.move_mouse_to_color_obj(salt_color):
