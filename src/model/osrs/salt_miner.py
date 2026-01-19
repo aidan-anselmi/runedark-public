@@ -233,6 +233,10 @@ class SaltMiner(OSRSBot):
             self.sleep()
         else:
             self.log_msg("Could not find basalt or noter.")
+            if not basalt_rect:
+                self.log_msg("Basalt not found.")
+            if not snowflake_rect:
+                self.log_msg("Noter not found.")
             return False
 
         if not self.traveler.travel(self.return_to_mine_steps):
