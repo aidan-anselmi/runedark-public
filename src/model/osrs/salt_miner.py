@@ -185,6 +185,12 @@ class SaltMiner(OSRSBot):
         if cur_location == Point(-1, -1):
             return False
         return math.dist(cur_location, Point(2838, 10336)) > 25
+    
+    def at_noter(self) -> bool:
+        cur_location = self.traveler.get_cur_location()
+        if cur_location == Point(-1, -1):
+            return False
+        return math.dist(cur_location, Point(2871, 3937)) < 10
 
     def mine_salt(self) -> bool:
         # 1/3 chance to mine each salt type
@@ -211,7 +217,7 @@ class SaltMiner(OSRSBot):
         return False
     
     def note_basalt(self) -> bool:
-        if not self.traveler.travel(self.to_noter_steps):
+        if not self.at_noter() and not self.traveler.travel(self.to_noter_steps):
             self.log_msg("Failed to travel to noter.")
             return False
 
@@ -230,8 +236,11 @@ class SaltMiner(OSRSBot):
             self.sleep()
             self.mouse.move_to(snowflake_rect.random_point())
             self.sleep()
-            if not self.get_mouseover_text(contains="Use") and not self.mouse.click(check_red_click=True):
+            if not self.get_mouseover_text(contains="Use"):
                 self.log_msg("Could not get snowflake mouseover text.")
+                return False
+            if not self.mouse.click(check_red_click=True):
+                self.log_msg("Could not click noter on snowflake.")
                 return False
             self.sleep()
         else:
@@ -240,6 +249,11 @@ class SaltMiner(OSRSBot):
                 self.log_msg("Basalt not found.")
             if not snowflake_rect:
                 self.log_msg("Noter not found.")
+            return False
+        
+        self.sleep()
+        if self.is_inv_full():
+            self.log_msg("Inventory still full after noting basalt.")
             return False
 
         if not self.traveler.travel(self.return_to_mine_steps):
