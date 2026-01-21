@@ -171,6 +171,9 @@ class AbyssRuneCrafter(OSRSBot):
         self.repair_pouch = False
         self.runs = 0
 
+        self.click_pouches()
+        return
+
         while time.time() - self.start_time < end_time:
             if self.is_inv_full():
                 if math.dist(self.traveler.get_cur_location(), self.law_altar_point) < 50:
