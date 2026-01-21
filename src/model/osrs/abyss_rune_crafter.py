@@ -125,7 +125,7 @@ class AbyssRuneCrafter(OSRSBot):
         self.abyss_west = Point(3017,4827)
         self.abyss_north_east = Point(3054,4847)
         self.abyss_south_east = Point(3057,4816)
-        self.abyss_south_west = Point(3017,4814)
+        self.abyss_south_west = Point(3022,4816)
         self.abyss_north_west = Point(3023,4847)
 
         # abyss inner ring
