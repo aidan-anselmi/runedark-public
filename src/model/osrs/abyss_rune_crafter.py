@@ -200,6 +200,15 @@ class AbyssRuneCrafter(OSRSBot):
         self.stop()
         return
     
+    def enter_abyss_door(self) -> bool:
+        door = self.find_colors(self.win.game_view, self.cp.hsv.PINK_MARK)
+        if not door:
+            self.log_msg("Could not find abyss door.")
+            return False
+        door = door[0]
+        self.mouse.move_to(door.random_point())
+        return self.mouse.click(check_red_click=True)
+
     def handle_abyss(self) -> bool:
         # on the inside of the ring
         if math.dist(self.traveler.get_cur_location(), self.abyss_center) < self.abyss_radius:
@@ -210,8 +219,11 @@ class AbyssRuneCrafter(OSRSBot):
             for _ in range(5):
                 if self.enter_law_rift():
                     break
-               
-        return True
+        if not self.enter_abyss_door():
+            self.log_msg("Could not enter abyss door.")
+            return False
+
+        return self.enter_abyss_door()
     
     def repair_pouches(self) -> bool:
         target_point = Point(3039, 4835)
