@@ -212,7 +212,7 @@ class AbyssRuneCrafter(OSRSBot):
     def handle_abyss(self) -> bool:
         # on the inside of the ring
         if math.dist(self.traveler.get_cur_location(), self.abyss_center) < self.abyss_radius:
-            if self.runs == 0 or self.repair_pouch:
+            if self.repair_pouch:
                 for _ in range(5):
                     if self.repair_pouches():
                         break
@@ -281,6 +281,9 @@ class AbyssRuneCrafter(OSRSBot):
             return False
         
         self.runs += 1
+        if self.runs > random.randint(30,40):
+            self.repair_pouch = True
+            self.runs = 0
         return True
     
     def resupply(self) -> bool:
