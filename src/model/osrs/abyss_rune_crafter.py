@@ -129,14 +129,14 @@ class AbyssRuneCrafter(OSRSBot):
         self.abyss_north_west = Point(3016,4847)
 
         # abyss inner ring
-        self.abyss_inner_north = Point(3040,4843)
-        self.abyss_inner_south = Point(3040,4818)
-        self.abyss_inner_east = Point(3052,4832)
-        self.abyss_inner_west = Point(3027,4831)
-        self.abyss_inner_north_east = Point(3048,4842)
-        self.abyss_inner_south_east = Point(3051,4820)
-        self.abyss_inner_south_west = Point(3028,4820)
-        self.abyss_inner_north_west = Point(3027,4846)
+        # self.abyss_inner_north = Point(3040,4843)
+        # self.abyss_inner_south = Point(3040,4818)
+        # self.abyss_inner_east = Point(3052,4832)
+        # self.abyss_inner_west = Point(3027,4831)
+        # self.abyss_inner_north_east = Point(3048,4842)
+        # self.abyss_inner_south_east = Point(3051,4820)
+        # self.abyss_inner_south_west = Point(3028,4820)
+        # self.abyss_inner_north_west = Point(3027,4846)
         return
 
     def main_loop(self):
@@ -222,12 +222,45 @@ class AbyssRuneCrafter(OSRSBot):
             for _ in range(5):
                 if self.enter_law_rift():
                     break
+        
+        for _ in range(10):
+            if not self.find_colors(self.win.game_view, self.cp.hsv.PINK_MARK):
+                self.rotate_within_abyss()
+
         if not self.enter_abyss_door():
             self.log_msg("Could not enter abyss door.")
             return False
 
         return self.enter_abyss_door()
     
+    def rotate_within_abyss(self) -> bool:
+        # ordered clockwise around the abyss center
+        points = [
+            self.abyss_north,
+            self.abyss_north_east,
+            self.abyss_east,
+            self.abyss_south_east,
+            self.abyss_south,
+            self.abyss_south_west,
+            self.abyss_west,
+            self.abyss_north_west,
+        ]
+
+        cur = self.traveler.get_cur_location()
+        # find index of closest point
+        dists = [math.dist(cur, p) for p in points]
+        min_idx = int(dists.index(min(dists)))
+
+        # choose the next point clockwise
+        next_idx = (min_idx + 1) % len(points)
+        target_point = points[next_idx]
+
+        # walk to that point using existing walker path formatting
+        self.traveler.walker.travel_to_dest_along_path(
+            target_point, None, self.traveler.format_points(self.abyss_center, target_point)
+        )
+        return True
+
     def repair_pouches(self) -> bool:
         target_point = Point(3039, 4835)
         if math.dist(self.traveler.get_cur_location(), target_point) > 4:
