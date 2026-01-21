@@ -222,6 +222,8 @@ class AbyssRuneCrafter(OSRSBot):
     def resupply(self) -> bool:
         if not self.is_bank_window_open():
             return False
+        if not self.find_sprite(win=self.win.game_view, png="pure-essence.png", folder="items", confidence=0.05):
+            self.open_bank_tab(2)
 
         if rect := self.find_sprite(win=self.win.inventory, png="law-rune.png", folder="items"):
             self.mouse.move_to(rect.random_point())
