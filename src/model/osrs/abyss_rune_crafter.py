@@ -248,7 +248,7 @@ class AbyssRuneCrafter(OSRSBot):
         return True
 
     def craft_runes(self) -> bool:
-        def click_altar(self) -> bool:
+        def click_altar() -> bool:
             altar = self.find_colors(self.win.game_view, self.cp.hsv.PINK_MARK)
             if not altar:
                 return False
@@ -257,11 +257,11 @@ class AbyssRuneCrafter(OSRSBot):
             self.mouse.click()
             self.sleep_while_color_moving(self.cp.hsv.CYAN_MARK)
 
-        if not click_altar(self):
+        if not click_altar():
             self.log_msg("Could not find altar to click.")
             return False
         self.click_pouches()
-        if not click_altar(self):
+        if not click_altar():
             self.log_msg("Could not find altar to click.")
             return False
         
