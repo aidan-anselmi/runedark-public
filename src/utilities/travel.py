@@ -239,3 +239,36 @@ class DigsitePendantStep(TravelStep):
                 return True
                 
         return False
+    
+class HomeGloryStep(TravelStep):
+    def __init__(
+        self,
+        color : Color = None,
+        tele_dest: str = "Edgeville",
+        start: Point = None,
+    ):
+        super().__init__(
+            description=f"Teleporting to {tele_dest} via Glory",
+            start=start,
+        )
+        self.tele_dest = tele_dest
+        self.color = color
+            
+    def handle(self, traveler: "Traveler") -> bool:
+        if self.color is None:
+            self.color = traveler.bot.cp.hsv.BLUE_MARK
+
+        if self.tele_dest == "Edgeville":
+            if mounted_glory := traveler.bot.find_colors(traveler.bot.win.game_view, self.color):
+                mounted_glory = mounted_glory[0]
+                traveler.bot.mouse.move_to(mounted_glory.random_point())
+                if traveler.bot.get_mouseover_text(contains="Edgeville") and traveler.bot.mouse.click(check_red_click=True):
+                    traveler.bot.sleep_while_color_moving(self.color)
+                    traveler.bot.sleep(lo=1, hi=2)
+                    return True
+        # other destinations not supported yet
+        return False
+    
+class AbyssRingStep(TravelStep):
+    def handle(self, traveler: "Traveler") -> bool:
+        return False

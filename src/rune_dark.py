@@ -644,9 +644,10 @@ if __name__ == "__main__":
         from model.osrs.util_tester import OSRSUtilTester
         from model.osrs.slayer_melee import SlayerMelee
         from model.osrs.salt_miner import SaltMiner
+        from model.osrs.abyss_rune_crafter import AbyssRuneCrafter
 
         app = App(test=True)
-        app.test(SaltMiner())
+        app.test(AbyssRuneCrafter())
 
     app = App()
     app.start()
