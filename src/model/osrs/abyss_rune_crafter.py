@@ -175,6 +175,7 @@ class AbyssRuneCrafter(OSRSBot):
             if self.is_inv_full():
                 if math.dist(self.traveler.get_cur_location(), self.law_altar_point) < 50:
                     self.craft_runes()
+                    self.traveler.travel(self.to_bank_steps)
                 elif math.dist(self.traveler.get_cur_location(), self.abyss_center) < 50:
                     self.handle_abyss()
                 else:
@@ -309,12 +310,12 @@ class AbyssRuneCrafter(OSRSBot):
             if not self.get_mouseover_text(contains="Craft"):
                 return False
             self.mouse.click()
-            self.sleep_while_color_moving(self.cp.hsv.CYAN_MARK)
             return True
 
         for _ in range(3):
             if click_altar():
                 break
+        self.sleep_while_color_moving(self.cp.hsv.CYAN_MARK)
         self.sleep(lo=1, hi=2)
         self.click_pouches()
         for _ in range(3):
