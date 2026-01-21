@@ -114,7 +114,7 @@ class AbyssRuneCrafter(OSRSBot):
         self.to_bank_steps = [
             TeleportSpellStep("home", "tele home"),
             StairsStep(start=Point(1921,5708), description="drink pool", mouseover_text="Drink", color=self.cp.hsv.GREEN_MARK),
-            HomeGloryStep(color=self.cp.hsv.BLUE_MARK, start=Point(1967,5698), description="glory to edgeville"),
+            HomeGloryStep(color=self.cp.hsv.BLUE_MARK, start=Point(1967,5698)),
             StairsStep(start=Point(3087,3493), description="bank", mouseover_text="Bank", color=self.cp.hsv.BLUE_MARK),
         ]
         
