@@ -168,7 +168,21 @@ class AbyssRuneCrafter(OSRSBot):
         end_time = int(self.run_time) * 60  # Measured in seconds.
         last_update = self.start_time
 
+        self.repair_pouch = False
+        self.runs = 0
+
         while time.time() - self.start_time < end_time:
+            if self.is_inv_full():
+                if math.dist(self.traveler.get_cur_location(), self.law_altar_point) < 50:
+                    self.craft_runes()
+                elif math.dist(self.traveler.get_cur_location(), self.abyss_center) < 50:
+                    self.handle_abyss()
+                else:
+                    self.traveler.travel(self.to_abyss_steps)
+            else:
+                self.traveler.travel(self.to_bank_steps)
+                self.resupply()
+
             # update progress
             if time.time() - last_update > 300:
                 self.update_progress((time.time() - self.start_time) / end_time)
@@ -179,22 +193,6 @@ class AbyssRuneCrafter(OSRSBot):
                 self.logout_and_stop_script()
                 return
             self.toggle_run_on_if_enough_energy()
-
-            cur_location = self.traveler.get_cur_location()
-            if cur_location == Point(-1, -1):
-                continue
-
-            if self.is_inv_full():
-                if math.dist(cur_location, self.law_altar_point) < 50:
-                    self.craft_runes()
-                elif math.dist(cur_location, self.abyss_center) < 50:
-                    self.handle_abyss()
-                else:
-                    self.traveler.travel(self.to_abyss_steps)
-            else:
-                self.traveler.travel(self.to_bank_steps)
-                self.resupply()
-
             time.sleep(.1)
 
         self.update_progress(1)
@@ -203,6 +201,47 @@ class AbyssRuneCrafter(OSRSBot):
         return
     
     def handle_abyss(self) -> bool:
+        # on the inside of the ring
+        if math.dist(self.traveler.get_cur_location(), self.abyss_center) < self.abyss_radius:
+            if self.runs == 0 or self.repair_pouch:
+                for _ in range(5):
+                    if self.repair_pouches():
+                        break
+            for _ in range(5):
+                if self.enter_law_rift():
+                    break
+               
+        return True
+    
+    def repair_pouches(self) -> bool:
+        target_point = Point(3039, 4835)
+        if math.dist(self.traveler.get_cur_location(), target_point) > 4:
+            self.traveler.walker.travel_to_dest_along_path(
+                target_point, None, self.traveler.format_points(self.abyss_center, target_point)
+            )
+
+        if not self.move_mouse_to_color_obj(self.cp.hsv.CYAN_MARK):
+            self.log_msg("Could not find NPC to repair pouches.")
+            return False
+        if not self.get_mouseover_text(contains="Repairs") or not self.mouse.click(check_red_click=True):
+            self.log_msg("could not click NPC to repair pouches.")
+            return False
+
+        self.repair_pouch = False
+        return True
+    
+    def enter_law_rift(self) -> bool:
+        if math.dist(self.traveler.get_cur_location(), self.law_rift_point) > 4:
+            self.traveler.walker.travel_to_dest_along_path(
+                self.law_rift_point, None, self.traveler.format_points(self.abyss_center, self.law_rift_point)
+            )
+        if not self.move_mouse_to_color_obj(self.cp.hsv.BLUE_MARK):
+            self.log_msg("Could not find law rift.")
+            return False
+        if not self.get_mouseover_text(contains="Exit") or not self.mouse.click(check_red_click=True):
+            self.log_msg("could not click law rift.")
+            return False
+
         return True
 
     def craft_runes(self) -> bool:
@@ -221,6 +260,8 @@ class AbyssRuneCrafter(OSRSBot):
         if not click_altar(self):
             self.log_msg("Could not find altar to click.")
             return False
+        
+        self.runs += 1
         return True
     
     def resupply(self) -> bool:
@@ -269,7 +310,7 @@ class AbyssRuneCrafter(OSRSBot):
             self.mouse.click()
             self.sleep()
         pag.press("esc")
-        self.sleep()
+        self.sleep(lo=.4, hi=.7)
         
         return True
     
