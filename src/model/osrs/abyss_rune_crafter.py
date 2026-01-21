@@ -172,7 +172,7 @@ class AbyssRuneCrafter(OSRSBot):
         self.runs = 0
 
         self.zoom(out=True)
-        self.toggle_auto_retaliate(on=False)
+        self.toggle_auto_retaliate(state="off")
 
         while time.time() - self.start_time < end_time:
             if self.is_inv_full():
