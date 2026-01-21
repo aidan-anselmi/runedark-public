@@ -103,7 +103,7 @@ class AbyssRuneCrafter(OSRSBot):
     def set_directions(self):
         self.mage_point = Point(3105, 3557)
         self.abyss_center = Point(3041,4832)
-        self.abyss_radius = 14
+        self.abyss_radius = 16.5
         self.law_rift_point = Point(3050,4839)
         self.law_altar_point = Point(2464,4826)
 
