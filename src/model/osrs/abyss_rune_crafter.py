@@ -168,18 +168,6 @@ class AbyssRuneCrafter(OSRSBot):
         end_time = int(self.run_time) * 60  # Measured in seconds.
         last_update = self.start_time
 
-        self.action_win = self.win.current_action
-        self.action_win.top += 58
-        self.action_win.height += 3
-
-        self.salt_1_color = self.cp.hsv.CYAN_MARK
-        self.salt_2_color = self.cp.hsv.PINK_MARK
-        self.salt_3_color = self.cp.hsv.YELLOW_MARK
-        self.salt_4_color = self.cp.hsv.GREEN_MARK
-        self.snowflake_color = self.cp.hsv.CYAN_MARK
-
-        self.consec_no_mine_checks = 0
-
         while time.time() - self.start_time < end_time:
             # update progress
             if time.time() - last_update > 300:
@@ -191,7 +179,6 @@ class AbyssRuneCrafter(OSRSBot):
                 self.logout_and_stop_script()
                 return
             self.toggle_run_on_if_enough_energy()
-            time.sleep(.1)
 
             cur_location = self.traveler.get_cur_location()
             if cur_location == Point(-1, -1):
@@ -208,6 +195,8 @@ class AbyssRuneCrafter(OSRSBot):
                 self.traveler.travel(self.to_bank_steps)
                 self.resupply()
 
+            time.sleep(.1)
+
         self.update_progress(1)
         self.log_msg("[END]")
         self.stop()
@@ -217,12 +206,27 @@ class AbyssRuneCrafter(OSRSBot):
         return True
 
     def craft_runes(self) -> bool:
+        def click_altar(self) -> bool:
+            altar = self.find_colors(self.win.game_view, self.cp.hsv.PINK_MARK)
+            if not altar:
+                return False
+            altar = altar[0]
+            self.mouse.move_to(altar.random_point())
+            self.mouse.click()
+
+        if not click_altar(self):
+            self.log_msg("Could not find altar to click.")
+            return False
+        self.click_pouches()
+        if not click_altar(self):
+            self.log_msg("Could not find altar to click.")
+            return False
         return True
     
     def resupply(self) -> bool:
         if not self.is_bank_window_open():
             return False
-        if not self.find_sprite(win=self.win.game_view, png="pure-essence.png", folder="items", confidence=0.05):
+        if not self.find_sprite(win=self.win.game_view, png="pure-essence-bank.png", folder="items", confidence=0.05):
             self.open_bank_tab(2)
 
         if rect := self.find_sprite(win=self.win.inventory, png="law-rune.png", folder="items"):
@@ -259,11 +263,7 @@ class AbyssRuneCrafter(OSRSBot):
         else:
             self.logout_and_stop_script("Out of pure essence, stopping script.")
             return False
-        for png in ["small-pouch.png", "medium-pouch.png", "large-pouch.png", "giant-pouch.png"]:
-            if rect := self.find_sprite(win=self.win.inventory, png=png, folder="items"):
-                self.mouse.move_to(rect.random_point())
-                self.mouse.click()
-                self.sleep()
+        self.click_pouches()
         if rect := self.find_sprite(win=self.win.game_view, png="pure-essence-bank.png", folder="items", confidence=0.05):
             self.mouse.move_to(rect.random_point())
             self.mouse.click()
@@ -271,4 +271,12 @@ class AbyssRuneCrafter(OSRSBot):
         pag.press("esc")
         self.sleep()
         
+        return True
+    
+    def click_pouches(self) -> bool:
+        for png in ["small-pouch.png", "medium-pouch.png", "large-pouch.png", "giant-pouch.png"]:
+            if rect := self.find_sprite(win=self.win.inventory, png=png, folder="items"):
+                self.mouse.move_to(rect.random_point())
+                self.mouse.click()
+                self.sleep()
         return True
