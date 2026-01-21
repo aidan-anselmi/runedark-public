@@ -277,14 +277,17 @@ class AbyssRuneCrafter(OSRSBot):
         return True
     
     def enter_law_rift(self) -> bool:
-        if math.dist(self.traveler.get_cur_location(), self.law_rift_point) > 4:
+        rect = self.find_colors(self.win.game_view, self.cp.hsv.BLUE_MARK)
+        if not rect:
             self.traveler.walker.travel_to_dest_along_path(
                 self.law_rift_point, None, self.traveler.format_points(self.abyss_center, self.law_rift_point)
             )
             self.sleep_while_color_moving(self.cp.hsv.BLUE_MARK)
-        if not self.move_mouse_to_color_obj(self.cp.hsv.BLUE_MARK):
+            rect = self.find_colors(self.win.game_view, self.cp.hsv.BLUE_MARK)
+        if not rect:
             self.log_msg("Could not find law rift.")
             return False
+        self.mouse.move_to(rect[0].random_point())
         if not self.get_mouseover_text(contains="Exit") or not self.mouse.click(check_red_click=True):
             self.log_msg("could not click law rift.")
             return False
