@@ -193,7 +193,6 @@ class AbyssRuneCrafter(OSRSBot):
                 self.logout_and_stop_script()
                 return
             self.toggle_run_on_if_enough_energy()
-            time.sleep(.1)
 
         self.update_progress(1)
         self.log_msg("[END]")
