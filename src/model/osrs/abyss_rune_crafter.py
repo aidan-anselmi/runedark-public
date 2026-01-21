@@ -279,20 +279,28 @@ class AbyssRuneCrafter(OSRSBot):
             self.mouse.click()
             self.sleep()
 
-        # eat
-        i = 0
-        while self.get_hp() < 70 and i < 5:
-            if lobster_rect := self.find_sprite(win=self.win.game_view, png="lobster.png", folder="items"):
-                self.mouse.move_to(lobster_rect.random_point())
-                self.mouse.click()
-                self.sleep()
+        def eat_lobster() -> bool:
             if colors := self.find_colors(self.win.inventory, self.cp.hsv.RED_MARK):
                 c = colors[0]
                 self.mouse.move_to(c.random_point())
                 if self.get_mouseover_text(contains="Eat"):
                     self.mouse.click()
                     self.sleep()
+                    return True
+            return False
+
+        # eat
+        i = 0
+        while self.get_hp() < 70 and i < 5:
             i += 1
+            if eat_lobster():
+                continue
+            if lobster_rect := self.find_sprite(win=self.win.game_view, png="lobster.png", folder="items"):
+                self.mouse.move_to(lobster_rect.random_point())
+                self.mouse.click()
+                self.sleep(lo=.5, hi=1.5)
+            if eat_lobster():
+                self.sleep(lo=1, hi=2)
 
         for png in ["earth-rune-bank.png", "air-rune-bank.png"]:
             if not self.find_sprite(win=self.win.inventory, png=png, folder="items"):
@@ -313,9 +321,9 @@ class AbyssRuneCrafter(OSRSBot):
             self.mouse.move_to(rect.random_point())
             self.mouse.click()
             self.sleep()
+        self.sleep()
         pag.press("esc")
-        self.sleep(lo=.4, hi=.7)
-        
+        self.sleep()
         return True
     
     def click_pouches(self) -> bool:
