@@ -33,7 +33,7 @@ class AbyssRuneCrafter(OSRSBot):
         # needing to open the options panel.
         self.run_time = 180
         self.options_set = False
-        self.scrape()
+        # self.scrape()
 
     def scrape(self):
         scraper = SpriteScraper()
@@ -256,6 +256,10 @@ class AbyssRuneCrafter(OSRSBot):
             self.mouse.move_to(rect.random_point())
             self.mouse.click()
             self.sleep()
+        else:
+            self.log_msg("Out of pure essence, stopping script.")
+            self.logout_and_stop_script()
+            return False
         for png in ["small-pouch.png", "medium-pouch.png", "large-pouch.png", "giant-pouch.png"]:
             if rect := self.find_sprite(win=self.win.inventory, png=png, folder="items"):
                 self.mouse.move_to(rect.random_point())
@@ -265,6 +269,7 @@ class AbyssRuneCrafter(OSRSBot):
             self.mouse.move_to(rect.random_point())
             self.mouse.click()
             self.sleep()
-        
+        pag.press("esc")
+        self.sleep()
         
         return True
