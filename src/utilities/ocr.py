@@ -268,14 +268,14 @@ if __name__ == "__main__":
                 CP.bgr.ORB_TEXT_10_0,
             ]
             image = area.screenshot()
-            debug.save_image("ocr-initial-screenshot.png", image)
+            # debug.save_image("ocr-initial-screenshot.png", image)
             text = scrape_text(
                 area, font, colors, include_only_chars=[str(i) for i in range(10)]
             )
             found_rects = find_textbox(text, area, font, colors)
 
         image = area.screenshot()  # Screenshot the starting area and save it.
-        debug.save_image("ocr-initial-screenshot.png", image)
+        # debug.save_image("ocr-initial-screenshot.png", image)
         print(test_style.replace("_", " ").title())
         found_text = scrape_text(area, font, colors)
         print("OCR Area-wide Scraped Text: ", found_text)
@@ -293,7 +293,7 @@ if __name__ == "__main__":
             )
             # Draw the rectangle in bright green onto its containing image.
             cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 1)
-        debug.save_image("ocr-result.png", image)  # Save the modified image.
+        # debug.save_image("ocr-result.png", image)  # Save the modified image.
         cv2.imshow("OCR Found Textboxes", image)  # Display the image.
         cv2.waitKey(3000)  # 3000 milliseconds.
         cv2.destroyAllWindows()

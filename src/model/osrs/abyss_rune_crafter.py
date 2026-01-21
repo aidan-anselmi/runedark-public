@@ -175,7 +175,6 @@ class AbyssRuneCrafter(OSRSBot):
             if self.is_inv_full():
                 if math.dist(self.traveler.get_cur_location(), self.law_altar_point) < 50:
                     self.craft_runes()
-                    self.traveler.travel(self.to_bank_steps)
                 elif math.dist(self.traveler.get_cur_location(), self.abyss_center) < 50:
                     self.handle_abyss()
                 else:

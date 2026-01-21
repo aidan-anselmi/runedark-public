@@ -2191,7 +2191,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
                 current position in Gielinor, or (-1, -1, -1) if the coordinate could
                 not be read.
         """
-        dbg.save_image("tile_info.png", self.win.tile.screenshot())
+        # dbg.save_image("tile_info.png", self.win.tile.screenshot())
         x, y, plane = -1, -1, -1
         if text := ocr.scrape_text(
             rect=self.win.tile,
