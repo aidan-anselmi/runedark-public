@@ -355,9 +355,8 @@ class AbyssRuneCrafter(OSRSBot):
             if lobster_rect := self.find_sprite(win=self.win.game_view, png="lobster.png", folder="items"):
                 self.mouse.move_to(lobster_rect.random_point())
                 self.mouse.click()
-                self.sleep(lo=.5, hi=1.5)
-            if eat_lobster():
                 self.sleep(lo=1, hi=1.5)
+            eat_lobster()
 
         for png in ["earth-rune-bank.png", "air-rune-bank.png"]:
             if not self.find_sprite(win=self.win.inventory, png=png, folder="items"):
