@@ -159,7 +159,7 @@ class AbyssRuneCrafter(OSRSBot):
         accelerates the development process.
         """
         self.set_directions()
-        self.walker = Walker(self, dest_square_side_length=4)
+        self.walker = Walker(self, dest_square_side_length=6)
         self.traveler = Traveler(self, self.walker)
 
         run_time_str = f"{self.run_time // 60}h {self.run_time % 60}m"  # e.g. 6h 0m
