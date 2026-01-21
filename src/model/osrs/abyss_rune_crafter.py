@@ -224,9 +224,11 @@ class AbyssRuneCrafter(OSRSBot):
             return False
             
         
-        for _ in range(10):
+        for _ in range(12):
             if not self.find_colors(self.win.game_view, self.cp.hsv.PINK_MARK):
                 self.rotate_within_abyss()
+            else:
+                break
         return self.enter_abyss_door()
     
     def rotate_within_abyss(self) -> bool:
@@ -293,7 +295,7 @@ class AbyssRuneCrafter(OSRSBot):
             return False
 
         self.sleep_while_color_moving(self.cp.hsv.BLUE_MARK, timeout=5)
-        time.sleep(2)
+        time.sleep(1)
         self.sleep_until_color_visible(self.cp.hsv.PINK_MARK, timeout=5)
         return True
 
