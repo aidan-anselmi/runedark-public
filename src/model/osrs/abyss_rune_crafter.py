@@ -308,16 +308,12 @@ class AbyssRuneCrafter(OSRSBot):
             self.sleep_while_color_moving(self.cp.hsv.CYAN_MARK)
             return True
 
-        if not click_altar():
-            self.log_msg("Could not find altar to click.")
-            return False
+        click_altar()
         self.click_pouches()
-        if not click_altar():
-            self.log_msg("Could not find altar to click.")
-            return False
+        click_altar()
         
         self.runs += 1
-        if self.runs > random.randint(30,40):
+        if self.runs > random.randint(25,40):
             self.repair_pouch = True
             self.runs = 0
         return True
