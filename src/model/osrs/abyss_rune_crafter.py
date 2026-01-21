@@ -293,7 +293,9 @@ class AbyssRuneCrafter(OSRSBot):
             self.log_msg("could not click law rift.")
             return False
 
-        self.sleep(lo=2, hi=3)
+        self.sleep_while_color_moving(self.cp.hsv.BLUE_MARK, timeout=5)
+        time.sleep(2)
+        self.sleep_until_color_visible(self.cp.hsv.PINK_MARK, timeout=5)
         return True
 
     def craft_runes(self) -> bool:
