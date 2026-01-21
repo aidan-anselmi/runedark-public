@@ -123,7 +123,7 @@ class AbyssRuneCrafter(OSRSBot):
         self.abyss_south = Point(3037, 4810)
         self.abyss_east = Point(3062,4831)
         self.abyss_west = Point(3017,4827)
-        self.abyss_north_east = Point(3055,4854)
+        self.abyss_north_east = Point(3054,4847)
         self.abyss_south_east = Point(3057,4816)
         self.abyss_south_west = Point(3017,4814)
         self.abyss_north_west = Point(3023,4847)
