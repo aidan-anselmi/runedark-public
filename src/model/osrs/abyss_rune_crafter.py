@@ -315,6 +315,7 @@ class AbyssRuneCrafter(OSRSBot):
         for _ in range(3):
             if click_altar():
                 break
+        self.sleep(lo=1, hi=2)
         self.click_pouches()
         for _ in range(3):
             if click_altar():
