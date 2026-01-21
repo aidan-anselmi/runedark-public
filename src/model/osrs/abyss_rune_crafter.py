@@ -250,7 +250,7 @@ class AbyssRuneCrafter(OSRSBot):
                     self.mouse.click()
                     self.sleep()
 
-        if rect := self.find_sprite(win=self.win.game_view, png="pure-essence.png", folder="items"):
+        if rect := self.find_sprite(win=self.win.game_view, png="pure-essence.png", folder="items", confidence=0.05):
             self.mouse.move_to(rect.random_point())
             self.mouse.click()
             self.sleep()
@@ -259,7 +259,7 @@ class AbyssRuneCrafter(OSRSBot):
                 self.mouse.move_to(rect.random_point())
                 self.mouse.click()
                 self.sleep()
-        if rect := self.find_sprite(win=self.win.game_view, png="pure-essence.png", folder="items"):
+        if rect := self.find_sprite(win=self.win.game_view, png="pure-essence.png", folder="items", confidence=0.05):
             self.mouse.move_to(rect.random_point())
             self.mouse.click()
             self.sleep()
