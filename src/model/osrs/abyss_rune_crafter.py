@@ -309,9 +309,13 @@ class AbyssRuneCrafter(OSRSBot):
             self.sleep_while_color_moving(self.cp.hsv.CYAN_MARK)
             return True
 
-        click_altar()
+        for _ in range(3):
+            if click_altar():
+                break
         self.click_pouches()
-        click_altar()
+        for _ in range(3):
+            if click_altar():
+                break
         
         self.runs += 1
         if self.runs > random.randint(25,40):
