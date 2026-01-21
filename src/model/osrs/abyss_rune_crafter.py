@@ -254,8 +254,11 @@ class AbyssRuneCrafter(OSRSBot):
                 return False
             altar = altar[0]
             self.mouse.move_to(altar.random_point())
+            if not self.get_mouseover_text(contains="Craft"):
+                return False
             self.mouse.click()
             self.sleep_while_color_moving(self.cp.hsv.CYAN_MARK)
+            return True
 
         if not click_altar():
             self.log_msg("Could not find altar to click.")
