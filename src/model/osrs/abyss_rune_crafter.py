@@ -171,6 +171,9 @@ class AbyssRuneCrafter(OSRSBot):
         self.repair_pouch = False
         self.runs = 0
 
+        self.zoom(out=True)
+        self.toggle_auto_retaliate(on=False)
+
         while time.time() - self.start_time < end_time:
             if self.is_inv_full():
                 if math.dist(self.traveler.get_cur_location(), self.law_altar_point) < 50:
@@ -178,9 +181,9 @@ class AbyssRuneCrafter(OSRSBot):
                 elif math.dist(self.traveler.get_cur_location(), self.abyss_center) < 50:
                     self.handle_abyss()
                 else:
-                    self.traveler.travel(self.to_abyss_steps)
+                    self.traveler.travel(self.to_abyss_steps, zoom=False)
             else:
-                self.traveler.travel(self.to_bank_steps)
+                self.traveler.travel(self.to_bank_steps, zoom=False)
                 self.resupply()
 
             # update progress
