@@ -219,6 +219,7 @@ class AbyssRuneCrafter(OSRSBot):
             self.traveler.walker.travel_to_dest_along_path(
                 target_point, None, self.traveler.format_points(self.abyss_center, target_point)
             )
+            self.sleep_while_color_moving(self.cp.hsv.CYAN_MARK)
 
         if not self.move_mouse_to_color_obj(self.cp.hsv.CYAN_MARK):
             self.log_msg("Could not find NPC to repair pouches.")
@@ -235,6 +236,7 @@ class AbyssRuneCrafter(OSRSBot):
             self.traveler.walker.travel_to_dest_along_path(
                 self.law_rift_point, None, self.traveler.format_points(self.abyss_center, self.law_rift_point)
             )
+            self.sleep_while_color_moving(self.cp.hsv.BLUE_MARK)
         if not self.move_mouse_to_color_obj(self.cp.hsv.BLUE_MARK):
             self.log_msg("Could not find law rift.")
             return False
