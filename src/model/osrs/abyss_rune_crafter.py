@@ -207,7 +207,10 @@ class AbyssRuneCrafter(OSRSBot):
             return False
         door = door[0]
         self.mouse.move_to(door.random_point())
-        return self.mouse.click(check_red_click=True)
+        res = self.mouse.click(check_red_click=True)
+        if not res:
+            return False
+        self.sleep_while_color_moving(self.cp.hsv.PINK_MARK, timeout=3)
 
     def handle_abyss(self) -> bool:
         # on the inside of the ring
