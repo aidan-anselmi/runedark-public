@@ -384,7 +384,7 @@ class AbyssRuneCrafter(OSRSBot):
         return True
     
     def click_pouches(self) -> bool:
-        for png in ["small-pouch.png", "medium-pouch.png", "large-pouch.png", "giant-pouch.png"]:
+        for png in ["small-pouch.png", "medium-pouch.png", "large-pouch.png"]:
             for _ in range(3):
                 if rect := self.find_sprite(win=self.win.inventory, png=png, folder="items"):
                     self.mouse.move_to(rect.random_point())
