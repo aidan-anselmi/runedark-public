@@ -158,6 +158,7 @@ class AbyssRuneCrafter(OSRSBot):
         `Bot` and `RuneLiteBot` classes. Leveraging these methods significantly
         accelerates the development process.
         """
+        self.set_directions()
         self.walker = Walker(self, dest_square_side_length=4)
         self.traveler = Traveler(self, self.walker)
 
