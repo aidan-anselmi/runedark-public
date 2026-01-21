@@ -104,7 +104,7 @@ class AbyssRuneCrafter(OSRSBot):
         self.mage_point = Point(3105, 3557)
         self.abyss_center = Point(3041,4832)
         self.abyss_radius = 14
-        self.law_rift_point = Point(3049,4839)
+        self.law_rift_point = Point(3050,4839)
         self.law_altar_point = Point(2464,4826)
 
         self.to_abyss_steps = [
@@ -119,14 +119,14 @@ class AbyssRuneCrafter(OSRSBot):
         ]
         
         # abyss outer ring
-        self.abyss_north = Point(3039,4855)
-        self.abyss_south = Point(3039, 4806)
-        self.abyss_east = Point(3063,4830)
-        self.abyss_west = Point(3015,4831)
+        self.abyss_north = Point(3042,4853)
+        self.abyss_south = Point(3037, 4810)
+        self.abyss_east = Point(3062,4831)
+        self.abyss_west = Point(3017,4827)
         self.abyss_north_east = Point(3055,4854)
-        self.abyss_south_east = Point(3061,4813)
+        self.abyss_south_east = Point(3057,4816)
         self.abyss_south_west = Point(3017,4814)
-        self.abyss_north_west = Point(3016,4847)
+        self.abyss_north_west = Point(3023,4847)
 
         # abyss inner ring
         # self.abyss_inner_north = Point(3040,4843)
@@ -276,6 +276,7 @@ class AbyssRuneCrafter(OSRSBot):
             self.log_msg("could not click NPC to repair pouches.")
             return False
 
+        self.wait_till_interface_text(contains="repair", timeout=5)
         self.repair_pouch = False
         return True
     
