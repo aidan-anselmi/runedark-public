@@ -109,7 +109,7 @@ class AbyssRuneCrafter(OSRSBot):
 
         self.to_abyss_steps = [
             StairsStep(start=Point(3094,3491), end=Point(3089,3517), description="cross wildy ditch", mouseover_text="Cross", color=self.cp.hsv.PINK_MARK),
-            StairsStep(start=Point(3089,3523), end=self.mage_point, description="tele to abyss", mouseover_text="Teleport", color=self.cp.hsv.CYAN_MARK),
+            StairsStep(start=Point(3089,3523), end=self.mage_point, description="tele to abyss", mouseover_text="Teleport", color=self.cp.hsv.CYAN_MARK, extra_wait_time=1.5),
         ]
         self.to_bank_steps = [
             TeleportSpellStep("home", "tele home"),
@@ -244,6 +244,7 @@ class AbyssRuneCrafter(OSRSBot):
             self.log_msg("could not click law rift.")
             return False
 
+        self.sleep(lo=2, hi=3)
         return True
 
     def craft_runes(self) -> bool:
