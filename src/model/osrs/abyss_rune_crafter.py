@@ -221,16 +221,13 @@ class AbyssRuneCrafter(OSRSBot):
                         break
             for _ in range(5):
                 if self.enter_law_rift():
-                    break
+                    return True
+            return False
+            
         
         for _ in range(10):
             if not self.find_colors(self.win.game_view, self.cp.hsv.PINK_MARK):
                 self.rotate_within_abyss()
-
-        if not self.enter_abyss_door():
-            self.log_msg("Could not enter abyss door.")
-            return False
-
         return self.enter_abyss_door()
     
     def rotate_within_abyss(self) -> bool:
