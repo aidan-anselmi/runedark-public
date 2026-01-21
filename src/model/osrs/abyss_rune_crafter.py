@@ -390,5 +390,6 @@ class AbyssRuneCrafter(OSRSBot):
                     self.sleep()
                     break
                 else:
+                    self.log_msg(f"Could not find {png} to empty.")
                     self.sleep()
         return True
