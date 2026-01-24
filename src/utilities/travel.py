@@ -67,7 +67,7 @@ class Traveler:
             return -1 
 
         closest_step = 0
-        closest_dist = 100 # must be within 100 units to start
+        closest_dist = 50 # must be within 50 units to start
         for i in range(len(travel_steps)):
             if travel_steps[i].start and math.dist(travel_steps[i].start, cur_location) < closest_dist:
                 closest_dist = math.dist(travel_steps[i].start, cur_location)
@@ -172,6 +172,8 @@ class TeleportSpellStep(TravelStep):
             traveler.bot.mouse.move_to(traveler.bot.win.spellbook_normal[15].random_point())
         if self.tele_dest == "home":
             traveler.bot.mouse.move_to(traveler.bot.win.spellbook_normal[22].random_point())
+        if self.tele_dest == "falador":
+            traveler.bot.mouse.move_to(traveler.bot.win.spellbook_normal[20].random_point())
         traveler.bot.mouse.click()
         traveler.bot.sleep(lo=4.0, hi=5.0)
         return True

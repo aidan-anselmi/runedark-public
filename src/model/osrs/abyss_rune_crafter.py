@@ -168,11 +168,14 @@ class AbyssRuneCrafter(OSRSBot):
         end_time = int(self.run_time) * 60  # Measured in seconds.
         last_update = self.start_time
 
-        self.repair_pouch = False
+        self.repair_pouch = True
         self.runs = 0
 
         self.zoom(out=True)
         self.toggle_auto_retaliate(state="off")
+        self.sleep()
+        pag.press("f2")
+        self.sleep()
 
         while time.time() - self.start_time < end_time:
             if self.is_inv_full():
@@ -277,7 +280,9 @@ class AbyssRuneCrafter(OSRSBot):
             self.log_msg("could not click NPC to repair pouches.")
             return False
 
-        self.wait_till_interface_text(contains="repair", timeout=5)
+        # TODO
+        # self.wait_till_interface_text(contains="repair", timeout=5)
+        self.sleep(lo=3, hi=5)
         self.repair_pouch = False
         return True
     

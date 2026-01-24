@@ -39,7 +39,12 @@ class SlayerMelee(OSRSBot):
         self.food_color = Color(((0, 245, 245), (1, 255, 255)))
 
         self.scrape()
-        self.task = "armored zombie"
+        self.task = "greater demon"
+        self.to_task_travel_steps = []
+        self.to_bank_travel_steps = [
+            TeleportSpellStep("ge", "bank to ge"),
+            StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
+        ]
         self.set_directions()
 
     def scrape(self):
@@ -121,6 +126,19 @@ class SlayerMelee(OSRSBot):
                 StairsStep(Point(1303, 10205), Point(1311, 10188), "rocks to entrance", mouseover_text="Exit", extra_wait_time=4),
                 StairsStep(Point(1311, 3807), Point(1324, 3824), "elevator to bank", mouseover_text="Use"),
             ]
+        if self.task == "blue dragon":
+            self.bank_color = self.cp.hsv.BLUE_MARK
+            self.to_task_travel_steps = [
+                TeleportSpellStep("falador", "tele to falador"),
+                StairsStep(Point(2947, 3368), Point(2937, 3355), "climb wall", mouseover_text="Climb"),
+                StairsStep(Point(2934, 3355), Point(2884, 3396), "enter dungeon", mouseover_text="Climb"),
+                StairsStep(Point(2884, 9796), Point(2886, 9823), "to dragon area", mouseover_text="Jump"),
+            ]
+            self.to_bank_travel_steps = [
+                TeleportSpellStep("falador", "tele to falador"),
+                StairsStep(Point(2964, 3377), Point(2947, 3368), "falador bank", mouseover_text="Bank", color=self.bank_color),
+            ]
+            
 
         if self.task == "fire giant":
             self.to_task_travel_steps = [
@@ -128,6 +146,29 @@ class SlayerMelee(OSRSBot):
                 SpiritTreeStep(tree_key="2", color=self.cp.hsv.RED_MARK, description="home spirit tree", start=Point(1922, 5707)),
                 StairsStep(Point(2462, 3444), Point(2430, 3424), "spirit tree to cave", mouseover_text="Enter"),
                 WalkStep(Point(2429, 9824), Point(2397, 9778), "cave to fire giants"),
+            ]
+            self.to_bank_travel_steps = [
+                TeleportSpellStep("ge", "bank to ge"),
+                StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
+            ]
+        if self.task == "hellhound":
+            self.to_task_travel_steps = [
+                TeleportSpellStep("home", "tele home"),
+                SpiritTreeStep(tree_key="2", color=self.cp.hsv.RED_MARK, description="home spirit tree", start=Point(1922, 5707)),
+                StairsStep(Point(2462, 3444), Point(2430, 3424), "spirit tree to cave", mouseover_text="Enter"),
+                WalkStep(Point(2429, 9824), Point(2414, 9800), "cave to fire giants"),
+            ]
+            self.to_bank_travel_steps = [
+                TeleportSpellStep("ge", "bank to ge"),
+                StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
+            ]
+        if self.task == "spectre":
+            self.to_task_travel_steps = [
+                TeleportSpellStep("home", "tele home"),
+                SpiritTreeStep(tree_key="2", color=self.cp.hsv.RED_MARK, description="home spirit tree", start=Point(1922, 5707)),
+                StairsStep(Point(2462, 3444), Point(2430, 3424), "spirit tree to cave", mouseover_text="Enter"),
+                StairsStep(Point(2429, 9824), Point(2429, 9807), "agility shortcut", mouseover_text="Enter"),
+                WalkStep(Point(2435, 9807), Point(2456, 9784), "shortcut to spectures"),
             ]
             self.to_bank_travel_steps = [
                 TeleportSpellStep("ge", "bank to ge"),
@@ -150,7 +191,29 @@ class SlayerMelee(OSRSBot):
                 TeleportSpellStep("home", "tele home"),
                 StairsStep(start=Point(1922, 5707), description="home kourend portal", mouseover_text="Enter"),
                 StairsStep(Point(1641, 3673), Point(1639, 3673), "enter statue", mouseover_text="Investigate"),
-                StairsStep(Point(1666, 10050), Point(1648, 10009), "entrance to cracl", mouseover_text="Squeeze"),
+                StairsStep(Point(1666, 10050), Point(1648, 10009), "entrance to crack", mouseover_text="Squeeze"),
+            ]
+            self.to_bank_travel_steps = [
+                TeleportSpellStep("ge", "bank to ge"),
+                StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
+            ]
+        if self.task == "dust devil":
+            self.to_task_travel_steps = [
+                TeleportSpellStep("home", "tele home"),
+                StairsStep(start=Point(1922, 5707), description="home kourend portal", mouseover_text="Enter"),
+                StairsStep(Point(1641, 3673), Point(1639, 3673), "enter statue", mouseover_text="Investigate"),
+                WalkStep(Point(1666, 10050), Point(1713, 10033), "entrance to dust devils"),
+            ]
+            self.to_bank_travel_steps = [
+                TeleportSpellStep("ge", "bank to ge"),
+                StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
+            ]
+        if self.task == "greater demon":
+            self.to_task_travel_steps = [
+                TeleportSpellStep("home", "tele home"),
+                StairsStep(start=Point(1922, 5707), description="home kourend portal", mouseover_text="Enter"),
+                StairsStep(Point(1641, 3673), Point(1639, 3673), "enter statue", mouseover_text="Investigate"),
+                WalkStep(Point(1666, 10050), Point(1691, 10098), "entrance to demons", mouseover_text="Squeeze"),
             ]
             self.to_bank_travel_steps = [
                 TeleportSpellStep("ge", "bank to ge"),

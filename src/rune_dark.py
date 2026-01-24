@@ -647,7 +647,7 @@ if __name__ == "__main__":
         from model.osrs.abyss_rune_crafter import AbyssRuneCrafter
 
         app = App(test=True)
-        app.test(AbyssRuneCrafter())
+        app.test(Karambwan())
 
     app = App()
     app.start()
