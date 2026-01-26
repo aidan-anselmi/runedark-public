@@ -312,7 +312,7 @@ class FairyRingStep(TravelStep):
         if not rect:
             return False
         traveler.bot.mouse.move_to(rect.random_point())
-        if traveler.bot.get_mouseover_text(contains="Wield"):
+        if not traveler.bot.get_mouseover_text(contains="Wield"):
             return False
         traveler.bot.mouse.click()
         traveler.bot.sleep()
