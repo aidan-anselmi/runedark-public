@@ -269,13 +269,58 @@ class HomeGloryStep(TravelStep):
                     traveler.bot.sleep_while_color_moving(self.color)
                     traveler.bot.sleep(lo=1, hi=2)
                     return True
-        # other destinations not supported yet
+        # other destinations not soupported yet
         return False
     
 class AbyssRingStep(TravelStep):
     def handle(self, traveler: "Traveler") -> bool:
         return False
     
-class FairyRing(TravelStep):
+class FairyRingStep(TravelStep):
+    def __init__(
+        self,
+        start: Point = None,
+        color: Color = None,
+        description: str = "",
+    ):
+        super().__init__(
+            description=description,
+            start=start,
+            mouseover_text="Last"
+        )
+
+        self.color = color
+
     def handle(self, traveler: "Traveler") -> bool:
+        if not self.equip_item(traveler, "dramen-staff.png"):
+            traveler.bot.log_msg("Failed to equip Dramen staff for fairy ring.")
+            return False
+
+        res = traveler.click_object_at_step(self)
+        if res:
+            traveler.bot.sleep(lo=3.0, hi=4.0)
+
+        self.loop_equip_item(traveler, "zombie-axe.png")
+        return res
+
+    def equip_item(self, traveler: "Traveler", png: str) -> bool:
+        if not traveler.bot.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
+            traveler.bot.sleep()
+
+        rect = traveler.bot.find_sprite(traveler.bot.win.inventory, png, folder="item")
+        if not rect:
+            return False
+        traveler.bot.mouse.move_to(rect.random_point())
+        if traveler.bot.get_mouseover_text(contains="Wield"):
+            return False
+        traveler.bot.mouse.click()
+        traveler.bot.sleep()
+        return True
+    
+    def loop_equip_item(self, traveler: "Traveler", png: str) -> bool:
+        for _ in range(15):
+            if self.equip_item(traveler, png):
+                return True
+            time.sleep(1)
         return False

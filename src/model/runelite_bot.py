@@ -376,7 +376,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         win: Rectangle,
         png: Union[Path, str],
         folder: Union[Path, str] = "",
-        confidence: float = 0.15,
+        confidence: float = 0.10,
         num_retries: int = 1,
         verbose=False,
     ) -> Optional[Rectangle]:

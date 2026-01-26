@@ -55,7 +55,7 @@ class SlayerMelee(OSRSBot):
         # make sure directory exists
         dest_dir.mkdir(parents=True, exist_ok=True)
 
-        search_string = "Cooked karambwan, Open herb sack, Open gem bag, Digsite pendant"
+        search_string = "Cooked karambwan, Open herb sack, Open gem bag, Digsite pendant, Dramen staff"
         image_type = ImageType.ALL
         destination = dest_dir
 
@@ -113,6 +113,17 @@ class SlayerMelee(OSRSBot):
         self.options_set = True
 
     def set_directions(self):
+        if self.task == "wyvern":
+            self.to_task_travel_steps = [
+                TeleportSpellStep("home", "tele home"),
+                FairyRingStep(start=Point(1922, 5707), color=self.cp.hsv.YELLOW_MARK, description="home fairy ring"),
+                StairsStep(Point(2996, 3114), Point(3009, 3150), "fairy ring to entrance", mouseover_text="Climb"),
+                StairsStep(Point(3009, 9550), Point(3013, 9550), "entrance to agility", mouseover_text="Enter", extra_wait_time=5.5),
+            ]
+            self.to_bank_travel_steps = [
+                TeleportSpellStep("ge", "bank to ge"),
+                StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
+            ]
         if self.task == "wyrms":
             self.to_task_travel_steps = [
                 StairsStep(Point(1324, 3824), Point(1311, 3807), "bank to elevator", mouseover_text="Activate", extra_wait_time=4),
