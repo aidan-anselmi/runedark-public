@@ -308,7 +308,7 @@ class FairyRingStep(TravelStep):
             pag.press("f2")
             traveler.bot.sleep()
 
-        rect = traveler.bot.find_sprite(traveler.bot.win.inventory, png, folder="item")
+        rect = traveler.bot.find_sprite(traveler.bot.win.inventory, png, folder="items")
         if not rect:
             return False
         traveler.bot.mouse.move_to(rect.random_point())
