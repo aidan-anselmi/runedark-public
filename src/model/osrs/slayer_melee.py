@@ -29,7 +29,7 @@ class SlayerMelee(OSRSBot):
         super().__init__(bot_title=bot_title, description=description)
         # We can set default option values here if we'd like, and potentially override
         # needing to open the options panel.
-        self.run_time = 180
+        self.run_time = 240
         self.options_set = False
 
         self.walker = Walker(self, dest_square_side_length=4)
@@ -39,7 +39,7 @@ class SlayerMelee(OSRSBot):
         self.food_color = Color(((0, 245, 245), (1, 255, 255)))
 
         self.scrape()
-        self.task = "greater demon"
+        self.task = "wyvern"
         self.to_task_travel_steps = []
         self.to_bank_travel_steps = [
             TeleportSpellStep("ge", "bank to ge"),
@@ -139,18 +139,6 @@ class SlayerMelee(OSRSBot):
                 StairsStep(Point(2964, 3377), Point(2947, 3368), "falador bank", mouseover_text="Bank", color=self.bank_color),
             ]
             
-
-        if self.task == "fire giant":
-            self.to_task_travel_steps = [
-                TeleportSpellStep("home", "tele home"),
-                SpiritTreeStep(tree_key="2", color=self.cp.hsv.RED_MARK, description="home spirit tree", start=Point(1922, 5707)),
-                StairsStep(Point(2462, 3444), Point(2430, 3424), "spirit tree to cave", mouseover_text="Enter"),
-                WalkStep(Point(2429, 9824), Point(2397, 9778), "cave to fire giants"),
-            ]
-            self.to_bank_travel_steps = [
-                TeleportSpellStep("ge", "bank to ge"),
-                StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
-            ]
         if self.task == "hellhound":
             self.to_task_travel_steps = [
                 TeleportSpellStep("home", "tele home"),
@@ -192,6 +180,36 @@ class SlayerMelee(OSRSBot):
                 StairsStep(start=Point(1922, 5707), description="home kourend portal", mouseover_text="Enter"),
                 StairsStep(Point(1641, 3673), Point(1639, 3673), "enter statue", mouseover_text="Investigate"),
                 StairsStep(Point(1666, 10050), Point(1648, 10009), "entrance to crack", mouseover_text="Squeeze"),
+            ]
+            self.to_bank_travel_steps = [
+                TeleportSpellStep("ge", "bank to ge"),
+                StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
+            ]
+        if self.task == "dagannoth":
+            self.to_task_travel_steps = [
+                TeleportSpellStep("home", "tele home"),
+                StairsStep(start=Point(1922, 5707), description="home kourend portal", mouseover_text="Enter"),
+                StairsStep(Point(1641, 3673), Point(1639, 3673), "enter statue", mouseover_text="Investigate"),
+                StairsStep(Point(1666, 10050), Point(1648, 10009), "entrance to crack", mouseover_text="Squeeze"),
+                WalkStep(Point(1646, 10000), Point(1663, 9997), "crack to dagannoths"),
+            ]
+            self.to_bank_travel_steps = [
+                TeleportSpellStep("ge", "bank to ge"),
+                StairsStep(Point(3164, 3478), Point(3162, 3489), "ge tele to bank", mouseover_text="Bank"),
+            ]
+        if self.task == "fire giant":
+            # self.to_task_travel_steps = [
+            #     TeleportSpellStep("home", "tele home"),
+            #     SpiritTreeStep(tree_key="2", color=self.cp.hsv.RED_MARK, description="home spirit tree", start=Point(1922, 5707)),
+            #     StairsStep(Point(2462, 3444), Point(2430, 3424), "spirit tree to cave", mouseover_text="Enter"),
+            #     WalkStep(Point(2429, 9824), Point(2397, 9778), "cave to fire giants"),
+            # ]
+            self.to_task_travel_steps = [
+                TeleportSpellStep("home", "tele home"),
+                StairsStep(start=Point(1922, 5707), description="home kourend portal", mouseover_text="Enter"),
+                StairsStep(Point(1641, 3673), Point(1639, 3673), "enter statue", mouseover_text="Investigate"),
+                StairsStep(Point(1666, 10050), Point(1640, 10047), "entrance to vine", mouseover_text="Climb"),
+                WalkStep(Point(1461, 9879), Point(1455, 9900), "vine to giants"),
             ]
             self.to_bank_travel_steps = [
                 TeleportSpellStep("ge", "bank to ge"),

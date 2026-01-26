@@ -275,3 +275,7 @@ class HomeGloryStep(TravelStep):
 class AbyssRingStep(TravelStep):
     def handle(self, traveler: "Traveler") -> bool:
         return False
+    
+class FairyRing(TravelStep):
+    def handle(self, traveler: "Traveler") -> bool:
+        return False
