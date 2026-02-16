@@ -157,7 +157,7 @@ class SaltMiner(OSRSBot):
 
             if self.strayed_far():
                 self.log_msg("Strayed far, returning to mine.")
-                self.traveler.travel(self.return_to_mine_steps)    
+                self.traveler.travel(self.return_to_mine_steps, zoom=False)    
  
             if not self.is_player_doing_action("Mining", rect=self.action_win):
                 # chance to break
@@ -172,7 +172,7 @@ class SaltMiner(OSRSBot):
                     self.consec_no_mine_checks = 0
 
                 if self.consec_no_mine_checks > 5:
-                    self.traveler.travel(self.return_to_mine_steps)                               
+                    self.traveler.travel(self.return_to_mine_steps, zoom=False)                               
 
             # check for no xp gain
             if self.has_not_gained_xp(duration=300):
@@ -206,11 +206,11 @@ class SaltMiner(OSRSBot):
     def mine_salt(self) -> bool:
         # 1/3 chance to mine each salt type
         salt_choice = random.choice([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-        if salt_choice < 2:
+        if salt_choice < 1:
             salt_color = self.salt_1_color
-        elif salt_choice < 5:
+        elif salt_choice < 2:
             salt_color = self.salt_2_color
-        elif salt_choice < 8:
+        elif salt_choice < 3:
             salt_color = self.salt_3_color
         else:
             salt_color = self.salt_4_color
@@ -228,7 +228,7 @@ class SaltMiner(OSRSBot):
         return False
     
     def note_basalt(self) -> bool:
-        if not self.at_noter() and not self.traveler.travel(self.to_noter_steps):
+        if not self.at_noter() and not self.traveler.travel(self.to_noter_steps, zoom=False):
             self.log_msg("Failed to travel to noter.")
             return False
 
@@ -267,7 +267,7 @@ class SaltMiner(OSRSBot):
             self.log_msg("Inventory still full after noting basalt.")
             return False
 
-        if not self.traveler.travel(self.return_to_mine_steps):
+        if not self.traveler.travel(self.return_to_mine_steps, zoom=False):
             self.log_msg("Failed to travel to noter.")
             return False
 

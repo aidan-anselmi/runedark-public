@@ -85,16 +85,19 @@ class Traveler:
                 break
             else:
                 self.bot.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
+                self.bot.sleep()
         return cur_location
     
     def format_points(self, p1: Point, p2: Point) -> str:
         return f"({p1.x}, {p1.y}) -> ({p2.x}, {p2.y})"
     
     def click_object_at_step(self, step: TravelStep) -> bool:
-        for _ in range(5):
+        for i in range(5):
             if self.bot.move_mouse_to_color_obj(step.color):
+                self.bot.sleep()
                 if step.mouseover_text and not self.bot.get_mouseover_text(contains=step.mouseover_text):
-                    self.bot.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
+                    if i in [2, 4]:
+                        self.bot.move_camera(horizontal=random.choice([-25, 25]), vertical=0)
                     continue
                 if self.bot.mouse.click(check_red_click=True):
                     time.sleep(.5)
@@ -102,6 +105,7 @@ class Traveler:
                     return True
             else:
                 self.bot.log_msg(f"Could not find object for step: {step.description}")
+                self.bot.sleep()
         return False
 
     def travel_once(self, travel_steps: list[TravelStep]) -> bool:

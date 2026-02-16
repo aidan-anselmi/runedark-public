@@ -1117,7 +1117,7 @@ class RuneLiteBot(Bot, metaclass=ABCMeta):
         item_path = BOT_IMAGES / "inventory" / "empty-slot.png"
         num_empty_slots = 0
         for i, slot in enumerate(self.win.inventory_slots):
-            if search_img_in_rect(item_path, slot, confidence=0.10):
+            if search_img_in_rect(item_path, slot, confidence=0.05):
                 if verbose:
                     self.log_msg(f"Inventory slot {i+1} is empty.")
                 num_empty_slots += 1

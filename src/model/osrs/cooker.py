@@ -163,7 +163,7 @@ class Cooker(OSRSBot):
                         self.mouse.click()
                         self.sleep()
                         pag.press("esc")
-                        self.sleep()
+                        self.sleep(lo=.3, hi=.5)
                     else:
                         self.log_msg("could not find raw karambwan in bank.")
                         self.logout_and_stop_script("[END]")
@@ -218,4 +218,6 @@ class Cooker(OSRSBot):
         self.logout_and_stop_script("[END]")
 
     def get_karambwan_count(self) -> int:
+        if not self.is_control_panel_tab_open("inventory"):
+            pag.press("f2")
         return self.get_num_item_in_inv(png="raw-karambwan.png", folder="items", confidence=0.03)

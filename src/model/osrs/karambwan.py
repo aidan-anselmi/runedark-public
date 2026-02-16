@@ -23,7 +23,7 @@ class Karambwan(OSRSBot):
         super().__init__(bot_title=bot_title, description=description)
         # We can set default option values here if we'd like, and potentially override
         # needing to open the options panel.
-        self.run_time = 215
+        self.run_time = 200
         self.options_set = False
 
         self.walker = Walker(self, dest_square_side_length=8)
@@ -137,7 +137,7 @@ class Karambwan(OSRSBot):
         end_time = int(self.run_time) * 60  # Measured in seconds.
         last_update = start_time
 
-        # self.get_karambwanji()
+        self.get_karambwanji()
 
         cur_xp = self.get_total_xp()
         xp_timestart = time.time()

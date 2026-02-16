@@ -33,7 +33,7 @@ class AbyssRuneCrafter(OSRSBot):
         # needing to open the options panel.
         self.run_time = 180
         self.options_set = False
-        # self.scrape()
+        self.scrape()
 
     def scrape(self):
         scraper = SpriteScraper()
@@ -311,10 +311,12 @@ class AbyssRuneCrafter(OSRSBot):
         def click_altar() -> bool:
             altar = self.find_colors(self.win.game_view, self.cp.hsv.PINK_MARK)
             if not altar:
+                self.log_msg("Could not find altar.")
                 return False
             altar = altar[0]
             self.mouse.move_to(altar.random_point())
             if not self.get_mouseover_text(contains="Craft"):
+                self.log_msg("Could not find craft option.")
                 return False
             self.mouse.click()
             return True
@@ -328,6 +330,9 @@ class AbyssRuneCrafter(OSRSBot):
         for _ in range(3):
             if click_altar():
                 break
+            else:
+                self.log_msg("Could not find altar to craft runes.")
+                self.sleep()
         
         self.runs += 1
         if self.runs > random.randint(25,40):
@@ -369,11 +374,15 @@ class AbyssRuneCrafter(OSRSBot):
             eat_lobster()
 
         for png in ["earth-rune-bank.png", "air-rune-bank.png"]:
-            if not self.find_sprite(win=self.win.inventory, png=png, folder="items"):
+            if not self.find_sprite(win=self.win.inventory, png=png, folder="items", confidence=0.05):
                 if rect := self.find_sprite(win=self.win.game_view, png=png, folder="items"):
                     self.mouse.move_to(rect.random_point())
                     self.mouse.click()
                     self.sleep()
+                else:
+                    self.log_msg("Could not find {} in bank.".format(png))
+            else:
+                self.log_msg("{} already in inventory.".format(png))
 
         if rect := self.find_sprite(win=self.win.game_view, png="pure-essence-bank.png", folder="items", confidence=0.05):
             self.mouse.move_to(rect.random_point())
